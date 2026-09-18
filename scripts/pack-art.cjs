@@ -9,13 +9,12 @@ async function main() {
   await fs.mkdir(output, { recursive: true });
   const groups = new Map();
   const hd = require('../data/hd-art-manifest.json');
-  const nativeText = new Set(['native-conference','native-biotech','native-header-primary','native-header-profile','native-hospital-banner','native-expert-banner','native-insurance-banner','reference-banner','native-collect-banner','native-follow-banner']);
   for (const [component, constant, directory] of [['NativeArt','assets','captures'],['ReferenceArt','regions',null]]) {
     const code = await fs.readFile(path.join(root,'components',component+'.vue'),'utf8');
     const map = vm.runInNewContext('('+code.match(new RegExp('const '+constant+' = (\\{[\\s\\S]*?\\n\\});'))[1]+')');
     for (const [name, values] of Object.entries(map)) {
       const key=(directory?'native-':'reference-')+name;
-      if(hd[key] || nativeText.has(key)) continue;
+      if(hd[key]) continue;
       const [file,x,y,width,height] = directory ? values : ['reference',...values];
       const input = path.join(root,'art-source',directory||'',file+'.png');
       if (!groups.has(input)) groups.set(input,[]);

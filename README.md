@@ -101,7 +101,7 @@ npm run pack:art
 npm run check:package
 ```
 
-`pack:art` 先从官方 App Store 大尺寸截图裁剪首页插画、药械缩略图与旅游横幅，以质量 94、4:4:4 JPEG 编码至 `static/hd`；其余旧素材按实际展示区域无损处理并逐像素核对。输出素材和索引可重复生成。品牌标题、资源数量条及部分服务横幅使用真实文字与 CSS 图形，避免截图文字放大模糊。医院、专家和部分新闻照片仍为旧参考截图，需原始高清文件才能继续改善。`check:package` 检查动态引用图片、2 MiB 主包限制及模板/WXSS 的 scoped 标识。检查 HBuilderX 产物可执行 `npm run check:package -- unpackage/dist/dev/mp-weixin`。
+`pack:art` 先从官方 App Store 大尺寸截图裁剪首页插画、药械缩略图与旅游横幅，以质量 94、4:4:4 JPEG 编码至 `static/hd`；其余旧素材按实际展示区域无损处理并逐像素核对。输出素材和索引可重复生成。品牌标题、资源数量条、服务横幅和导航图标使用参考图片，还原原页面的图形样式；已有较高分辨率的素材优先使用。医院、专家和部分新闻照片仍为旧参考截图，需原始高清文件才能继续改善。`check:package` 检查动态引用图片、2 MiB 主包限制及模板/WXSS 的 scoped 标识。检查 HBuilderX 产物可执行 `npm run check:package -- unpackage/dist/dev/mp-weixin`。
 
 部分图片来自原小程序公开页面及参考截图，来源并不代表已获得再分发或商用授权。发布或商用前需确认相关素材权利。本地原始素材和优化素材均保留，依赖、编译产物、环境文件和开发者工具私有配置不提交。
 

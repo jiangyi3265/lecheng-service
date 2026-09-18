@@ -3,6 +3,12 @@
     class="brand-header"
     :class="{ compact, back: !!title, imageBrand: !title }"
   >
+    <NativeArt
+      v-if="!title"
+      class="brand-art"
+      :name="skin === 'profile' ? 'header-profile' : 'header-primary'"
+      :width="750"
+    />
     <view v-if="title" class="back-control" @tap="goBack">
       <AppIcon name="back" :size="36" />
       <text>返回</text>
@@ -30,9 +36,10 @@
   </view>
 </template>
 <script>
+import NativeArt from "./NativeArt.vue";
 import AppIcon from "./AppIcon.vue";
 export default {
-  components: { AppIcon },
+  components: { AppIcon, NativeArt },
   props: { title: String, compact: Boolean, search: Boolean, skin: String },
   methods: {
     openSearch() {
@@ -158,7 +165,7 @@ export default {
 .imageBrand > .brand-name,
 .imageBrand > .brand-search,
 .imageBrand > .capsule {
-  opacity: 1;
+  opacity: 0;
 }
 .imageBrand > .brand-search {
   position: relative;

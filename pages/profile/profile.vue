@@ -30,7 +30,7 @@
           aria-label="我的收藏"
           @tap="open('collections')"
         >
-          <view><text>我的收藏</text><text>收藏好服务</text></view><view class="star">★</view>
+          <NativeArt name="collect-banner" :width="339" />
         </view>
         <view
           class="follow-banner"
@@ -38,7 +38,7 @@
           aria-label="药械关注"
           @tap="open('follows')"
         >
-          <view><text>药械关注</text><text>关注新进展</text></view><view class="medicine-icon">✚</view>
+          <NativeArt name="follow-banner" :width="339" />
         </view>
       </view>
       <view class="wallet" @tap="open('cards')">
@@ -350,7 +350,14 @@ export default {
   gap: 19rpx;
   font-size: 40rpx;
 }
-
+.profile-banners > view {
+  padding: 0;
+  background: none;
+  height: auto;
+  border-radius: 20rpx;
+  overflow: hidden;
+  display: block;
+}
 .package-empty {
   padding: 145rpx 0 170rpx;
   gap: 20rpx;
