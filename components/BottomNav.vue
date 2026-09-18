@@ -12,21 +12,17 @@
       :aria-label="item.label"
       @tap="navigate(item)"
     >
-      <NativeArt v-if="item.key === 'assistant'" name="mascot" :width="124" />
-      <NativeArt
-        v-else
-        :name="'nav-' + item.key + (current === item.key ? '-on' : '')"
-        :width="46"
-      />
+      <ReferenceArt v-if="item.key === 'assistant'" name="mascot" :width="124" />
+      <AppIcon v-else :name="item.icon" :active="current === item.key" :size="46" />
       <text>{{ item.label }}</text>
     </view>
   </view>
 </template>
 <script>
 import AppIcon from "./AppIcon.vue";
-import NativeArt from "./NativeArt.vue";
+import ReferenceArt from "./ReferenceArt.vue";
 export default {
-  components: { AppIcon, NativeArt },
+  components: { AppIcon, ReferenceArt },
   props: { current: { type: String, default: "home" } },
   data() {
     return {
@@ -93,7 +89,7 @@ export default {
   justify-content: flex-end;
   background: transparent;
 }
-.assistant .native-art {
+.assistant .reference-art {
   position: absolute;
   bottom: 40rpx;
   left: 6rpx;

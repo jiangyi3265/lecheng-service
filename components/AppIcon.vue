@@ -15,11 +15,11 @@
       <view class="house-front" />
     </template>
     <template v-else-if="name === 'heart'">
-      <view class="heart-one">♥</view>
-      <view class="heart-two">♥</view>
+      <view class="heart-one" />
+      <view class="heart-two" />
     </template>
     <template v-else-if="name === 'news'">
-      <view class="news-box"><text>▣</text></view>
+      <view class="news-box"><view class="news-dot" /><view class="news-dot second" /></view>
     </template>
     <template v-else-if="name === 'user'">
       <view class="user-head" />
@@ -141,28 +141,27 @@ export default {
 .heart-one,
 .heart-two {
   position: absolute;
-  color: #c9d5df;
-  font-size: 52rpx;
-  line-height: 1;
-  transform: rotate(-15deg);
+  width: 52%;
+  height: 52%;
+  background: #c9d5df;
+  border-radius: 10%;
+  transform: rotate(-45deg);
 }
-.heart-one {
-  left: 21%;
-  top: -3%;
+.heart-one:before, .heart-one:after,
+.heart-two:before, .heart-two:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  border-radius: 50%;
 }
-.heart-two {
-  font-size: 37rpx;
-  left: 0;
-  top: 25%;
-  color: #aebfce;
-  opacity: 0.75;
-}
-.selected .heart-one {
-  color: #7bbcff;
-}
-.selected .heart-two {
-  color: #378ffa;
-}
+.heart-one:before, .heart-two:before { top: -50%; left: 0; }
+.heart-one:after, .heart-two:after { left: 50%; top: 0; }
+.heart-one { left: 35%; top: 29%; }
+.heart-two { width: 37%; height: 37%; left: 10%; top: 47%; background: #adbfcd; opacity: .8; }
+.selected .heart-one { background: #7bbcff; }
+.selected .heart-two { background: #378ffa; }
 .news-box {
   width: 75%;
   height: 57%;
@@ -175,6 +174,8 @@ export default {
   color: #c8d5e1;
   font-size: 24rpx;
 }
+.news-dot { position: absolute; width: 32%; height: 70%; left: 21%; border-radius: 50%; background: currentColor; opacity: .55; }
+.news-dot.second { left: 43%; opacity: .85; }
 .news-box:after {
   content: "";
   position: absolute;
