@@ -1,0 +1,26 @@
+{
+  "name": "lecheng-service",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:h5": "UNI_INPUT_DIR=\"$PWD\" uni --host 127.0.0.1",
+    "build:h5": "UNI_INPUT_DIR=\"$PWD\" uni build",
+    "build:mp-weixin": "UNI_INPUT_DIR=\"$PWD\" uni build -p mp-weixin && npm run check:package",
+    "pack:art": "node scripts/pack-art.cjs",
+    "check:package": "node scripts/check-package.cjs"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app": "3.0.0-4060620250520001",
+    "@dcloudio/uni-components": "3.0.0-4060620250520001",
+    "@dcloudio/uni-h5": "3.0.0-4060620250520001",
+    "@dcloudio/uni-mp-weixin": "3.0.0-4060620250520001",
+    "vue": "3.4.21"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "3.4.15",
+    "@dcloudio/vite-plugin-uni": "3.0.0-4060620250520001",
+    "sass": "1.77.8",
+    "sharp": "^0.34.3",
+    "vite": "5.2.8"
+  }
+}
