@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+dist/
+unpackage/
+.hbuilderx/
+*.log
+
+# Local previews and credentials
+qa/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
