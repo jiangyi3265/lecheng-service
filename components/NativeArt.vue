@@ -10,6 +10,7 @@
 </template>
 <script>
 import packedArt from "../data/art-manifest.json";
+import hdArt from "../data/hd-art-manifest.json";
 // Layout dimensions refer to the unchanged original captures.
 // art-manifest selects the smallest lossless representation for each image.
 const assets = {
@@ -70,7 +71,7 @@ const assets = {
 export default {
   props: { name: String, width: { type: Number, default: 100 } },
   computed: {
-    packed() { return packedArt["native-" + this.name]; },
+    packed() { return hdArt["native-" + this.name] || packedArt["native-" + this.name]; },
     asset() {
       return assets[this.name] || assets.biotech;
     },
@@ -84,6 +85,7 @@ export default {
       };
     },
     imageStyle() {
+      if (hdArt["native-" + this.name]) return {width:"100%",height:"100%",left:0,top:0};
       return { width: this.packed.width * this.ratio + "rpx", height: this.packed.height * this.ratio + "rpx", left: -this.packed.x * this.ratio + "rpx", top: -this.packed.y * this.ratio + "rpx" };
     },
   },

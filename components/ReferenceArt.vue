@@ -10,6 +10,7 @@
 </template>
 <script>
 import packedArt from "../data/art-manifest.json";
+import hdArt from "../data/hd-art-manifest.json";
 const regions = {
   hero: [75, 9, 826, 348],
   banner: [124, 734, 728, 100],
@@ -19,9 +20,10 @@ const regions = {
 export default {
   props: { name: String, width: { type: Number, default: 100 } },
   computed: {
-    packed() { return packedArt["reference-" + this.name]; },
+    packed() { return hdArt["reference-" + this.name] || packedArt["reference-" + this.name]; },
     region() {
-      return regions[this.name] || regions.medicine;
+      const hd = hdArt["reference-" + this.name];
+      return hd ? [0, 0, hd.width, hd.height] : regions[this.name] || regions.medicine;
     },
     scale() {
       return this.width / this.region[2];

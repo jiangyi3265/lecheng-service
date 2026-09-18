@@ -1,0 +1,23 @@
+{
+  "native-travel": {
+    "src": "/static/hd/native-travel.jpg",
+    "width": 806,
+    "height": 288,
+    "x": 0,
+    "y": 0
+  },
+  "native-drug-vosoritide": {
+    "src": "/static/hd/native-drug-vosoritide.jpg",
+    "width": 178,
+    "height": 184,
+    "x": 0,
+    "y": 0
+  },
+  "reference-hero": {
+    "src": "/static/hd/reference-hero.jpg",
+    "width": 864,
+    "height": 159,
+    "x": 0,
+    "y": 0
+  }
+}

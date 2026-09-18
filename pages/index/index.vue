@@ -46,16 +46,7 @@
         "
         @tap="all"
       >
-        <ReferenceArt v-if="category === 0" name="banner" :width="660" />
-        <NativeArt
-          v-else
-          :name="
-            ['', 'hospital-banner', 'expert-banner', 'insurance-banner'][
-              category
-            ]
-          "
-          :width="660"
-        />
+        <ResourceBanner :index="category" />
       </view>
       <view class="catalog-panel">
         <view class="catalog-tabs">
@@ -106,6 +97,7 @@
   </view>
 </template>
 <script>
+import ResourceBanner from "../../components/ResourceBanner.vue";
 import NativeArt from "../../components/NativeArt.vue";
 import ResourceList from "../../components/ResourceList.vue";
 import BrandHeader from "../../components/BrandHeader.vue";
@@ -123,6 +115,7 @@ import {
 export default {
   components: {
     NativeArt,
+    ResourceBanner,
     ResourceList,
     BrandHeader,
     BottomNav,
@@ -226,12 +219,12 @@ export default {
 .hero :deep(.brand-header) {
   position: relative;
   z-index: 2;
-  opacity: 0;
+  opacity: 1;
 }
 .hero-art {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 174rpx;
 }
 .home-body {
   margin-top: -93rpx;

@@ -6,7 +6,7 @@
     "dev:h5": "UNI_INPUT_DIR=\"$PWD\" uni --host 127.0.0.1",
     "build:h5": "UNI_INPUT_DIR=\"$PWD\" uni build",
     "build:mp-weixin": "UNI_INPUT_DIR=\"$PWD\" uni build -p mp-weixin && npm run check:package",
-    "pack:art": "node scripts/pack-art.cjs",
+    "pack:art": "node scripts/pack-hd-art.cjs && node scripts/pack-art.cjs",
     "check:package": "node scripts/check-package.cjs"
   },
   "dependencies": {
