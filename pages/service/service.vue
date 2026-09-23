@@ -1,425 +1,508 @@
 <template>
-  <view class="service-page">
-    <view class="service-top">
-      <BrandHeader compact />
-      <view class="service-search">
-        <SearchField v-model="query" small @search="submit" />
-      </view>
-      <view
-        class="conference-banner"
-        @tap="detail('综合会务中心', 'conference')"
-      >
-        <ServicePoster kind="conference" />
-      </view>
-    </view>
-    <view class="service-main">
-      <view class="service-categorybar">
-        <view
-          class="pinned-tab"
-          :class="{ selected: current === 0 }"
-          @tap="current = 0"
-        >
-          全部
-        </view>
-        <scroll-view
-          scroll-x
-          class="service-tabs"
-          :scroll-into-view="'service-tab-' + current"
-          scroll-with-animation
-          :show-scrollbar="false"
-        >
-          <view class="tab-row">
-            <view
-              v-for="(tab, i) in tabs.slice(1)"
-              :id="'service-tab-' + (i + 1)"
-              :key="tab"
-              :class="{ selected: current === i + 1 }"
-              @tap="current = i + 1"
-            >
-              {{ tab }}
-            </view>
-          </view>
-        </scroll-view>
-      </view>
-      <template v-if="visible">
-        <view class="service-card" @tap="detail(featured.title, featured.kind)">
-          <ServicePoster :kind="featured.kind" :title="featured.title" />
-          <view v-if="featured.description" class="service-description">
-            ❝ {{ featured.description }}
-          </view>
-          <view v-if="current === 1" class="service-tags">
-            <text>全国唯一</text>
-            <text>18至50周岁</text>
-            <text>蔡司VISUMAX 800</text>
-          </view>
-          <view v-if="current === 4 || current === 8" class="service-tags">
-            <text>{{ current === 4 ? "乐城餐饮" : "需预约" }}</text>
-          </view>
-          <text v-if="current !== 5 && current !== 6" class="consult">
-            {{ current === 9 ? "免费" : "详情咨询" }}
-          </text>
-          <view v-if="current !== 5 && current !== 6" class="provider">
-            <text class="provider-name">
-              ✿
-              {{
-                featured.kind === "biotech"
-                  ? "四川大学华西乐城医院（海南海控乐城医院）"
-                  : "乐城管理局"
-              }}
-            </text>
-            <text v-if="featured.kind === 'biotech'" class="available">
-              已开展
-            </text>
-          </view>
-          <view v-if="featured.kind === 'biotech'" class="provider">
-            <text class="provider-name">✿ 博鳌未来医院</text>
-            <text class="pending">附条件审批、暂未开展</text>
-          </view>
-        </view>
-        <view v-if="current === 0 || current === 2" class="service-grid">
-          <view
-            v-for="name in technologies"
-            :key="name"
-            class="small-service"
-            @tap="detail(name, 'biotech')"
-          >
-            <view class="small-poster">
-              <text>生物医学新技术</text>
-              <text>{{ name }}</text>
-            </view>
-            <text class="small-title">{{ name }}</text>
-            <text class="quotation">❝</text>
-            <text class="consult">详情咨询</text>
-          </view>
-        </view>
-      </template>
-      <view v-else class="empty-state">
-        暂无相关服务
-        <text
-          @tap="
-            query = '';
-            submitted = '';
-            current = 0;
-          "
-        >
-          查看全部服务
-        </text>
-      </view>
-    </view>
-    <BottomNav current="service" />
-  </view>
+	<view class="page secondary-page" :class="{ 'settings-page': isSettingsPage }">
+		<AppHeader :title="title" back :back-label="type === '资讯详情' || isSettingsPage ? '返回' : ''" :fallback="fallback" />
+		<SettingsPanel v-if="isSettingsPage" :page="type" />
+		<NewsArticle v-else-if="type === '资讯详情' && article" :article="article" />
+		<NewsArticle v-else-if="serviceArticle" :article="serviceArticle" :show-favorite="false" />
+		<view v-else class="detail-content">
+			<template v-if="type === '我的收藏' || type === '浏览记录'">
+				<view class="between"
+					><text class="muted small"
+						>共 {{ savedItems.length }} 条记录</text
+					><button
+						v-if="type === '浏览记录' && savedItems.length"
+						class="link"
+						@tap="clearHistory"
+					>
+						清空记录
+					</button></view
+				>
+				<view class="selection-chips"
+					><button
+						v-for="group in groups"
+						:key="group"
+						class="selection-chip"
+						:class="{ selected: filter === group }"
+						@tap="filter = group"
+					>
+						{{ group }}
+					</button></view
+				>
+				<view
+					v-for="item in filteredItems"
+					:key="item.key"
+					class="saved-entry"
+					><HospitalCard
+						v-if="item.itemType === 'hospital'"
+						:hospital="item"
+						compact
+					/><ResourceCard
+						v-else-if="item.itemType === 'resource'"
+						:item="item"
+						/><button v-else-if="item.itemType === 'news'" class="saved-news" @tap="openService('资讯详情', { id: item.id })">
+							<view class="saved-news-cover"><ScenePhoto :scene="item.scene" :label="item.title" /></view>
+							<view class="flex-1"><text class="section-title">{{ item.title }}</text><text class="muted small preview">{{ item.date }} · 示例</text></view>
+						</button><DoctorCard v-else :doctor="item" /><button
+						v-if="type === '我的收藏'"
+						class="remove-favorite"
+						@tap="removeFavorite(item.key)"
+					>
+						移除收藏
+					</button></view
+				>
+				<view v-if="!filteredItems.length" class="empty-state"
+					><AppIcon
+						:name="type === '我的收藏' ? 'star' : 'clock'"
+						color="muted"
+						:size="84"
+					/><text class="empty-title">{{
+						type === "我的收藏"
+							? "还没有相关收藏"
+							: "还没有相关浏览记录"
+					}}</text
+					><text class="small"
+						>医院、药械、医生和资讯的记录都会保存在这里</text
+					><button class="empty-action" @tap="openSearch()">
+						去查看医疗资源
+					</button></view
+				>
+			</template>
+			<ArticleList v-else-if="type === '福利活动' || type === '服务流程'" :items="serviceArticlesFor(type)" :empty-text="type === '福利活动' ? '暂无福利活动' : '暂无服务流程'" @select="openService(type + '详情', { id: $event.id })" />
+			<template v-else-if="type === '我的咨询'">
+				<button
+					v-for="chat in conversations"
+					:key="chat.name"
+					class="list-row conversation-link"
+					@tap="openChat(chat.name)"
+				>
+					<AppIcon name="chat" color="blue" :size="53" /><view
+						class="flex-1"
+						><text class="section-title">{{ chat.name }}</text
+						><text class="muted small preview">{{
+							chat.last
+						}}</text></view
+					><AppIcon name="chevron" color="muted" :size="26" />
+				</button>
+				<button class="outline-button section-space" @tap="openChat()">
+					咨询服务助手
+				</button>
+			</template>
+			<template v-else-if="type === '帮助与反馈'">
+				<text class="section-title">常见问题</text
+				><view v-for="(faq, index) in faqs" :key="faq.q" class="faq"
+					><button
+						class="faq-question"
+						@tap="expanded = expanded === index ? -1 : index"
+					>
+						<text>{{ faq.q }}</text
+						><AppIcon
+							name="down"
+							color="muted"
+							:size="26"
+						/></button
+					><text
+						v-if="expanded === index"
+						class="detail-description"
+						>{{ faq.a }}</text
+					></view
+				>
+				<view class="section-space"
+					><view class="between"
+						><text class="section-title">意见反馈</text
+						><button class="link" @tap="openService('我的反馈')">
+							反馈记录 ›
+						</button></view
+					><textarea
+						v-model="feedback"
+						class="feedback-input"
+						maxlength="500"
+						placeholder="请描述遇到的问题或建议"
+						aria-label="意见反馈"
+					/><text class="demo-label">演示提交，仅保存在本机。</text
+					><text v-if="feedbackError" class="inline-error">{{
+						feedbackError
+					}}</text
+					><button class="primary-button" @tap="saveFeedback">
+						提交反馈（演示）
+					</button></view
+				>
+			</template>
+			<template v-else-if="type === '我的反馈'">
+				<button
+					v-for="item in feedbacks"
+					:key="item.id"
+					class="feedback-record"
+					@tap="openService('反馈详情', { id: item.id })"
+				>
+					<view class="between"
+						><text class="section-title">意见反馈</text
+						><text class="pill">{{ item.status }}</text></view
+					><text class="detail-description">{{ item.text }}</text
+					><text class="link">查看详情 ›</text>
+				</button>
+				<view v-if="!feedbacks.length" class="empty-state"
+					><text class="empty-title">还没有反馈记录</text
+					><button
+						class="empty-action"
+						@tap="openService('帮助与反馈')"
+					>
+						填写反馈
+					</button></view
+				>
+			</template>
+			<template v-else-if="type === '联系医院' && contactHospital">
+				<view class="contact-symbol"
+					><AppIcon name="headset" color="blue" :size="84" /></view
+				><text class="detail-heading">{{ contactHospital.name }}</text
+				><text class="detail-description"
+					>您可以通过在线咨询体验服务流程，也可以查看科室和到院指引。</text
+				><view class="info-panel"
+					><view class="info-line"
+						><text>服务时间</text
+						><text>09:00–17:00（示例）</text></view
+					><view class="info-line"
+						><text>联系电话</text><text>未配置真实电话</text></view
+					><view class="info-line"
+						><text>院区位置</text
+						><text>{{ contactHospital.address }}</text></view
+					></view
+				><view class="action-pair"
+					><button
+						class="outline-button"
+						@tap="openGuide(contactHospital.id)"
+					>
+						到院指引</button
+					><button
+						class="primary-button"
+						@tap="openChat(contactHospital.name)"
+					>
+						在线咨询
+					</button></view
+				>
+			</template>
+			<template v-else-if="article">
+				<view v-if="article.image !== undefined" class="article-image"
+					><ScenePhoto :scene="article.image" /></view
+				><view class="article-head"
+					><AppIcon
+						:name="article.icon || 'document'"
+						color="blue"
+						:size="57"
+					/><text class="detail-heading">{{ article.title }}</text
+					><text v-if="article.time" class="muted small">{{
+						article.time
+					}}</text></view
+				><view
+					v-for="(paragraph, index) in article.paragraphs"
+					:key="index"
+					class="article-paragraph"
+					><text v-if="paragraph.title" class="section-title">{{
+						paragraph.title
+					}}</text
+					><text class="detail-description">{{
+						paragraph.text || paragraph
+					}}</text></view
+				>
+				<button
+					v-if="article.appointmentId"
+					class="primary-button"
+					@tap="openAppointment(article.appointmentId)"
+				>
+					查看预约记录</button
+				><button
+					v-if="article.action"
+					class="primary-button"
+					@tap="runAction(article.action)"
+				>
+					{{
+						article.action === "选择医院"
+							? "选择医院，开始预约"
+							: article.action === "健康管理"
+								? "查看健康管理医院"
+								: "查看" + article.action
+					}}</button
+				><button
+					v-if="type === '反馈详情'"
+					class="outline-button"
+					@tap="openService('我的反馈')"
+				>
+					查看全部反馈
+				</button>
+			</template>
+			<view v-else class="empty-state"
+				><text class="empty-title">暂未找到该内容</text
+				><button class="empty-action" @tap="goBack(fallback)">
+					返回上一页
+				</button></view
+			>
+		</view>
+	</view>
 </template>
-<script>
-import BrandHeader from "../../components/BrandHeader.vue";
-import SearchField from "../../components/SearchField.vue";
-import ServicePoster from "../../components/ServicePoster.vue";
-import BottomNav from "../../components/BottomNav.vue";
-export default {
-  components: { BrandHeader, SearchField, ServicePoster, BottomNav },
-  data() {
-    return {
-      query: "",
-      submitted: "",
-      current: 0,
-      tabs: [
-        "全部",
-        "医疗",
-        "新生物技术",
-        "产品",
-        "餐饮",
-        "住宿",
-        "出行",
-        "旅游",
-        "商务",
-        "会议",
-      ],
-      services: [
-        {
-          type: 2,
-          title: "自体NK细胞辅助免疫药物治疗实体瘤技术",
-          kind: "biotech",
-        },
-        { type: 1, title: "蔡司二代全飞秒", kind: "medical" },
-        { type: 3, title: "精准体检与深度筛查", kind: "product" },
-        {
-          type: 4,
-          title: "乐城餐饮指南",
-          kind: "dining",
-          description: "乐城先行区及周边餐饮、美食、小吃、推荐",
-        },
-        {
-          type: 5,
-          title: "博鳌乐城人才公寓",
-          kind: "stay",
-          description: "乐城先行区保租房 助力自贸港人才安居梦",
-        },
-        {
-          type: 6,
-          title: "琼海智慧出行",
-          kind: "transport",
-          description: "琼海市智能网联汽车应用试点项目",
-        },
-        { type: 7, title: "2型糖尿病干细胞治疗方案", kind: "tourism" },
-        {
-          type: 8,
-          title: "乐城商务合作",
-          kind: "business",
-          description: "提供园区内多功能会议厅、会议室、宴会厅",
-        },
-        { type: 9, title: "中国白癜风精准诊疗与创新转化论坛", kind: "meeting" },
-      ],
-      technologies: [
-        "溶瘤病毒M1技术（注射用VRT106）治疗局部肿瘤",
-        "基因修饰自体造血干细胞治疗输血依赖型β地中海贫血",
-        "人GLP1和FGF21双因子高表达脂肪干细胞技术",
-      ],
-    };
-  },
-  onLoad(p) {
-    this.current = Number(p.tab || 0);
-  },
-  computed: {
-    featured() {
-      if (this.current === 0)
-        return (
-          (this.submitted
-            ? this.services.find((x) => x.title.includes(this.submitted))
-            : null) || this.services[0]
-        );
-      return (
-        this.services.find((x) => x.type === this.current) || this.services[0]
-      );
-    },
-    visible() {
-      return !this.submitted || this.featured.title.includes(this.submitted);
-    },
-  },
-  methods: {
-    submit() {
-      this.submitted = this.query.trim();
-    },
-    detail(name, kind) {
-      uni.navigateTo({
-        url:
-          "/pages/detail/detail?type=service&name=" +
-          encodeURIComponent(name) +
-          "&kind=" +
-          kind,
-      });
-    },
-  },
-};
+<script setup>
+import { ref, computed, watch } from "vue";
+import { onLoad, onShow } from "@dcloudio/uni-app";
+import AppHeader from "../../components/AppHeader.vue";
+import AppIcon from "../../components/AppIcon.vue";
+import HospitalCard from "../../components/HospitalCard.vue";
+import ResourceCard from "../../components/ResourceCard.vue";
+import DoctorCard from "../../components/DoctorCard.vue";
+import ScenePhoto from "../../components/ScenePhoto.vue";
+import NewsArticle from "../../components/NewsArticle.vue";
+import ArticleList from "../../components/ArticleList.vue";
+import SettingsPanel from "../../components/SettingsPanel.vue";
+import { serviceArticlesFor } from "../../data/service-articles";
+import { hospitals } from "../../data/medical";
+import { resolveSavedItem, news } from "../../data/catalog";
+import { faqs, articles } from "../../data/content";
+import { readList, saveList, toggleFavorite, recordVisit } from "../../utils/storage";
+import {
+	getNotices,
+	markNoticeRead,
+	submitFeedback,
+} from "../../utils/demo-store";
+import {
+	routeText,
+	openSearch,
+	openChat,
+	openService,
+	openGuide,
+	openAppointment,
+	navigate,
+	goBack,
+} from "../../utils/navigation";
+const type = ref("我的收藏"),
+	itemId = ref(""),
+	hospitalId = ref(""),
+	savedItems = ref([]),
+	conversations = ref([]),
+	feedbacks = ref([]),
+	notifications = ref([]),
+	filter = ref("全部"),
+	expanded = ref(0),
+	feedback = ref(""),
+	feedbackError = ref("");
+const isSettingsPage = computed(() => ['设置', '账户与安全'].includes(type.value));
+const groups = ["全部", "医院", "药品", "器械", "医生", "资讯"];
+const serviceArticle = computed(() => ['福利活动详情', '服务流程详情'].includes(type.value) ? serviceArticlesFor(type.value.replace('详情', '')).find((item) => item.id === itemId.value) : null);
+const title = computed(() => (type.value === "资讯详情" ? "文章详情" : type.value === "通知" ? "系统通知" : type.value));
+const fallback = computed(() =>
+	[
+		"我的收藏",
+		"浏览记录",
+		"我的咨询",
+		"我的反馈",
+		"反馈详情",
+		"设置",
+		"账户与安全",
+		"隐私协议",
+		"帮助与反馈",
+		"隐私说明",
+		"关于乐城服务",
+		"福利活动",
+		"服务流程",
+		"福利活动详情",
+		"服务流程详情",
+	].includes(type.value)
+		? "/pages/mine/mine"
+		: ["通知", "资讯详情"].includes(type.value)
+			? "/pages/messages/messages"
+			: "/pages/index/index",
+);
+const filteredItems = computed(() =>
+	savedItems.value.filter(
+		(i) => filter.value === "全部" || i.kind === filter.value,
+	),
+);
+const contactHospital = computed(() =>
+	hospitals.find((h) => h.id === hospitalId.value),
+);
+const article = computed(() => {
+	if (type.value === '隐私协议') return { ...articles['隐私说明'], title: '隐私协议' };
+	if (type.value === "通知") {
+		const n = notifications.value.find((n) => n.id === itemId.value);
+		return n ? { ...n, icon: "notice", paragraphs: [n.body] } : null;
+	}
+	if (type.value === "资讯详情") {
+		const n = news.find((n) => n.id === itemId.value);
+		return n
+			? { ...n, image: n.scene, time: n.date + " · 静态资讯示例" }
+			: null;
+	}
+	if (type.value === "反馈详情") {
+		const f = feedbacks.value.find((f) => f.id === itemId.value);
+		return f
+			? {
+					title: "您的反馈已记录",
+					icon: "check",
+					paragraphs: [
+						{ title: "反馈内容", text: f.text },
+						{ title: "当前状态", text: f.status },
+						{ title: "反馈编号", text: f.id },
+						"本条反馈仅保存在当前设备，未发送到真实客服。",
+					],
+				}
+			: null;
+	}
+	return articles[type.value] || null;
+});
+onLoad((o) => {
+	type.value = routeText(o.type, "我的收藏");
+	itemId.value = o.id || "";
+	if (type.value === "资讯详情" && news.some((n) => n.id === itemId.value)) recordVisit("news:" + itemId.value);
+	hospitalId.value = o.hospitalId || "";
+	feedback.value = uni.getStorageSync("lecheng-feedback") || "";
+	if (
+		type.value === "通知" &&
+		getNotices().some((n) => n.id === itemId.value)
+	)
+		markNoticeRead(itemId.value);
+	refresh();
+});
+onShow(refresh);
+watch(feedback, (v) => uni.setStorageSync("lecheng-feedback", v));
+function refresh() {
+	savedItems.value = readList(
+		type.value === "我的收藏" ? "favorites" : "history",
+	)
+		.map(resolveSavedItem)
+		.filter(Boolean);
+	conversations.value = readList("conversations");
+	feedbacks.value = readList("feedbacks");
+	notifications.value = getNotices();
+}
+function removeFavorite(key) {
+	toggleFavorite(key);
+	refresh();
+}
+function clearHistory() {
+	uni.showModal({
+		title: "清空浏览记录",
+		content: "仅清空浏览记录，收藏和预约不会受到影响。",
+		confirmColor: "#0785ff",
+		success: (r) => {
+			if (r.confirm) {
+				saveList("history", []);
+				refresh();
+			}
+		},
+	});
+}
+function saveFeedback() {
+	feedbackError.value = "";
+	try {
+		const item = submitFeedback(feedback.value);
+		feedback.value = "";
+		openService("反馈详情", { id: item.id });
+	} catch (e) {
+		feedbackError.value = e.message;
+	}
+}
+function runAction(action) {
+	if (action === "健康管理") openSearch("医院", { type: "健康管理" });
+	else if (action === "选择医院") openSearch("医院");
+	else openService(action);
+}
 </script>
 <style scoped>
-.service-page {
-  min-height: 100vh;
-  padding-bottom: 188rpx;
-  background: #f6f6f6;
+.settings-page { background: #f6f6f6; }
+.saved-news { display: flex; align-items: center; gap: 24rpx; width: 100%; padding: 24rpx 0; text-align: left; }
+.saved-news-cover { width: 210rpx; height: 150rpx; flex-shrink: 0; border-radius: 16rpx; overflow: hidden; }
+.saved-news .section-title { font-size: 28rpx; line-height: 1.5; }
+.saved-entry {
+	position: relative;
 }
-.service-top {
-  background: linear-gradient(#3f92ff, #6daaf5 70%, #f6f6f6);
-  padding-bottom: 18rpx;
+.remove-favorite {
+	margin-left: auto;
+	font-size: 23rpx;
+	color: #8d9daf;
+	padding: 10rpx 8rpx 18rpx;
 }
-.service-search {
-  padding: 24rpx 24rpx 26rpx;
+.conversation-link {
+	width: 100%;
+	text-align: left;
+	min-height: 150rpx;
 }
-.conference-banner {
-  margin: 0 24rpx;
+.conversation-link .section-title {
+	font-size: 29rpx;
 }
-.service-main {
-  margin: 0 24rpx;
-  background: #fff;
-  border-radius: 22rpx 22rpx 0 0;
-  overflow: hidden;
+.preview {
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin-top: 10rpx;
 }
-.service-tabs {
-  height: 88rpx;
-  padding: 0 12rpx;
+.faq {
+	border-bottom: 1rpx solid #eaf0f7;
 }
-.tab-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1rpx solid #ddd;
-  height: 88rpx;
+.faq-question {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20rpx;
+	width: 100%;
+	text-align: left;
+	padding: 28rpx 0;
+	font-size: 29rpx;
 }
-.tab-row view {
-  font-size: 28rpx;
-  font-weight: 500;
-  height: 88rpx;
-  display: flex;
-  align-items: center;
-  position: relative;
-  padding: 0 12rpx;
-  white-space: nowrap;
+.feedback-input {
+	width: 100%;
+	height: 270rpx;
+	margin: 25rpx 0 15rpx;
+	padding: 24rpx;
+	background: #f3f7fc;
+	border: 1rpx solid #e3edf6;
+	border-radius: 22rpx;
+	font-size: 27rpx;
+	line-height: 1.7;
 }
-.tab-row .selected {
-  color: #448fe3;
-  font-weight: 700;
+.feedback-record {
+	width: 100%;
+	padding: 25rpx;
+	border: 1rpx solid #e3edf6;
+	border-radius: 22rpx;
+	margin-bottom: 24rpx;
+	text-align: left;
 }
-.selected:after {
-  content: "";
-  position: absolute;
-  width: 42rpx;
-  height: 5rpx;
-  background: #458fe6;
-  bottom: 15rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 8rpx;
+.feedback-record .detail-description {
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
 }
-.service-card {
-  padding: 26rpx 20rpx 0;
-  border-bottom: 1rpx solid #eee;
+.settings-list button {
+	width: 100%;
+	text-align: left;
 }
-.consult {
-  display: block;
-  margin: 46rpx 0 28rpx;
-  color: #ef4e43;
-  font-size: 28rpx;
-  font-weight: 700;
+.setting-hint {
+	display: block;
+	color: #8e9eb2;
+	font-size: 22rpx;
 }
-.provider {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10rpx;
-  margin: 25rpx 0;
-  font-size: 23rpx;
+.contact-symbol {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 138rpx;
+	height: 138rpx;
+	border-radius: 38rpx;
+	background: #e9f5ff;
+	margin: 25rpx 0;
 }
-.provider-name {
-  color: #589beb;
-  background: linear-gradient(90deg, #e6f0ff, #fff);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
+.article-image {
+	height: 350rpx;
+	border-radius: 24rpx;
+	overflow: hidden;
+	margin-bottom: 30rpx;
 }
-.available {
-  color: #72b249;
-  white-space: nowrap;
+.article-head {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 10rpx;
+	padding-top: 15rpx;
 }
-.pending {
-  color: #dfaa57;
-  font-size: 22rpx;
-  white-space: nowrap;
-}
-.service-tags {
-  display: flex;
-  gap: 15rpx;
-  padding-top: 28rpx;
-}
-.service-tags text {
-  background: #e9f1ff;
-  color: #6e9eda;
-  border-radius: 8rpx;
-  padding: 3rpx 12rpx;
-  font-size: 22rpx;
-  white-space: nowrap;
-  max-width: 180rpx;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.service-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20rpx;
-  background: #f6f6f6;
-  padding-top: 20rpx;
-}
-.small-service {
-  border-radius: 30rpx;
-  background: #fff;
-  padding: 15rpx;
-  box-shadow: 0 8rpx 16rpx #00000008;
-}
-.small-poster {
-  height: 280rpx;
-  background: linear-gradient(145deg, #d6edff, #fff, #6a99ec);
-  border-radius: 17rpx;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: 25rpx;
-  padding: 20rpx;
-  text-align: center;
-  font-size: 23rpx;
-  font-weight: 700;
-  color: #537ec9;
-}
-.small-poster text:first-child {
-  font-size: 18rpx;
-  letter-spacing: 2rpx;
-  color: #8aa9d5;
-}
-.small-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin: 18rpx 0;
-}
-.quotation {
-  color: #cbd0d6;
-}
-.small-service .consult {
-  margin: 65rpx 0 12rpx;
-}
-.service-categorybar {
-  display: flex;
-  height: 88rpx;
-  border-bottom: 1rpx solid #eee;
-}
-.service-tabs {
-  flex: 1;
-  width: 0;
-  padding: 0;
-}
-.pinned-tab {
-  width: 86rpx;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28rpx;
-  position: relative;
-  background: #fff;
-  box-shadow: 5rpx 0 8rpx #b5bdc41a;
-  z-index: 1;
-}
-.pinned-tab.selected {
-  color: #448fe3;
-  font-weight: 700;
-}
-.tab-row {
-  width: max-content;
-  justify-content: flex-start;
-  gap: 5rpx;
-}
-.tab-row > view {
-  padding: 0 24rpx;
-}
-.service-description {
-  font-size: 26rpx;
-  line-height: 1.6;
-  margin: 25rpx 0 35rpx;
-  color: #686f75;
-}
-.service-description + .consult {
-  margin-top: 25rpx;
-}
-.service-top {
-  background: linear-gradient(
-    180deg,
-    #5796f7 0,
-    #5e99f7 108rpx,
-    #74a7f8 217rpx,
-    #b1ccf7 290rpx,
-    #f6f6f6 380rpx,
-    #f6f6f6 100%
-  );
+.article-paragraph {
+	margin: 28rpx 0;
 }
 </style>

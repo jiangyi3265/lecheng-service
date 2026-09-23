@@ -1,0 +1,126 @@
+.detail-content {
+	padding: 30rpx 36rpx 48rpx;
+}
+.demo-label {
+	display: block;
+	color: #8d9fb3;
+	font-size: 23rpx;
+	line-height: 1.6;
+	margin: 18rpx 0;
+}
+.info-panel {
+	padding: 28rpx;
+	background: #f1f7fe;
+	border-radius: 22rpx;
+	margin: 26rpx 0;
+}
+.info-line {
+	display: flex;
+	gap: 22rpx;
+	padding: 14rpx 0;
+	font-size: 27rpx;
+	line-height: 1.6;
+}
+.info-line > text:first-child {
+	color: #8292a8;
+	width: 140rpx;
+	flex-shrink: 0;
+}
+.info-line > text:last-child {
+	flex: 1;
+	min-width: 0;
+	word-break: break-word;
+}
+.detail-heading {
+	font-size: 39rpx;
+	font-weight: 650;
+	display: block;
+	margin: 12rpx 0;
+}
+.detail-description {
+	font-size: 27rpx;
+	color: #7c8da3;
+	line-height: 1.85;
+	display: block;
+	margin: 20rpx 0 30rpx;
+}
+.section-space {
+	margin-top: 34rpx;
+}
+.outline-button {
+	height: 80rpx;
+	border: 1rpx solid #bedfff;
+	color: #0785ff;
+	border-radius: 44rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #f5faff;
+	font-size: 28rpx;
+}
+.action-pair {
+	display: flex;
+	gap: 20rpx;
+	margin-top: 28rpx;
+}
+.action-pair > button {
+	flex: 1;
+	min-width: 0;
+}
+.selection-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16rpx;
+	margin: 22rpx 0;
+}
+.selection-chip {
+	padding: 14rpx 26rpx;
+	border: 1rpx solid #e2eaf4;
+	background: #f7fafe;
+	color: #6a7f99;
+	border-radius: 18rpx;
+	font-size: 26rpx;
+}
+.selection-chip.selected {
+	border-color: #0785ff;
+	background: #eaf5ff;
+	color: #0785ff;
+}
+.inline-error {
+	display: block;
+	color: #c65353;
+	font-size: 25rpx;
+	margin: 20rpx 0;
+}
+.form-field {
+	display: flex;
+	align-items: center;
+	gap: 18rpx;
+	min-height: 108rpx;
+	border-bottom: 1rpx solid #eaf0f7;
+}
+.form-field > text {
+	width: 150rpx;
+	flex-shrink: 0;
+	font-size: 27rpx;
+}
+.form-field input {
+	flex: 1;
+	min-width: 0;
+	font-size: 28rpx;
+	height: 90rpx;
+}
+.status-pill {
+	color: #0785ff;
+	background: #edf6ff;
+	border-radius: 30rpx;
+	font-size: 24rpx;
+	padding: 7rpx 19rpx;
+}
+.status-pill.cancelled {
+	color: #8d98a8;
+	background: #f0f3f7;
+}
+.secondary-page {
+	padding-bottom: calc(44rpx + env(safe-area-inset-bottom));
+}

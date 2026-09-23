@@ -1,0 +1,246 @@
+page {
+	--primary: #0785ff;
+	--ink: #142c4d;
+	--muted: #8292a8;
+	--line: #eaf0f7;
+	--pale: #edf6ff;
+	background: #f7fafe;
+	color: #142c4d;
+	font-family:
+		-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+		sans-serif;
+	font-size: 28rpx;
+	line-height: 1.5;
+}
+view,
+text,
+button,
+input,
+textarea,
+scroll-view {
+	box-sizing: border-box;
+}
+button {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: inherit;
+	font-size: inherit;
+	line-height: inherit;
+}
+button::after {
+	border: 0;
+	width: auto;
+	height: auto;
+	top: auto;
+	left: auto;
+	transform: none;
+}
+button[disabled] {
+	opacity: 0.45;
+	color: inherit;
+	background: transparent;
+}
+.page {
+	min-height: 100vh;
+	padding-bottom: calc(142rpx + env(safe-area-inset-bottom));
+	background: #fff;
+}
+.content-pad {
+	padding-left: 36rpx;
+	padding-right: 36rpx;
+}
+.row {
+	display: flex;
+	align-items: center;
+}
+.between {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.flex-1 {
+	flex: 1;
+	min-width: 0;
+}
+.section-title {
+	font-size: 32rpx;
+	font-weight: 650;
+	color: #142c4d;
+	letter-spacing: 0.2rpx;
+}
+.muted {
+	color: #8292a8;
+}
+.small {
+	font-size: 24rpx;
+}
+.link {
+	color: #0785ff;
+	font-size: 25rpx;
+}
+.tap {
+	transition: opacity 0.18s;
+}
+.tap:active,
+button:active {
+	opacity: 0.72;
+}
+.icon-button {
+	width: 80rpx;
+	height: 80rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-shrink: 0;
+}
+.primary-button {
+	height: 80rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #0785ff;
+	color: #fff;
+	font-size: 29rpx;
+	font-weight: 500;
+	border-radius: 44rpx;
+}
+.surface {
+	background: #fff;
+	border: 1rpx solid #eaf0f7;
+	border-radius: 24rpx;
+}
+.segmented {
+	display: flex;
+	padding: 5rpx;
+	background: #f9fbfe;
+	border: 2rpx solid #eaf1f9;
+	border-radius: 60rpx;
+	height: 92rpx;
+}
+.segment {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50rpx;
+	font-size: 29rpx;
+}
+.segment.is-active {
+	color: #fff;
+	background: #0785ff;
+	box-shadow: 0 5rpx 12rpx rgba(7, 133, 255, 0.12);
+}
+.pill {
+	background: #e9f4ff;
+	color: #168bff;
+	font-size: 22rpx;
+	line-height: 32rpx;
+	padding: 0 12rpx;
+	border-radius: 10rpx;
+	display: inline-block;
+}
+.empty-state {
+	padding: 90rpx 28rpx;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 18rpx;
+	text-align: center;
+	color: #8292a8;
+}
+.empty-title {
+	color: #142c4d;
+	font-size: 30rpx;
+	font-weight: 600;
+}
+.empty-action {
+	margin-top: 12rpx;
+	color: #0785ff;
+	padding: 16rpx 36rpx;
+	border-radius: 44rpx;
+	background: #edf6ff;
+}
+.list-row {
+	display: flex;
+	align-items: center;
+	min-height: 104rpx;
+	gap: 24rpx;
+	border-bottom: 1rpx solid #edf1f7;
+}
+.list-row:last-child {
+	border-bottom: 0;
+}
+.line-clamp {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+/* #ifdef H5 */
+html,
+body {
+	margin: 0;
+	background: #edf3fb;
+}
+body,
+uni-page-body {
+	color: #142c4d;
+	font-family:
+		-apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+		sans-serif;
+	font-size: 28rpx;
+	line-height: 1.5;
+}
+uni-view,
+uni-text,
+uni-button,
+uni-input,
+uni-textarea,
+uni-scroll-view {
+	box-sizing: border-box;
+}
+uni-button {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	color: inherit;
+	font-size: inherit;
+	line-height: inherit;
+}
+uni-button::after {
+	border: 0;
+	width: auto;
+	height: auto;
+	top: auto;
+	left: auto;
+	transform: none;
+}
+uni-button[disabled] {
+	opacity: 0.45;
+}
+uni-page-body {
+	min-height: 100vh;
+}
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+	outline: 2px solid #0785ff;
+	outline-offset: 3px;
+}
+@media (min-width: 600px) {
+	uni-page-body {
+		max-width: 480px;
+		margin: 0 auto;
+		box-shadow: 0 0 40px #dce5f2;
+	}
+}
+/* #endif */
+@media (prefers-reduced-motion: reduce) {
+	.tap {
+		transition: none;
+	}
+}

@@ -1,26 +1,28 @@
 {
-  "name": "lecheng-service",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev:h5": "UNI_INPUT_DIR=\"$PWD\" uni --host 127.0.0.1",
-    "build:h5": "UNI_INPUT_DIR=\"$PWD\" uni build",
-    "build:mp-weixin": "UNI_INPUT_DIR=\"$PWD\" uni build -p mp-weixin && npm run check:package",
-    "pack:art": "node scripts/pack-hd-art.cjs && node scripts/pack-art.cjs",
-    "check:package": "node scripts/check-package.cjs"
-  },
-  "dependencies": {
-    "@dcloudio/uni-app": "3.0.0-4060620250520001",
-    "@dcloudio/uni-components": "3.0.0-4060620250520001",
-    "@dcloudio/uni-h5": "3.0.0-4060620250520001",
-    "@dcloudio/uni-mp-weixin": "3.0.0-4060620250520001",
-    "vue": "3.4.21"
-  },
-  "devDependencies": {
-    "@dcloudio/types": "3.4.15",
-    "@dcloudio/vite-plugin-uni": "3.0.0-4060620250520001",
-    "sass": "1.77.8",
-    "sharp": "^0.34.3",
-    "vite": "5.2.8"
-  }
+	"name": "lecheng-miniapp",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "node --test qa/demo-store.test.mjs qa/auth-client.test.mjs qa/settings.test.mjs qa/search-filters.test.mjs",
+		"dev:h5": "node scripts/uni.mjs h5",
+		"build:h5": "node scripts/uni.mjs h5 build",
+		"dev:mp-weixin": "node scripts/uni.mjs mp-weixin",
+		"build:mp-weixin": "node scripts/uni.mjs mp-weixin build",
+		"assets:icons": "node scripts/icons.mjs"
+	},
+	"dependencies": {
+		"@dcloudio/uni-app": "3.0.0-5020420260812001",
+		"@dcloudio/uni-components": "3.0.0-5020420260812001",
+		"@dcloudio/uni-h5": "3.0.0-5020420260812001",
+		"@dcloudio/uni-mp-weixin": "3.0.0-5020420260812001",
+		"vue": "3.4.21"
+	},
+	"devDependencies": {
+		"@dcloudio/types": "3.4.31",
+		"@dcloudio/vite-plugin-uni": "3.0.0-5020420260812001",
+		"playwright": "^1.58.0",
+		"sharp": "^0.35.4",
+		"vite": "5.2.8"
+	}
 }

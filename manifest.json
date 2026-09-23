@@ -1,7 +1,10 @@
 {
-    "name" : "乐城服务",
-    "appid" : "__UNI__99D240B",
-    "description" : "",
+    "name" : "乐城小程序",
+    "appid" : "__UNI__C9343B8",
+    "description" : "乐城服务，医疗资源查询与就医服务",
+    "uniStatistics" : {
+        "enable" : false
+    },
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
@@ -50,12 +53,9 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "miniprogramRoot" : "./",
-        "packOptions": { "include": [{ "type": "folder", "value": "static" }] },
         "appid" : "wxc0bf4aba46ccdfe9",
         "setting" : {
-            "urlCheck" : false,
-            "ignoreUploadUnusedFiles": false
+            "urlCheck" : false
         },
         "usingComponents" : true
     },
@@ -67,9 +67,6 @@
     },
     "mp-toutiao" : {
         "usingComponents" : true
-    },
-    "uniStatistics" : {
-        "enable" : false
     },
     "vueVersion" : "3"
 }

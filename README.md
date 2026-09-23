@@ -1,110 +1,63 @@
-# lecheng-service
+# 乐城服务小程序
 
-乐城服务 UniApp 用户端，提供医疗资源浏览、综合服务与资讯展示的微信小程序 / H5 界面。
+使用 uni-app + Vue 3 实现对话中的六页 UI 设计画布，包含首页、查询、医院详情、乐城介绍、动态消息、个人中心，以及资料、咨询、收藏、浏览记录、帮助等承接页面。
 
-## 项目简介
+## 运行
 
-根据公开参考页面实现的前端复刻项目，保留 HBuilderX 项目布局并提供 Vite CLI。当前功能包括：
+在 HBuilderX 中打开本目录，选择「运行 → 运行到小程序模拟器 → 微信开发者工具」。在 `manifest.json` 的 `mp-weixin.appid` 中填写自己的小程序 AppID。原有 uni-app AppID 已保留。
 
-- 首页找药械、找医院、找专家、找保险分类切换与关键词筛选。
-- 药械、医院、专家、保险详情及相关资源展示。
-- 综合服务分类、服务详情、新闻与政策列表和详情入口。
-- 个人中心、收藏与关注入口；本地收藏跨页持久化。
-- “乐小二”快捷提问与本地导航答复。
+也可使用命令行：
 
-当前数据来自 `data/catalog.js` 等本地示例及页面内数据，没有调用原系统接口，也尚未接入关联后端。登录、预约提交、订单、支付、退款、语音识别及官方客服均未接入；未知详情和正文保留待接入状态。页面展示总数并不等于本地数据量。本项目不能视为官方完整产品或全站数据备份。
-
-## 技术栈
-
-- UniApp（`@dcloudio/uni-app` 3.0.0-4060620250520001）
-- Vue 3.4.21、JavaScript、Vite 5.2.8、Sass
-- 微信小程序、H5；HBuilderX 项目配置
-- Node.js / Sharp：参考素材无损裁剪与包体检查脚本
-
-## 关联仓库
-
-| 项目 | 说明 | GitHub |
-| --- | --- | --- |
-| lecheng-service-backend | 后端服务与权限基础框架 | [lecheng-service-backend](https://github.com/jiangyi3265/lecheng-service-backend) |
-| lecheng-service-admin | Web 管理后台 | [lecheng-service-admin](https://github.com/jiangyi3265/lecheng-service-admin) |
-| lecheng-service | UniApp 用户端 / 微信小程序 / H5 | [lecheng-service](https://github.com/jiangyi3265/lecheng-service) |
-
-三个仓库同属乐城服务项目。管理后台采用后端的若依接口约定；用户端当前使用本地示例数据，尚未接入该后端。仓库关联不代表医疗、订单、支付或预约接口已实现。用户端保留原有仓库名称和地址。
-
-## 快速启动
-
-准备 Node.js 20.19+ 或 22.12+、npm；微信小程序调试需安装微信开发者工具。
-
-### macOS / Linux
-
-```bash
-npm ci
+```sh
+npm install
 npm run dev:h5
-```
-
-现有 npm 脚本使用 POSIX 环境变量语法。H5 通常在 `http://127.0.0.1:5173/` 启动，以终端输出为准。
-
-```bash
 npm run build:h5
 npm run build:mp-weixin
 ```
 
-H5 输出为 `dist/build/h5`，微信输出为 `dist/build/mp-weixin`。后者自动执行包体检查。
+H5 开发地址为 `http://127.0.0.1:5186`。微信编译输出在 `unpackage/dist/build/mp-weixin`，可导入微信开发者工具；H5 构建输出在 `unpackage/dist/build/h5`。
 
-### Windows PowerShell
+## 已实现的交互
 
-可直接用 HBuilderX 打开项目并选择“运行到浏览器”或“运行到微信开发者工具”。使用 CLI 时需先安装依赖，再通过 PowerShell 设置输入目录：
+- 首页轮播、医院介绍/乐城介绍原地切换、完整医院列表、底部导航。医院标题采用蓝色数量横幅，不再显示“查看全部”。
+- 乐城介绍仅保留“乐城动态、国家政策、了解乐城”三个内容分类，直接在首页下方切换。动态、政策采用左图右文的纵向列表，详情原位展开；了解乐城采用大幅园区配图穿插正文的文章排版。
+- 查询框提示“搜索疾病、药品、项目”；三个分类为批复项目、特许药械、亚健康项目，统一提供“按科室 / 按疾病”筛选。科室为左侧竖向分类栏，疾病为整行分类列表，均从筛选按钮下方展开。支持组合筛选、重置、关键词搜索及空结果恢复；移除查询标题、副标题、筛选图标和综合排序。
+- 批复项目与特许药械分别保留原医院、药品内容；亚健康项目沿用原器械资料，采用与批复项目相同的左图右文排版。详情和关联医院仍可进入，返回保持分类与关键词。
+- 我的营业时间、地址和联系电话区域放大为两行信息布局；使用绿色电话图标，未配置号码时显示待更新。
+- 医院 → 科室 → 医生 → 日期/时段 → 预约表单 → 预约详情，完整模拟流程。
+- 我的预约、取消预约、重新预约、预约通知与个人中心状态同步。
+- 医院、药械、医生收藏和浏览记录，支持分类查看、移除收藏与清空浏览记录。
+- 问诊消息/系统通知切换；逐条已读，预约通知可进入对应预约。
+- 本地咨询消息、明确标注的静态助手回复、消息预览更新和输入草稿保存。
+- 园区示意图、院区选择、到院方式切换与医院跳转；资讯列表、分类与文章详情。
+- 个人资料校验与保存、常见问题、反馈提交/记录/详情、提醒设置。
+- 内容入口使用保留页面栈的跳转；详情逐级返回，查询关键词和筛选条件保留。仅主导航切换与无历史页面兜底会重建根页面。
 
-```powershell
-npm ci
-$env:UNI_INPUT_DIR = (Get-Location).Path
-npx uni --host 127.0.0.1
-```
+## 数据与接口
 
-微信构建使用：
+`data/medical.js` 包含 3 家示例医院，界面数量与实际静态记录一致。`data/catalog.js` 提供 8 条药械资料、8 位示例医生、关联关系、资讯及动态生成的未来七天演示日期。真实医院、药品、器械、登录、预约、客服和地图接口尚未接入。
 
-```powershell
-$env:UNI_INPUT_DIR = (Get-Location).Path
-npx uni build -p mp-weixin
-npm run check:package
-```
+`utils/storage.js` 管理本机收藏、浏览记录及资料。个人中心数字由实际本地记录产生，因此不会固定显示画布中的示例统计数字。资料页手机号是本机资料，不代表手机号认证。
 
-将 CLI 产物导入微信开发者工具，在 `manifest.json` 中配置你自己的小程序 AppID。AppID 是公开标识，不是 AppSecret；不要在客户端配置服务端密钥。
+`utils/demo-store.js` 处理模拟预约、取消、通知、咨询回复和反馈。数据持久化到本机；重复预约与无效表单会被阻止。园区图是交互示意图，不调用真实地图或定位。医院联系人页面不拨打虚构电话。
 
-本版本无需数据库或 Redis即可运行页面。`manifest.json` 的 `miniprogramRoot: "./"` 用于生成正确的开发者工具配置。HBuilderX 使用 `unpackage/dist/dev/mp-weixin`，CLI 使用 `dist/build/mp-weixin`，两者应分别构建。
+回归测试：`node --test qa/demo-store.test.mjs`。浏览器验收结果见 `qa/linkage-results.json`。
 
-## 项目结构
+首页医院目录与横幅验收见 `qa/home-inline-results.json`（历史记录）；最新三个分类及图文介绍验收见 `qa/home-content-results.json`，包含 390px / 320px 手机宽度和原地切换。
 
-```text
-pages/index/      首页与资源分类
-pages/catalog/    搜索列表
-pages/detail/     药械、服务、资讯详情
-pages/service/    综合服务
-pages/news/       新闻与政策
-pages/profile/    个人中心
-pages/account/    收藏、订单和卡包等入口
-pages/assistant/  乐小二本地导航助手
-components/      导航、卡片、资源详情与素材组件
-data/            示例数据和素材索引
-art-source/      原始参考素材，不进入运行包
-static/art/      优化后的运行素材
-static/hd/       较高分辨率的官方截图裁剪素材
-scripts/         素材打包与小程序包体校验
-manifest.json    UniApp 平台配置
-pages.json       页面注册与全局样式
-```
+查询分类及个人中心联系卡片的历史验收见 `qa/search-revision-results.json`，旧筛选交互验收见 `qa/search-filters-results.json`。最新参考图版筛选验收见 `qa/search-reference-results.json`，截图位于 `qa/screenshots/search-reference/`，覆盖390px、320px手机宽度及短屏。
 
-## 素材与包体检查
+`data/search-filters.js` 集中维护参考截图中可见的科室、疾病分类及示例记录关联。`components/SearchFilters.vue` 实现两个下拉面板、内部滚动和短屏适配。缺少对应静态资料的分类显示空结果，疾病关联不代表真实医疗服务或药械适应症。
 
-```bash
-npm run pack:art
-npm run check:package
-```
+## 结构与素材
 
-`pack:art` 先从官方 App Store 大尺寸截图裁剪首页插画、药械缩略图与旅游横幅，以质量 94、4:4:4 JPEG 编码至 `static/hd`；其余旧素材按实际展示区域无损处理并逐像素核对。输出素材和索引可重复生成。品牌标题、资源数量条、服务横幅和导航图标使用参考图片，还原原页面的图形样式；已有较高分辨率的素材优先使用。医院、专家和部分新闻照片仍为旧参考截图，需原始高清文件才能继续改善。`check:package` 检查动态引用图片、2 MiB 主包限制及模板/WXSS 的 scoped 标识。检查 HBuilderX 产物可执行 `npm run check:package -- unpackage/dist/dev/mp-weixin`。
+- `components/`：共用页头、底部导航、医院卡片、图标和图集组件。
+- `styles/theme.css`：全局视觉样式；`DESIGN.md`：设计约束。
+- `static/images/medical-atlas.jpg`：使用 GPT 内置图像生成工具、参照设计图制作的四宫格医院/园区素材。以图集方式使用，压缩后约 631 KB。
+- `static/icons/`：本地 PNG 图标，使用 `npm run assets:icons` 从代码中的 SVG 路径重新生成。
+- `static/images/hospital-*.png`：医院横幅的小楼插画，使用 `node scripts/directory-art.mjs` 重新生成。
+- `qa/`：验收清单与检查结果。
 
-部分图片来自原小程序公开页面及参考截图，来源并不代表已获得再分发或商用授权。发布或商用前需确认相关素材权利。本地原始素材和优化素材均保留，依赖、编译产物、环境文件和开发者工具私有配置不提交。
+微信端使用真实状态栏及胶囊安全空间，H5 保留设计展示状态栏。图片与图标均在本地，不依赖第三方图床。未启用 uni 统计。
 
-## 简历描述示例
-
-使用 UniApp、Vue 3 与 Vite 实现乐城服务跨端界面，完成医疗资源分类检索、详情导航、综合服务展示及本地收藏交互，并通过素材无损处理和自动包体检查适配微信小程序发布限制。当前成果为前端演示，未包含真实订单、支付或医疗业务后端。
+本次仅实现前端，未发布小程序。真实 AppID 下的微信开发者工具和真机检查仍需完成。
