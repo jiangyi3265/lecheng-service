@@ -12,7 +12,7 @@
 				>
 					{{ item }}
 				</button></view
-			><text class="demo-label">预约记录为本机模拟数据</text
+			><text class="demo-label">{{ syncError || (apiBaseUrl ? '预约咨询申请记录由乐城后台同步；实际号源需医院确认' : '预约记录为本机模拟数据') }}</text
 			><button
 				v-for="item in filtered"
 				:key="item.id"
@@ -58,11 +58,18 @@ import { onShow } from "@dcloudio/uni-app";
 import AppHeader from "../../components/AppHeader.vue";
 import AppIcon from "../../components/AppIcon.vue";
 import { readList } from "../../utils/storage";
+import { apiBaseUrl, getAppointments } from "../../utils/lecheng-api";
 import { openAppointment, openSearch } from "../../utils/navigation";
-const tabs = ["全部", "待就诊", "已取消"],
+const tabs = ["全部", "待处理", "已联系", "已取消"],
 	tab = ref("全部"),
-	items = ref([]);
-onShow(() => (items.value = readList("appointments")));
+	items = ref([]), syncError = ref("");
+onShow(async () => {
+	items.value = readList("appointments");
+	if (apiBaseUrl) {
+		try { items.value = await getAppointments(); syncError.value = ""; }
+		catch (error) { syncError.value = "后台同步失败，当前显示本机缓存"; }
+	}
+});
 const filtered = computed(() =>
 	items.value.filter((a) => tab.value === "全部" || a.status === tab.value),
 );

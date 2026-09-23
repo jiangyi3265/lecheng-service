@@ -3,7 +3,7 @@
     <scroll-view class="consultation-history" scroll-y :scroll-into-view="scrollTarget" @tap="dismissKeyboard">
       <view class="history-content">
         <text class="consultation-caption">乐城服务为您服务</text>
-        <text class="consultation-note">演示咨询 · 消息仅保存在本机</text>
+        <text class="consultation-note">{{ apiBaseUrl ? '客服留言 · 消息同步至乐城后台' : '演示咨询 · 消息仅保存在本机' }}</text>
         <view class="consultation-row">
           <view class="consultation-avatar"><AppIcon name="robot" color="blue" :size="48" /></view>
           <view class="consultation-bubble">
@@ -25,16 +25,17 @@
         aria-label="咨询内容" confirm-type="send" :maxlength="500" :adjust-position="false"
         :focus="inputFocused" :hold-keyboard="false" @focus="inputFocused = true" @blur="inputFocused = false"
         @keyboardheightchange="onKeyboardChange" @confirm="send" />
-      <button class="consultation-send" role="button" aria-label="发送消息" :disabled="!draft.trim()" @tap="send">发送</button>
+      <button class="consultation-send" role="button" aria-label="发送消息" :disabled="!draft.trim() || sending" @tap="send">发送</button>
     </view>
   </view>
 </template>
 
 <script setup>
-import { ref, watch, nextTick, onMounted } from "vue";
+import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { onShow } from "@dcloudio/uni-app";
 import AppIcon from "./AppIcon.vue";
 import { chatMessages, sendDemoMessage, markChatRead } from "../utils/demo-store";
+import { apiBaseUrl, getMessages, sendMessage } from "../utils/lecheng-api";
 
 defineOptions({ options: { virtualHost: true } });
 const emit = defineEmits(["keyboard-height-change"]);
@@ -43,19 +44,27 @@ const draftKey = "lecheng-draft-" + name;
 const draft = ref(uni.getStorageSync(draftKey) || "");
 const inputFocused = ref(false);
 const messages = ref(chatMessages(name));
+const sending = ref(false);
 const scrollTarget = ref("");
+let poller;
 watch(draft, (value) => uni.setStorageSync(draftKey, value));
 async function scrollToLatest() {
   scrollTarget.value = "";
   await nextTick();
   scrollTarget.value = "consultation-end";
 }
-function refresh() {
-  messages.value = chatMessages(name);
-  markChatRead(name);
-  scrollToLatest();
+async function refresh() {
+  if (apiBaseUrl) {
+    try { messages.value = await getMessages(); scrollToLatest(); }
+    catch (error) { console.warn("客服消息同步失败", error); }
+  } else {
+    messages.value = chatMessages(name);
+    markChatRead(name);
+    scrollToLatest();
+  }
 }
-onMounted(refresh);
+onMounted(() => { refresh(); if (apiBaseUrl) poller = setInterval(refresh, 8000); });
+onUnmounted(() => clearInterval(poller));
 onShow(refresh);
 function onKeyboardChange(event) {
   emit("keyboard-height-change", Math.max(0, Number(event.detail.height) || 0));
@@ -66,12 +75,17 @@ function dismissKeyboard() {
   uni.hideKeyboard();
   emit("keyboard-height-change", 0);
 }
-function send() {
+async function send() {
   const value = draft.value.trim();
-  if (!value) return;
-  messages.value = sendDemoMessage(name, value);
-  draft.value = "";
-  scrollToLatest();
+  if (!value || sending.value) return;
+  sending.value = true;
+  try {
+    if (apiBaseUrl) { await sendMessage(value); await refresh(); }
+    else messages.value = sendDemoMessage(name, value);
+    draft.value = "";
+    scrollToLatest();
+  } catch (error) { uni.showToast({ title: error.message || "发送失败", icon: "none" }); }
+  finally { sending.value = false; }
 }
 </script>
 

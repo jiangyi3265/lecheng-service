@@ -17,11 +17,11 @@
 					appointment.status === "已取消"
 						? "预约已取消"
 						: created
-							? "模拟预约已保存"
-							: "等待就诊（演示）"
+							? (apiBaseUrl ? "预约咨询申请已提交" : "模拟预约已保存")
+							: (apiBaseUrl ? appointment.status : "等待就诊（演示）")
 				}}</text
 				><text class="muted small"
-					>本记录为静态演示，不代表真实挂号</text
+					>{{ apiBaseUrl ? '申请已记录，具体就诊安排需由医院确认' : '本记录为静态演示，不代表真实挂号' }}</text
 				></view
 			><view class="info-panel"
 				><view v-for="row in rows" :key="row.label" class="info-line"
@@ -49,7 +49,7 @@
 				><button class="outline-button" @tap="openAppointments()">
 					查看我的预约</button
 				><button
-					v-if="appointment.status === '待就诊'"
+					v-if="appointment.status === '待就诊' || appointment.status === '待处理'"
 					class="cancel-booking"
 					@tap="cancel"
 				>
@@ -78,8 +78,9 @@ import { ref, computed } from "vue";
 import { onLoad, onShow } from "@dcloudio/uni-app";
 import AppHeader from "../../components/AppHeader.vue";
 import AppIcon from "../../components/AppIcon.vue";
-import { readList } from "../../utils/storage";
+import { readList, saveList } from "../../utils/storage";
 import { cancelAppointment } from "../../utils/demo-store";
+import { apiBaseUrl, getAppointments, cancelRequestedAppointment } from "../../utils/lecheng-api";
 import {
 	openGuide,
 	openChat,
@@ -96,9 +97,13 @@ onLoad((o) => {
 	refresh();
 });
 onShow(refresh);
-function refresh() {
+async function refresh() {
 	appointment.value =
 		readList("appointments").find((a) => a.id === id.value) || null;
+	if (apiBaseUrl) {
+		try { appointment.value = (await getAppointments()).find((a) => a.id === id.value) || null; }
+		catch (error) { uni.showToast({ title: "后台同步失败，显示本机缓存", icon: "none" }); }
+	}
 }
 const rows = computed(() => {
 	const a = appointment.value;
@@ -125,12 +130,17 @@ const rows = computed(() => {
 function cancel() {
 	uni.showModal({
 		title: "取消这次预约？",
-		content: "取消后可重新选择时段，当前操作仅修改本机模拟记录。",
+		content: apiBaseUrl ? "取消后后台会同步更新申请状态。" : "取消后可重新选择时段，当前操作仅修改本机模拟记录。",
 		confirmText: "确认取消",
 		confirmColor: "#0785ff",
-		success: (r) => {
+		success: async (r) => {
 			if (r.confirm) {
-				cancelAppointment(id.value);
+				try {
+					if (apiBaseUrl) {
+						await cancelRequestedAppointment(Number(id.value.slice(2)));
+						saveList("appointments", readList("appointments").map((a) => a.id === id.value ? { ...a, status: "已取消" } : a));
+					} else cancelAppointment(id.value);
+				} catch (error) { uni.showToast({ title: error.message || "取消失败", icon: "none" }); return; }
 				refresh();
 			}
 		},

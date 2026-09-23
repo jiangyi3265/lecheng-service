@@ -19,9 +19,10 @@
 					><text>手机号码</text
 					><input
 						v-model="phone"
+						:disabled="true"
 						type="number"
 						maxlength="11"
-						placeholder="选填，11 位手机号码"
+						placeholder="微信授权后显示"
 						aria-label="手机号码" /></label
 				><label class="field"
 					><text>所在城市</text
@@ -32,7 +33,7 @@
 						aria-label="所在城市" /></label></view
 			><text v-if="error" class="form-error">{{ error }}</text
 			><text class="profile-note"
-				>资料仅保存在本机，尚未绑定真实账号。</text
+				>昵称同步至账号；所在城市保存在本机。手机号仅通过微信授权获取。</text
 			><button class="primary-button" @tap="save">保存资料</button
 			><text v-if="saved" class="saved-label">资料已保存</text></view
 		>
@@ -42,23 +43,22 @@
 import { ref } from "vue";
 import AppHeader from "../../components/AppHeader.vue";
 import { readProfile } from "../../utils/storage";
+import { auth, updateAccountName } from "../../utils/auth";
 const profile = readProfile(),
-	name = ref(profile.name),
-	phone = ref(profile.phone),
+	name = ref(auth.session()?.user?.name || profile.name),
+	phone = ref(auth.session()?.user?.phone || ''),
 	city = ref(profile.city),
 	error = ref(""),
 	saved = ref(false);
-function save() {
+async function save() {
 	error.value = "";
 	saved.value = false;
 	if (!name.value.trim()) {
 		error.value = "请输入昵称";
 		return;
 	}
-	if (phone.value && !/^1\d{10}$/.test(phone.value)) {
-		error.value = "请输入正确的 11 位手机号码";
-		return;
-	}
+	try { await updateAccountName(name.value.trim()); }
+	catch (e) { error.value = e.message; return; }
 	uni.setStorageSync("lecheng-profile", {
 		name: name.value.trim(),
 		phone: phone.value,

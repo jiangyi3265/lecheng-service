@@ -14,7 +14,7 @@
 					}}</text></view
 				></view
 			><text class="demo-label"
-				>静态预约演示 · 记录只保存在本机，不占用真实号源</text
+				>{{ apiBaseUrl ? '预约咨询申请将提交客服后台，需人工确认；不占用真实号源' : '静态预约演示 · 记录只保存在本机，不占用真实号源' }}</text
 			><text class="section-title">选择日期</text
 			><scroll-view scroll-x class="dates-scroll"
 				><view class="dates-row"
@@ -72,7 +72,7 @@
 							value="agree"
 							:checked="consent"
 							color="#0785ff"
-						/><text>我已了解本次为静态预约演示</text></label
+						/><text>{{ apiBaseUrl ? '我已了解这只是预约咨询申请，并非医院挂号' : '我已了解本次为静态预约演示' }}</text></label
 					></checkbox-group
 				></label
 			><text v-if="error" class="inline-error">{{ error }}</text
@@ -81,7 +81,7 @@
 				:disabled="submitting"
 				@tap="submit"
 			>
-				{{ submitting ? "保存中…" : "确认预约（演示）" }}</button
+				{{ submitting ? "提交中…" : apiBaseUrl ? "提交预约咨询申请" : "确认预约（演示）" }}</button
 			><button class="booking-guide link" @tap="openService('预约须知')">
 				查看预约须知
 			</button></view
@@ -103,8 +103,9 @@ import {
 	upcomingDates,
 	appointmentSlots as slots,
 } from "../../data/catalog";
-import { readProfile } from "../../utils/storage";
+import { readProfile, readList, saveList } from "../../utils/storage";
 import { createAppointment } from "../../utils/demo-store";
+import { apiBaseUrl, requestAppointment } from "../../utils/lecheng-api";
 import { pageUrl, openService, goBack } from "../../utils/navigation";
 const doctor = ref(null),
 	dates = ref(upcomingDates()),
@@ -126,23 +127,31 @@ onLoad((o) => {
 onShow(() => {
 	dates.value = upcomingDates();
 });
-function submit() {
+async function submit() {
 	error.value = "";
 	if (submitting.value) return;
 	if (!consent.value) {
-		error.value = "请先勾选静态演示说明";
+		error.value = "请先勾选申请说明";
 		return;
 	}
 	submitting.value = true;
 	try {
-		const item = createAppointment({
+		const input = {
 			doctorId: doctor.value.id,
 			date: date.value,
 			slot: slot.value,
 			name: name.value,
 			phone: phone.value,
 			note: note.value.trim(),
-		});
+		};
+		let item;
+		if (apiBaseUrl) {
+			if (!input.name.trim()) throw Error("请填写就诊人姓名");
+			if (!/^1\d{10}$/.test(input.phone)) throw Error("请输入正确的 11 位手机号码");
+			if (!dates.value.some((d) => d.value === input.date) || !slots.includes(input.slot)) throw Error("请选择有效日期和时段");
+			item = await requestAppointment(input);
+			saveList("appointments", [item, ...readList("appointments").filter((a) => a.id !== item.id)]);
+		} else item = createAppointment(input);
 		uni.redirectTo({
 			url: pageUrl("/pages/appointment/detail", {
 				id: item.id,

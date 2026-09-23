@@ -1,7 +1,8 @@
 import { hospitals } from "./medical.js";
+import { reactive } from "vue";
 
 // 名称、科室、排班和资源关联均为本地演示数据，不代表真实医疗机构信息。
-export const resources = [
+export const resources = reactive([
 	{
 		id: "med-eye",
 		kind: "药品",
@@ -90,9 +91,9 @@ export const resources = [
 		brand: "示例设备资料",
 		hospitalIds: ["international", "wellness"],
 	},
-];
+]);
 // 批复项目沿用当前医院示例条目；真实项目名称和批复资料待接入后替换。
-export const approvedProjects = hospitals.map((hospital) => ({
+export const approvedProjects = reactive(hospitals.map((hospital) => ({
 	id: `project:${hospital.id}`,
 	kind: "批复项目",
 	name: hospital.name,
@@ -103,7 +104,7 @@ export const approvedProjects = hospitals.map((hospital) => ({
 	scene: hospital.scene,
 	departments: hospital.departments,
 	hospitalIds: [hospital.id],
-}));
+})));
 const names = [
 	"林医生",
 	"陈医生",
@@ -115,7 +116,7 @@ const names = [
 	"王医生",
 ];
 let doctorIndex = 0;
-export const doctors = hospitals.flatMap((h) =>
+export const doctors = reactive(hospitals.flatMap((h) =>
 	h.features.map((f, index) => ({
 		id: `${h.id}-${index}`,
 		hospitalId: h.id,
@@ -127,8 +128,8 @@ export const doctors = hospitals.flatMap((h) =>
 		intro: `本页面展示${f.name}医生资料和排班联动，可选择日期与时段体验完整预约流程。`,
 		services: [`${f.name}咨询`, "就诊资料沟通", "就诊流程指引"],
 	})),
-);
-export const news = [
+));
+export const news = reactive([
 	{
 		id: "campus",
 		title: "一份园区导览，开启乐城之行",
@@ -169,7 +170,7 @@ export const news = [
 		],
 		action: "康养体验",
 	},
-];
+]);
 export function resolveSavedItem(key) {
 	if (key.startsWith("news:")) {
 		const item = news.find((n) => n.id === key.slice(5));

@@ -34,9 +34,10 @@ export function normalizeDepartment(value) {
 
 export function matchesSearchFilters(item, { keyword = '', department = '', disease = '' } = {}) {
   const isHospital = Array.isArray(item.departments);
+  const recordId = item.id?.startsWith('project:') ? item.id.slice(8) : item.id;
   const departments = isHospital ? item.departments : [item.category];
   const belongsToRecord = option =>
-    (isHospital ? option.hospitalIds : option.resourceIds).includes(item.id);
+    (isHospital ? option.hospitalIds : option.resourceIds).includes(recordId);
   const diseases = diseaseOptions.filter(belongsToRecord).map(option => option.name);
   const conditions = conditionKeywords.filter(belongsToRecord).map(option => option.name);
   const departmentNames = departmentOptions.filter(name =>

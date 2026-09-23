@@ -1,5 +1,7 @@
-// 本地静态示例，目录数量与实际可浏览记录保持一致。
-export const hospitals = [
+import { reactive, computed } from "vue";
+
+// 本地静态示例会在接口可用时由后台发布数据替换。
+export const hospitals = reactive([
 	{
 		id: "international",
 		name: "乐城国际医学中心",
@@ -47,6 +49,6 @@ export const hospitals = [
 			{ name: "综合内科", caption: "健康咨询", icon: "stethoscope" },
 		],
 	},
-];
-export const directoryTotal = hospitals.length;
+]);
+export const directoryTotal = computed(() => hospitals.length);
 export const notices = [];

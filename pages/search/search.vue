@@ -42,14 +42,14 @@
 				<view class="result-heading between"
 					><text>{{
 						filtering
-							? `找到 ${results.length} 家医院`
-							: `共 ${directoryTotal} 家医院`
+							? `找到 ${results.length} 条批复项目`
+							: `共 ${results.length} 条批复项目`
 					}}</text></view>
 				<ArticleList v-if="results.length" :items="projectArticles" @select="openResource($event.id)" />
 				<view v-if="!results.length" class="empty-state"
 					><AppIcon name="search" color="muted" :size="76" /><text
 						class="empty-title"
-						>没有找到相关医院</text
+						>没有找到相关项目</text
 					><text class="small">试试其他疾病、药品或项目关键词</text
 					><button class="empty-action" @tap="reset">
 						重置查询
@@ -93,8 +93,8 @@ import ArticleList from "../../components/ArticleList.vue";
 import SupportBanner from "../../components/SupportBanner.vue";
 import ResourceCard from "../../components/ResourceCard.vue";
 import SearchFilters from "../../components/SearchFilters.vue";
-import { resources } from "../../data/catalog";
-import { hospitals, directoryTotal } from "../../data/medical";
+import { resources, approvedProjects } from "../../data/catalog";
+import { hospitals } from "../../data/medical";
 import { departmentOptions, diseaseOptions, normalizeDepartment, matchesSearchFilters } from "../../data/search-filters";
 import { routeText, openResource } from "../../utils/navigation";
 const categories = [
@@ -162,18 +162,18 @@ watch(
 const filtering = computed(() =>
 	Boolean(keyword.value.trim() || department.value || disease.value),
 );
-const results = computed(() => hospitals.filter(item => matchesSearchFilters(item, queryFilters.value)));
+const results = computed(() => approvedProjects.filter(item => matchesSearchFilters(item, queryFilters.value)));
 const projectArticles = computed(() => results.value.map(item => ({
-	id: `project:${item.id}`,
+	id: item.id,
 	title: item.name,
 	scene: item.scene,
-	tags: item.tags,
-	summary: item.subtitle,
+	tags: item.tags || [item.category],
+	summary: item.spec || item.summary,
 })));
 const healthArticles = computed(() => resourceResults.value.map(item => ({
 	id: item.id,
 	title: item.name,
-	scene: hospitals.find(hospital => hospital.id === item.hospitalIds[0])?.scene ?? 0,
+	scene: hospitals.find(hospital => hospital.id === item.hospitalIds?.[0])?.scene ?? 0,
 	tags: [item.category, '亚健康项目'],
 	summary: item.summary,
 })));

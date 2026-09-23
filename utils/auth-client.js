@@ -4,7 +4,8 @@ export function createAuthClient({ storage, request, baseUrl, now = Date.now, ch
   let pendingRefresh = null;
   let revision = 0;
   const session = () => storage.get(key) || null;
-  const configured = () => /^https:\/\//.test(baseUrl || '');
+  const configured = () => /^https:\/\//.test(baseUrl || '') ||
+    (import.meta.env?.DEV && /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/.test(baseUrl || ''));
   function clear() { revision++; storage.remove(key); changed(); }
   function save(data, expectedRevision) {
     if (revision !== expectedRevision) throw new Error('登录状态已变更，请重试');
@@ -40,5 +41,10 @@ export function createAuthClient({ storage, request, baseUrl, now = Date.now, ch
     const current = session(); clear();
     if (current && configured()) await post('/auth/logout', { refreshToken: current.refreshToken });
   }
-  return { session, configured, login, ensureSession, logout };
+  function updateUser(user) {
+    const current = session();
+    if (!current || !user?.id || user.id !== current.user.id) throw new Error('登录状态已变更，请重试');
+    storage.set(key, { ...current, user }); changed();
+  }
+  return { session, configured, login, ensureSession, logout, updateUser };
 }

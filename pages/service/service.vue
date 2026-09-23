@@ -118,12 +118,12 @@
 						maxlength="500"
 						placeholder="请描述遇到的问题或建议"
 						aria-label="意见反馈"
-					/><text class="demo-label">演示提交，仅保存在本机。</text
+					/><text class="demo-label">{{ apiBaseUrl ? '反馈会提交至乐城后台处理。' : '演示提交，仅保存在本机。' }}</text
 					><text v-if="feedbackError" class="inline-error">{{
 						feedbackError
 					}}</text
 					><button class="primary-button" @tap="saveFeedback">
-						提交反馈（演示）
+						{{ apiBaseUrl ? '提交反馈' : '提交反馈（演示）' }}
 					</button></view
 				>
 			</template>
@@ -255,6 +255,7 @@ import { hospitals } from "../../data/medical";
 import { resolveSavedItem, news } from "../../data/catalog";
 import { faqs, articles } from "../../data/content";
 import { readList, saveList, toggleFavorite, recordVisit } from "../../utils/storage";
+import { apiBaseUrl, getFeedback, sendFeedback } from "../../utils/lecheng-api";
 import {
 	getNotices,
 	markNoticeRead,
@@ -360,7 +361,7 @@ onLoad((o) => {
 });
 onShow(refresh);
 watch(feedback, (v) => uni.setStorageSync("lecheng-feedback", v));
-function refresh() {
+async function refresh() {
 	savedItems.value = readList(
 		type.value === "我的收藏" ? "favorites" : "history",
 	)
@@ -368,6 +369,10 @@ function refresh() {
 		.filter(Boolean);
 	conversations.value = readList("conversations");
 	feedbacks.value = readList("feedbacks");
+	if (apiBaseUrl && (type.value === "我的反馈" || type.value === "反馈详情")) {
+		try { feedbacks.value = await getFeedback(); saveList("feedbacks", feedbacks.value); }
+		catch (error) { console.warn("反馈记录同步失败", error); }
+	}
 	notifications.value = getNotices();
 }
 function removeFavorite(key) {
@@ -387,10 +392,12 @@ function clearHistory() {
 		},
 	});
 }
-function saveFeedback() {
+async function saveFeedback() {
 	feedbackError.value = "";
 	try {
-		const item = submitFeedback(feedback.value);
+		if (!feedback.value.trim()) throw Error("请填写反馈内容");
+		const item = apiBaseUrl ? await sendFeedback(feedback.value.trim()) : submitFeedback(feedback.value);
+		if (apiBaseUrl) saveList("feedbacks", [item, ...readList("feedbacks").filter((f) => f.id !== item.id)]);
 		feedback.value = "";
 		openService("反馈详情", { id: item.id });
 	} catch (e) {

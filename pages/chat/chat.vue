@@ -1,13 +1,13 @@
 <template>
 	<view class="chat-page">
 		<AppHeader :title="name" back fallback="/pages/messages/messages" />
-		<view class="demo-note">静态演示助手 · 消息仅保存在本机</view>
+		<view class="demo-note">{{ apiBaseUrl ? '客服留言 · 消息同步至乐城后台' : '静态演示助手 · 消息仅保存在本机' }}</view>
 		<view class="chat-content"
 			><view class="chat-date">服务咨询</view
 			><view class="chat-row"
 				><view class="chat-avatar"
 					><AppIcon name="robot" color="blue" :size="51" /></view
-				><view class="chat-bubble">{{ greeting(name) }}</view></view
+				><view class="chat-bubble">{{ apiBaseUrl ? '您好：我是人工客服，我可以为您提供博鳌乐城项目介绍、预约评估、陪诊服务咨询和预约流程相关信息。人工在线时间：早8：00-晚22：00。' : greeting(name) }}</view></view
 			>
 			<view class="quick-questions"
 				><button @tap="openSearch()">查询医院</button
@@ -51,6 +51,7 @@
 <script setup>
 import { ref, nextTick, watch } from "vue";
 import { onLoad, onShow } from "@dcloudio/uni-app";
+import { apiBaseUrl, getMessages, sendMessage } from "../../utils/lecheng-api";
 import AppHeader from "../../components/AppHeader.vue";
 import AppIcon from "../../components/AppIcon.vue";
 import {
@@ -77,14 +78,22 @@ onShow(refresh);
 watch(draft, (value) =>
 	uni.setStorageSync("lecheng-draft-" + name.value, value),
 );
-function refresh() {
-	messages.value = chatMessages(name.value);
-	markChatRead(name.value);
+async function refresh() {
+	if (apiBaseUrl) {
+		try { messages.value = await getMessages(); }
+		catch (error) { console.warn("客服消息同步失败", error); }
+	} else {
+		messages.value = chatMessages(name.value);
+		markChatRead(name.value);
+	}
 }
 async function send() {
 	const text = draft.value.trim();
 	if (!text) return;
-	messages.value = sendDemoMessage(name.value, text);
+	try {
+		if (apiBaseUrl) { await sendMessage(text); await refresh(); }
+		else messages.value = sendDemoMessage(name.value, text);
+	} catch (error) { uni.showToast({ title: error.message || "发送失败", icon: "none" }); return; }
 	draft.value = "";
 	await nextTick();
 	uni.pageScrollTo({ selector: "#chat-end", duration: 180 });

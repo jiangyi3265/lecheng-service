@@ -1,10 +1,10 @@
 # 登录与地图接入状态
 
-当前仅完成前端接入，仓库内的 RuoYi 是管理后台认证，未发现小程序微信/手机号认证接口。不会将本地资料或微信临时 code 当成登录态。
+后台现已提供独立的小程序登录接口，微信临时 code 仅在服务端交换，不作为业务登录态。接口在本机通过模拟微信服务验证；正式微信登录仍需运营方配置小程序凭据、HTTPS 服务地址和 request 合法域名。
 
-## 后端待实现契约
+## 已实现的登录接口
 
-构建环境变量 `VITE_AUTH_BASE_URL` 指定 HTTPS 认证服务地址（例如 `https://业务域名/miniapp`），默认空。此变量为公开接口地址，不得填密钥。以下路径为本次前端约定，现有后端尚未提供：
+构建环境变量 `VITE_AUTH_BASE_URL` 指定认证服务地址，默认空；正式小程序必须使用 HTTPS，本地开发可指向 `http://127.0.0.1:8080`。此变量为公开接口地址，不得填密钥。后端需要配置 `LECHENG_WECHAT_APP_ID` 和 `LECHENG_WECHAT_APP_SECRET`：
 
 | POST 路径 | 请求 | 用途 |
 | --- | --- | --- |
@@ -12,10 +12,12 @@
 | `/auth/phone` | `{code,phoneCode}` | 微信登录 code 加手机号授权 code，服务端向微信校验手机号并关联账号 |
 | `/auth/refresh` | `{refreshToken}` | 轮换短期访问凭证与刷新凭证 |
 | `/auth/logout` | `{refreshToken}` | 撤销当前刷新凭证及所属会话 |
+| `GET /auth/me` | 请求头 `X-Lecheng-Access` | 读取当前账号 |
+| `PUT /auth/me` | 请求头及 `{name}` | 更新昵称 |
 
 前三个接口 HTTP 2xx 返回：`{accessToken,refreshToken,expiresIn,refreshExpiresIn,user:{id,name,phone}}`。有效期以秒计，由服务端决定；错误使用 HTTP 401/403 等状态。刷新凭证应由服务端安全签发、存储摘要、轮换并支持撤销。客户端没有固定两天清理任务；每次进入前台调用 `ensureSession()`，业务授权请求接入时也必须先调用它。网络故障保留凭证以便重试；服务器拒绝或刷新凭证过期才清理登录态。禁止只修改前端日期绕过服务端过期。
 
-微信 AppSecret、微信 session_key 只保存在服务端。手机号快捷登录使用微信 `getPhoneNumber`，不是未验证手机号登录，也未接入短信服务。微信主体资格/接口权限、request 合法域名、真实隐私协议仍需运营方配置；未配置时页面提示服务未开通，不能真实登录。
+微信 AppSecret、微信 session_key 不发送到小程序。手机号快捷登录使用微信 `getPhoneNumber`，不是未验证手机号登录，也未接入短信服务。微信主体资格/接口权限、request 合法域名、真实隐私协议仍需运营方配置；未配置时页面提示服务未开通，不能真实登录。客服、预约咨询申请和反馈使用独立的本机游客会话，当前不会在不同手机之间按微信账号合并。
 
 参考：[uni.login](https://uniapp.dcloud.net.cn/api/plugins/login.html)。
 
