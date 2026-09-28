@@ -15,7 +15,7 @@
 		><view v-if="doctor" class="detail-content"
 			><view class="doctor-intro"
 				><view class="doctor-avatar"
-					><AppIcon name="user-fill" color="blue" :size="100" /></view
+					><image v-if="doctor.coverImage" class="doctor-photo" :src="doctor.coverImage" mode="aspectFill" :aria-label="doctor.name" /><AppIcon v-else name="user-fill" color="blue" :size="100" /></view
 				><view class="flex-1"
 					><text class="detail-heading">{{ doctor.name }}</text
 					><text class="muted">{{ doctor.title }}</text
@@ -74,7 +74,7 @@
 	>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import { onLoad, onShow } from "@dcloudio/uni-app";
 import AppHeader from "../../components/AppHeader.vue";
 import AppIcon from "../../components/AppIcon.vue";
@@ -86,16 +86,11 @@ import {
 	openBooking,
 	goBack,
 } from "../../utils/navigation";
-const doctor = ref(null),
-	saved = ref(false),
-	dates = upcomingDates();
-onLoad((o) => {
-	doctor.value = doctors.find((d) => d.id === o.id);
-	if (doctor.value) {
-		recordVisit("doctor:" + doctor.value.id);
-		refresh();
-	}
-});
+const doctorId = ref('');
+const doctor = computed(() => doctors.find(d => d.id === doctorId.value));
+const saved = ref(false), dates = upcomingDates();
+onLoad(o => { doctorId.value = o.id; });
+watch(doctor, value => { if (value) { recordVisit('doctor:' + value.id); refresh(); } }, { immediate: true });
 onShow(refresh);
 function refresh() {
 	saved.value = doctor.value
@@ -111,6 +106,7 @@ function save() {
 }
 </script>
 <style scoped>
+.doctor-photo { width:100%; height:100%; border-radius:20rpx; }
 .doctor-intro {
 	display: flex;
 	align-items: center;

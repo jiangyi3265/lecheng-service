@@ -3,12 +3,13 @@
 		<AppHeader :title="item ? pageKind + '详情' : '资源详情'" back back-label="返回" fallback="/pages/search/search" />
 		<template v-if="item">
 			<view class="resource-hero">
-				<MedicinePackshot v-if="item.kind === '药品'" :label="item.name" />
+				<ScenePhoto v-if="item.coverImage" :src="item.coverImage" :label="item.name" />
+				<MedicinePackshot v-else-if="item.kind === '药品'" :label="item.name" />
 				<ScenePhoto v-else :scene="heroScene" :label="item.name + ' · 示意配图'" />
 			</view>
 			<view class="resource-summary">
 				<view class="summary-top">
-					<text class="kind-label">{{ pageKind }} · 示例资料</text>
+					<text class="kind-label">{{ pageKind }}{{ item.contentVersion === 2 ? '' : ' · 示例资料' }}</text>
 					<button class="favorite-button" :aria-label="saved ? '取消收藏' : '收藏资源'" @tap="save">
 						<AppIcon :name="saved ? 'bookmark-fill' : 'bookmark'" :color="saved ? 'blue' : 'muted'" :size="28" />
 						<text>{{ saved ? '已收藏' : '收藏' }}</text>
@@ -27,20 +28,19 @@
 			</view>
 			<view class="resource-section">
 				<text class="section-heading">详情</text>
-				<text class="section-copy">{{ item.summary }}</text>
+				<ContentBlocks v-if="item.contentBlocks?.length" :blocks="item.contentBlocks" /><text v-else class="section-copy">{{ item.summary }}</text>
 			</view>
-			<view class="resource-section">
+			<view v-if="item.indications || item.suitableFor || item.category || item.contentVersion !== 2" class="resource-section">
 				<text class="section-heading">适用</text>
-				<text class="section-copy">所属科室：{{ item.category }}。具体适用范围与服务安排，请向落地医院核实。</text>
+				<text class="section-copy">{{ item.indications || ((item.category ? '所属科室：' + item.category + '。' : '') + '具体适用范围与服务安排，请向落地医院核实。') }}</text><text v-if="item.suitableFor" class="section-copy">适用人群：{{ item.suitableFor }}</text>
 			</view>
-			<view class="resource-section">
+			<view v-if="specificationRows.length" class="resource-section">
 				<text class="section-heading">规格</text>
 				<view class="detail-table">
-					<view class="detail-table-row"><text class="table-label">{{ item.kind === '药品' ? '剂型 / 规格' : '项目说明' }}</text><text class="table-value">{{ item.spec }}</text></view>
-					<view class="detail-table-row"><text class="table-label">资料来源</text><text class="table-value">{{ item.brand }}</text></view>
+					<view v-for="row in specificationRows" :key="row.label" class="detail-table-row"><text class="table-label">{{ row.label }}</text><text class="table-value">{{ row.value }}</text></view>
 				</view>
 			</view>
-			<text class="resource-disclaimer">本页为静态示例，实际项目、药械信息及使用方式请以医院和正式资料为准。</text>
+			<text v-if="item.contentVersion !== 2" class="resource-disclaimer">本页为静态示例，实际项目、药械信息及使用方式请以医院和正式资料为准。</text>
 			<view class="resource-section landing-section">
 				<text class="section-heading">落地医院</text>
 				<HospitalCard v-for="hospital in related" :key="hospital.id" :hospital="hospital" cover />
@@ -55,38 +55,42 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { onLoad, onShow } from "@dcloudio/uni-app";
 import AppHeader from "../../components/AppHeader.vue";
 import AppIcon from "../../components/AppIcon.vue";
 import HospitalCard from "../../components/HospitalCard.vue";
 import ScenePhoto from "../../components/ScenePhoto.vue";
+import ContentBlocks from "../../components/ContentBlocks.vue";
 import MedicinePackshot from "../../components/MedicinePackshot.vue";
 import { resources, approvedProjects } from "../../data/catalog";
 import { hospitals } from "../../data/medical";
 import { readList, toggleFavorite, recordVisit } from "../../utils/storage";
 import { goBack, routeText } from "../../utils/navigation";
 
-const item = ref(null);
+const resourceId = ref('');
+const item = computed(() => [...resources, ...approvedProjects].find(resource => resource.id === resourceId.value));
 const saved = ref(false);
-const related = computed(() => hospitals.filter(hospital => item.value?.hospitalIds.includes(hospital.id)));
+const related = computed(() => hospitals.filter(hospital => item.value?.hospitalIds?.includes(hospital.id)));
 const heroScene = computed(() => item.value?.scene ?? related.value[0]?.scene ?? 0);
 const pageKind = computed(() => item.value?.kind === "药品" ? "特许药械" : item.value?.kind === "器械" ? "亚健康项目" : "批复项目");
 const informationRows = computed(() => item.value ? [
 	{ label: item.value.kind === "药品" ? "药械名称" : "项目名称", value: item.value.name },
 	{ label: "所属科室", value: item.value.category },
-	{ label: "资料状态", value: "本地静态示例" },
+	{ label: "获批地区 / 国家", value: item.value.approvalRegion },
+ { label: "获批时间", value: item.value.approvalDate },
+ { label: "生产企业", value: item.value.manufacturer },
+ { label: "别名", value: item.value.aliases },
 	{ label: "资料类别", value: pageKind.value },
-] : []);
+].filter(row => row.value) : []);
 
-onLoad((options) => {
-	const id = routeText(options.id);
-	item.value = [...resources, ...approvedProjects].find(resource => resource.id === id) || null;
-	if (item.value) {
-		recordVisit("resource:" + item.value.id);
-		refresh();
-	}
-});
+const specificationRows = computed(() => item.value ? [
+ { label: '剂型', value: item.value.dosageForm }, { label: '规格 / 项目说明', value: item.value.spec },
+ { label: '包装规格', value: item.value.packaging }, { label: '储存条件', value: item.value.storage },
+ { label: '资料来源', value: item.value.brand }
+].filter(row => row.value) : []);
+onLoad(options => { resourceId.value = routeText(options.id); });
+watch(item, value => { if (value) { recordVisit('resource:' + value.id); refresh(); } }, { immediate: true });
 onShow(refresh);
 function refresh() {
 	saved.value = item.value ? readList("favorites").includes("resource:" + item.value.id) : false;

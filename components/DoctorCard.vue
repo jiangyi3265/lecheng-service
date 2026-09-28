@@ -1,7 +1,7 @@
 <template>
 	<button class="doctor-card" @tap="openDoctor(doctor.id)">
 		<view class="doctor-face"
-			><AppIcon name="user-fill" color="blue" :size="72" /></view
+			><image v-if="doctor.coverImage" class="doctor-photo" :src="doctor.coverImage" mode="aspectFill" :aria-label="doctor.name" /><AppIcon v-else name="user-fill" color="blue" :size="72" /></view
 		><view class="doctor-copy"
 			><view class="row"
 				><text class="doctor-name">{{ doctor.name }}</text
@@ -17,6 +17,7 @@ import { openDoctor } from "../utils/navigation";
 defineProps({ doctor: { type: Object, required: true } });
 </script>
 <style scoped>
+.doctor-photo { width:100%; height:100%; border-radius:20rpx; }
 .doctor-card {
 	display: flex;
 	align-items: center;

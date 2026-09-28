@@ -38,7 +38,7 @@ export function matchesSearchFilters(item, { keyword = '', department = '', dise
   const departments = isHospital ? item.departments : [item.category];
   const belongsToRecord = option =>
     (isHospital ? option.hospitalIds : option.resourceIds).includes(recordId);
-  const diseases = diseaseOptions.filter(belongsToRecord).map(option => option.name);
+  const diseases = Array.isArray(item.diseaseCategories) ? item.diseaseCategories : diseaseOptions.filter(belongsToRecord).map(option => option.name);
   const conditions = conditionKeywords.filter(belongsToRecord).map(option => option.name);
   const departmentNames = departmentOptions.filter(name =>
     [name, ...(departmentAliases[name] || [])].some(alias => departments.includes(alias)),

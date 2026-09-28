@@ -40,8 +40,8 @@
 						v-else-if="item.itemType === 'resource'"
 						:item="item"
 						/><button v-else-if="item.itemType === 'news'" class="saved-news" @tap="openService('资讯详情', { id: item.id })">
-							<view class="saved-news-cover"><ScenePhoto :scene="item.scene" :label="item.title" /></view>
-							<view class="flex-1"><text class="section-title">{{ item.title }}</text><text class="muted small preview">{{ item.date }} · 示例</text></view>
+							<view class="saved-news-cover"><ScenePhoto :src="item.coverImage" :scene="item.scene" :label="item.title" /></view>
+							<view class="flex-1"><text class="section-title">{{ item.title }}</text><text class="muted small preview">{{ item.date }}{{ item.contentVersion === 2 ? '' : ' · 示例' }}</text></view>
 						</button><DoctorCard v-else :doctor="item" /><button
 						v-if="type === '我的收藏'"
 						class="remove-favorite"

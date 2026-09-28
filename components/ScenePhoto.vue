@@ -1,6 +1,6 @@
 <template>
 	<view class="scene-photo"
-		><image
+		><image v-if="src" class="uploaded-photo" :src="src" mode="aspectFill" :aria-label="label" /><image v-else
 			class="photo-atlas"
 			src="/static/images/medical-atlas.jpg"
 			mode="scaleToFill"
@@ -11,6 +11,7 @@
 <script setup>
 import { computed } from "vue";
 const props = defineProps({
+	src: { type: String, default: "" },
 	scene: { type: [Number, String], default: 0 },
 	label: { type: String, default: "乐城医疗园区" },
 });
@@ -33,6 +34,7 @@ const position = computed(() => ({
 	height: 200%;
 	max-width: none;
 }
+.uploaded-photo { width:100%; height:100%; }
 .photo-content {
 	position: absolute;
 	inset: 0;

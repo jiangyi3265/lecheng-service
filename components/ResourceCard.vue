@@ -1,24 +1,24 @@
 <template>
 	<button class="resource-card" :class="{ 'resource-card--medicine': medicineLayout }" @tap="openResource(item.id)">
 		<template v-if="medicineLayout">
-			<view class="medicine-heading"><text class="medicine-name">{{ item.name }}</text><text class="medicine-state">示例资料</text></view>
+			<view class="medicine-heading"><text class="medicine-name">{{ item.name }}</text><text class="medicine-state">{{ item.approvalDate ? item.approvalDate + ' 获批' : item.contentVersion === 2 ? '' : '示例资料' }}</text></view>
 			<view class="medicine-body">
-				<view class="medicine-thumb"><MedicinePackshot :label="item.name" compact /></view>
+				<view class="medicine-thumb"><ScenePhoto v-if="item.coverImage" :src="item.coverImage" :label="item.name" /><MedicinePackshot v-else :label="item.name" compact /></view>
 				<view class="medicine-meta">
-					<text class="medicine-badge">特许药械 · 示例</text>
+					<text class="medicine-badge">特许药械{{ item.contentVersion === 2 ? '' : ' · 示例' }}</text>
 					<text>落地医院：{{ landingHospital?.name || '待补充' }}</text>
 					<text>所属科室：{{ item.category }}</text>
-					<text>资料来源：{{ item.brand }}</text>
+					<text>{{ item.manufacturer ? '生产企业：' + item.manufacturer : '资料来源：' + (item.brand || '待补充') }}</text>
 					<text class="link">查看详情 ›</text>
 				</view>
 			</view>
 		</template>
 		<template v-else>
-			<view v-if="photoLayout" class="resource-photo"><ScenePhoto :scene="scene" :label="item.name + ' · 示意配图'" /></view>
+			<view v-if="photoLayout || item.coverImage" class="resource-photo"><ScenePhoto :src="item.coverImage" :scene="scene" :label="item.name + ' · 示意配图'" /></view>
 			<view v-else class="resource-picture"><AppIcon :name="item.icon" color="blue" :size="66" /><text>{{ item.kind }}</text></view>
 			<view class="resource-copy">
 				<text class="resource-name">{{ item.name }}</text>
-				<view><text class="pill">{{ item.category }}</text><text class="resource-demo">示例资料</text></view>
+				<view><text class="pill">{{ item.category }}</text><text v-if="item.contentVersion !== 2" class="resource-demo">示例资料</text></view>
 				<text class="muted small">{{ item.summary }}</text>
 				<text class="link">查看详情 ›</text>
 			</view>

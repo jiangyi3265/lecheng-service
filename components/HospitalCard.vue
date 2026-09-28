@@ -2,7 +2,7 @@
 	<button class="hospital-row" :class="{ 'is-compact': compact, 'is-cover': cover }"
 		:aria-label="`查看${hospital.name}详情`" @tap="openHospital(hospital.id)">
 		<view v-if="cover" class="cover-photo">
-			<ScenePhoto :scene="hospital.scene" :label="hospital.name">
+			<ScenePhoto :src="hospital.coverImage" :scene="hospital.scene" :label="hospital.name">
 				<view class="cover-caption">
 					<text class="cover-name">{{ hospital.name }}</text>
 					<AppIcon name="chevron" color="white" :size="28" />
@@ -10,7 +10,7 @@
 			</ScenePhoto>
 		</view>
 		<template v-else>
-			<view class="hospital-photo"><ScenePhoto :scene="hospital.scene" :label="hospital.name" /></view>
+			<view class="hospital-photo"><ScenePhoto :src="hospital.coverImage" :scene="hospital.scene" :label="hospital.name" /></view>
 			<view class="hospital-info">
 				<text class="hospital-name">{{ hospital.name }}</text>
 				<view class="hospital-tags"><text v-for="tag in hospital.tags" :key="tag" class="pill">{{ tag }}</text></view>

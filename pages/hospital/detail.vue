@@ -3,7 +3,7 @@
 		<AppHeader title="医院信息" back back-label="返回" />
 		<template v-if="hospital">
 			<view class="hospital-cover">
-				<ScenePhoto :scene="hospital.scene" :label="hospital.name" />
+				<ScenePhoto :src="hospital.coverImage" :scene="hospital.scene" :label="hospital.name" />
 			</view>
 			<view class="hospital-category">
 				<view class="hospital-type">{{ hospital.type }}</view>
@@ -33,28 +33,29 @@
 				</view>
 				<view class="detail-section introduction-section">
 					<view class="introduction-photo">
-						<ScenePhoto :scene="hospital.scene" :label="hospital.name" />
+						<ScenePhoto :src="hospital.coverImage" :scene="hospital.scene" :label="hospital.name" />
 					</view>
 					<text class="basics-heading">基本情况</text>
 					<text class="body-copy">{{ hospital.description }}</text>
-					<text class="body-copy">服务方向：{{ hospital.tags.join('、') }}。{{ hospital.subtitle }}。</text>
+					<text v-if="hospital.tags?.length || hospital.subtitle" class="body-copy">{{ hospital.tags?.length ? '服务方向：' + hospital.tags.join('、') + '。' : '' }}{{ hospital.subtitle }}</text>
 				</view>
+				<ContentBlocks :blocks="hospital.contentBlocks || []" />
 				<view class="environment-section" aria-label="医疗环境">
 					<view class="environment-heading">
 						<AppIcon name="building" color="white" :size="42" />
 						<text>医疗环境</text>
-						<text class="environment-note">环境示意</text>
+						<text v-if="!hospital.environmentImages?.length" class="environment-note">环境示意</text>
 					</view>
 					<swiper class="environment-swiper" :current="selectedEnvironment" indicator-dots
 						indicator-color="rgba(255,255,255,.6)" indicator-active-color="#ffffff" circular
 						@change="selectedEnvironment = $event.detail.current">
-						<swiper-item v-for="scene in environmentScenes" :key="scene">
-							<ScenePhoto :scene="scene" :label="'医疗环境示意图' + (scene + 1)" />
+						<swiper-item v-for="(photo, index) in environmentPhotos" :key="index">
+							<ScenePhoto :src="photo.src" :scene="photo.scene" :label="'医疗环境' + (index + 1)" />
 						</swiper-item>
 					</swiper>
 					<view class="environment-grid">
-						<button v-for="(scene, index) in environmentScenes" :key="scene" class="environment-tile"
-							:aria-label="'查看第' + (index + 1) + '张医疗环境示意图'" @tap="selectedEnvironment = index">
+						<button v-for="(photo, index) in environmentPhotos" :key="index" class="environment-tile"
+							:aria-label="'查看第' + (index + 1) + '张医疗环境示意图'" @tap="showEnvironment(index)">
 							<ScenePhoto :scene="scene" :label="'医疗环境示意图' + (index + 1)" />
 						</button>
 					</view>
@@ -73,28 +74,29 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { onLoad, onShow } from "@dcloudio/uni-app";
 import AppHeader from "../../components/AppHeader.vue";
 import AppIcon from "../../components/AppIcon.vue";
+import ContentBlocks from "../../components/ContentBlocks.vue";
 import ScenePhoto from "../../components/ScenePhoto.vue";
 import { hospitals } from "../../data/medical";
 import { readList, toggleFavorite, recordVisit } from "../../utils/storage";
 import { openSearch, openGuide, navigate } from "../../utils/navigation";
 
-const hospital = ref(null);
+const hospitalId = ref('international');
+const hospital = computed(() => hospitals.find(item => item.id === hospitalId.value));
 const saved = ref(false);
 const selectedEnvironment = ref(0);
-const environmentScenes = computed(() => hospital.value
-	? [hospital.value.scene, ...[0, 1, 2, 3].filter((scene) => scene !== hospital.value.scene)]
-	: []);
-onLoad((options) => {
-	hospital.value = hospitals.find((item) => item.id === (options.id || "international"));
-	if (hospital.value) {
-		recordVisit(hospital.value.id);
-		saved.value = readList("favorites").includes(hospital.value.id);
-	}
-});
+const environmentPhotos = computed(() => hospital.value?.environmentImages?.length
+ ? hospital.value.environmentImages.map(src => ({ src, scene: 0 }))
+ : hospital.value ? [hospital.value.scene, ...[0, 1, 2, 3].filter(scene => scene !== hospital.value.scene)].map(scene => ({ src: '', scene })) : []);
+function showEnvironment(index) {
+ selectedEnvironment.value = index;
+ if (hospital.value?.environmentImages?.length) uni.previewImage({ current: index, urls: hospital.value.environmentImages });
+}
+onLoad(options => { hospitalId.value = options.id || 'international'; });
+watch(hospital, value => { if (value) { recordVisit(value.id); saved.value = readList('favorites').includes(value.id); } }, { immediate: true });
 onShow(() => {
 	if (hospital.value) saved.value = readList("favorites").includes(hospital.value.id);
 });

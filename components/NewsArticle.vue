@@ -1,6 +1,6 @@
 <template>
 	<view class="news-article">
-		<view class="news-hero"><ScenePhoto :scene="article.scene" :label="article.title" /></view>
+		<view class="news-hero"><ScenePhoto :src="article.coverImage" :scene="article.scene" :label="article.title" /></view>
 		<view class="news-sheet">
 			<view v-if="showFavorite" class="news-actions">
 				<button class="news-favorite" :class="{ selected: favorite }" :aria-label="favorite ? '取消收藏' : '收藏文章'" @tap="toggleSaved">
@@ -9,8 +9,9 @@
 				</button>
 			</view>
 			<text class="news-title">{{ article.title }}</text>
-			<text v-if="article.date" class="news-date">发布日期：{{ article.date }} · 示例</text>
-			<view class="news-body">
+			<text v-if="article.date" class="news-date">发布日期：{{ article.date }}{{ article.contentVersion === 2 ? '' : ' · 示例' }}</text>
+			<ContentBlocks v-if="article.contentBlocks?.length" :blocks="article.contentBlocks" />
+			<view v-else class="news-body">
 				<view v-for="(paragraph, index) in article.paragraphs" :key="index" class="news-paragraph">
 					<text v-if="paragraph.title" class="news-subheading">{{ paragraph.title }}</text>
 					<text class="news-copy" selectable>{{ paragraph.text || paragraph }}</text>
@@ -23,6 +24,7 @@
 import { ref, watch } from 'vue';
 import { onShow } from '@dcloudio/uni-app';
 import ScenePhoto from './ScenePhoto.vue';
+import ContentBlocks from './ContentBlocks.vue';
 import AppIcon from './AppIcon.vue';
 import { readList, toggleFavorite } from '../utils/storage';
 const props = defineProps({ article: { type: Object, required: true }, showFavorite: { type: Boolean, default: true } });

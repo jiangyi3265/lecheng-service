@@ -26,10 +26,10 @@
         <text class="content-title">乐城动态</text>
         <button v-for="article in news" :key="article.id" class="news-card" hover-class="none"
           :aria-label="'查看详情：' + article.title" @tap="openService('资讯详情', { id: article.id })">
-          <view class="news-card-photo"><ScenePhoto :scene="article.scene" :label="article.title" /></view>
+          <view class="news-card-photo"><ScenePhoto :src="article.coverImage" :scene="article.scene" :label="article.title" /></view>
           <view class="news-card-copy">
             <text class="news-card-title">{{ article.title }}</text>
-            <view class="article-tags"><text class="pill">{{ article.category }}</text><text class="pill">资讯示例</text></view>
+            <view class="article-tags"><text class="pill">{{ article.category }}</text><text v-if="article.contentVersion !== 2" class="pill">资讯示例</text></view>
             <text class="news-card-summary">{{ article.summary }}</text>
             <text class="article-action">查看详情 <AppIcon name="chevron" color="blue" :size="22" /></text>
           </view>
@@ -46,7 +46,7 @@
         <view v-for="article in visibleArticles" :key="article.id" class="article">
           <button class="article-toggle" role="button" hover-class="none" :aria-expanded="expandedArticle === article.id" @tap="toggleArticle(article.id)">
             <view class="article-preview">
-              <view class="article-cover"><ScenePhoto :scene="article.scene" :label="article.title + ' · 园区配图'" /></view>
+              <view class="article-cover"><ScenePhoto :src="article.coverImage" :scene="article.scene" :label="article.title + ' · 园区配图'" /></view>
               <view class="article-info">
                 <text class="article-title">{{ article.title }}</text>
                 <view class="article-tags">

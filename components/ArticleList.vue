@@ -1,7 +1,7 @@
 <template>
   <view class="article-list">
     <button v-for="article in items" :key="article.id" class="article-list-item" @tap="$emit('select', article)">
-      <view class="article-list-cover"><ScenePhoto :scene="article.scene" :label="article.title" /></view>
+      <view class="article-list-cover"><ScenePhoto :src="article.coverImage" :scene="article.scene" :label="article.title" /></view>
       <view class="article-list-body">
         <text class="article-list-title">{{ article.title }}</text>
         <view v-if="article.tags?.length || article.category" class="article-list-tags">

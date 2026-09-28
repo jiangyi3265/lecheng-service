@@ -20,12 +20,12 @@
 				@tap="openService('资讯详情', { id: article.id })"
 			>
 				<view class="news-cover"
-					><ScenePhoto :scene="article.scene" /></view
+					><ScenePhoto :src="article.coverImage" :scene="article.scene" /></view
 				><view class="news-info"
 					><view class="between"
 						><text class="pill">{{ article.category }}</text
 						><text class="muted small"
-							>{{ article.date }} · 示例</text
+							>{{ article.date }}{{ article.contentVersion === 2 ? '' : ' · 示例' }}</text
 						></view
 					><text class="news-title">{{ article.title }}</text
 					><text class="muted small">{{ article.summary }}</text
@@ -41,8 +41,8 @@ import AppHeader from "../../components/AppHeader.vue";
 import ScenePhoto from "../../components/ScenePhoto.vue";
 import { news } from "../../data/catalog";
 import { openService } from "../../utils/navigation";
-const categories = ["全部", "园区生活", "就医指南", "康养体验"],
-	category = ref("全部");
+const categories = computed(() => ["全部", ...new Set(news.map(n => n.category).filter(Boolean))]);
+const category = ref("全部");
 const filtered = computed(() =>
 	news.filter(
 		(n) => category.value === "全部" || n.category === category.value,

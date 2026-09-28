@@ -6,6 +6,13 @@ import { departmentOptions, diseaseOptions, normalizeDepartment, matchesSearchFi
 
 const metabolic = '内分泌、营养和代谢疾病及免疫疾病';
 
+test('后台新建内容使用填写的疾病分类，清空后不再匹配旧分类', () => {
+  const medicine = { id: 'new-medicine', name: '后台新药械', category: '肿瘤科', diseaseCategories: ['肿瘤癌症'] };
+  assert.equal(matchesSearchFilters(medicine, { department: '肿瘤科', disease: '肿瘤癌症' }), true);
+  assert.equal(matchesSearchFilters(medicine, { disease: metabolic }), false);
+  assert.equal(matchesSearchFilters({ ...hospitals[0], diseaseCategories: [] }, { disease: metabolic }), false);
+});
+
 test('科室与疾病筛选取交集，且空条件保留原始医院列表', () => {
   assert.equal(hospitals.filter(item => matchesSearchFilters(item)).length, 3);
   assert.deepEqual(hospitals.filter(item => matchesSearchFilters(item, { department: '内科', disease: metabolic })).map(item => item.id), ['international', 'wellness']);
