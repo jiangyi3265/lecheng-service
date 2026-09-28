@@ -122,8 +122,8 @@
 					><text v-if="feedbackError" class="inline-error">{{
 						feedbackError
 					}}</text
-					><button class="primary-button" @tap="saveFeedback">
-						{{ apiBaseUrl ? '提交反馈' : '提交反馈（演示）' }}
+					><button class="primary-button" :disabled="feedbackSubmitting" @tap="saveFeedback">
+						{{ feedbackSubmitting ? '提交中…' : apiBaseUrl ? '提交反馈' : '提交反馈（演示）' }}
 					</button></view
 				>
 			</template>
@@ -274,14 +274,16 @@ import {
 const type = ref("我的收藏"),
 	itemId = ref(""),
 	hospitalId = ref(""),
-	savedItems = ref([]),
+	savedKeys = ref([]),
 	conversations = ref([]),
 	feedbacks = ref([]),
 	notifications = ref([]),
 	filter = ref("全部"),
 	expanded = ref(0),
 	feedback = ref(""),
-	feedbackError = ref("");
+	feedbackError = ref(""),
+	feedbackSubmitting = ref(false);
+const savedItems = computed(() => savedKeys.value.map(resolveSavedItem).filter(Boolean));
 const isSettingsPage = computed(() => ['设置', '账户与安全'].includes(type.value));
 const groups = ["全部", "医院", "药品", "器械", "医生", "资讯"];
 const serviceArticle = computed(() => ['福利活动详情', '服务流程详情'].includes(type.value) ? serviceArticlesFor(type.value.replace('详情', '')).find((item) => item.id === itemId.value) : null);
@@ -339,7 +341,7 @@ const article = computed(() => {
 						{ title: "反馈内容", text: f.text },
 						{ title: "当前状态", text: f.status },
 						{ title: "反馈编号", text: f.id },
-						"本条反馈仅保存在当前设备，未发送到真实客服。",
+						apiBaseUrl ? "本条反馈已提交至乐城后台，处理结果将在这里同步更新。" : "本条反馈仅保存在当前设备，未发送到真实客服。",
 					],
 				}
 			: null;
@@ -362,11 +364,9 @@ onLoad((o) => {
 onShow(refresh);
 watch(feedback, (v) => uni.setStorageSync("lecheng-feedback", v));
 async function refresh() {
-	savedItems.value = readList(
+	savedKeys.value = readList(
 		type.value === "我的收藏" ? "favorites" : "history",
-	)
-		.map(resolveSavedItem)
-		.filter(Boolean);
+	);
 	conversations.value = readList("conversations");
 	feedbacks.value = readList("feedbacks");
 	if (apiBaseUrl && (type.value === "我的反馈" || type.value === "反馈详情")) {
@@ -393,7 +393,9 @@ function clearHistory() {
 	});
 }
 async function saveFeedback() {
+	if (feedbackSubmitting.value) return;
 	feedbackError.value = "";
+	feedbackSubmitting.value = true;
 	try {
 		if (!feedback.value.trim()) throw Error("请填写反馈内容");
 		const item = apiBaseUrl ? await sendFeedback(feedback.value.trim()) : submitFeedback(feedback.value);
@@ -403,6 +405,7 @@ async function saveFeedback() {
 	} catch (e) {
 		feedbackError.value = e.message;
 	}
+	finally { feedbackSubmitting.value = false; }
 }
 function runAction(action) {
 	if (action === "健康管理") openSearch("医院", { type: "健康管理" });

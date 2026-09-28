@@ -32,7 +32,7 @@
 
 <script setup>
 import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
-import { onShow } from "@dcloudio/uni-app";
+import { onShow, onHide } from "@dcloudio/uni-app";
 import AppIcon from "./AppIcon.vue";
 import { chatMessages, sendDemoMessage, markChatRead } from "../utils/demo-store";
 import { apiBaseUrl, getMessages, sendMessage } from "../utils/lecheng-api";
@@ -63,9 +63,12 @@ async function refresh() {
     scrollToLatest();
   }
 }
-onMounted(() => { refresh(); if (apiBaseUrl) poller = setInterval(refresh, 8000); });
-onUnmounted(() => clearInterval(poller));
-onShow(refresh);
+function stopPolling() { clearInterval(poller); poller = undefined; }
+function startPolling() { stopPolling(); refresh(); if (apiBaseUrl) poller = setInterval(refresh, 8000); }
+onMounted(startPolling);
+onUnmounted(stopPolling);
+onShow(startPolling);
+onHide(stopPolling);
 function onKeyboardChange(event) {
   emit("keyboard-height-change", Math.max(0, Number(event.detail.height) || 0));
   scrollToLatest();

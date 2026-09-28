@@ -40,7 +40,7 @@
 				maxlength="500"
 				aria-label="咨询内容"
 				@confirm="send" /><button
-				:disabled="!draft.trim()"
+				:disabled="!draft.trim() || sending"
 				aria-label="发送消息"
 				@tap="send"
 			>
@@ -50,7 +50,7 @@
 </template>
 <script setup>
 import { ref, nextTick, watch } from "vue";
-import { onLoad, onShow } from "@dcloudio/uni-app";
+import { onLoad, onShow, onHide, onUnload } from "@dcloudio/uni-app";
 import { apiBaseUrl, getMessages, sendMessage } from "../../utils/lecheng-api";
 import AppHeader from "../../components/AppHeader.vue";
 import AppIcon from "../../components/AppIcon.vue";
@@ -68,19 +68,29 @@ import {
 } from "../../utils/navigation";
 const name = ref("乐城服务助手"),
 	draft = ref(""),
-	messages = ref([]);
+	messages = ref([]),
+	sending = ref(false);
+let poller;
+function stopPolling() { clearInterval(poller); poller = undefined; }
 onLoad((o) => {
 	name.value = routeText(o.name, "乐城服务助手");
 	draft.value = uni.getStorageSync("lecheng-draft-" + name.value) || "";
 	refresh();
 });
-onShow(refresh);
+onShow(() => { stopPolling(); refresh(); if (apiBaseUrl) poller = setInterval(refresh, 8000); });
+onHide(stopPolling);
+onUnload(stopPolling);
 watch(draft, (value) =>
 	uni.setStorageSync("lecheng-draft-" + name.value, value),
 );
 async function refresh() {
 	if (apiBaseUrl) {
-		try { messages.value = await getMessages(); }
+		try {
+			const latest = await getMessages();
+			const changed = latest[latest.length - 1]?.id !== messages.value[messages.value.length - 1]?.id;
+			messages.value = latest;
+			if (changed) { await nextTick(); uni.pageScrollTo({ selector: "#chat-end", duration: 180 }); }
+		}
 		catch (error) { console.warn("客服消息同步失败", error); }
 	} else {
 		messages.value = chatMessages(name.value);
@@ -89,11 +99,13 @@ async function refresh() {
 }
 async function send() {
 	const text = draft.value.trim();
-	if (!text) return;
+	if (!text || sending.value) return;
+	sending.value = true;
 	try {
 		if (apiBaseUrl) { await sendMessage(text); await refresh(); }
 		else messages.value = sendDemoMessage(name.value, text);
 	} catch (error) { uni.showToast({ title: error.message || "发送失败", icon: "none" }); return; }
+	finally { sending.value = false; }
 	draft.value = "";
 	await nextTick();
 	uni.pageScrollTo({ selector: "#chat-end", duration: 180 });

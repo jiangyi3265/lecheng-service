@@ -94,7 +94,7 @@
 	>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { onLoad, onShow } from "@dcloudio/uni-app";
 import AppHeader from "../../components/AppHeader.vue";
 import AppIcon from "../../components/AppIcon.vue";
@@ -107,8 +107,9 @@ import { readProfile, readList, saveList } from "../../utils/storage";
 import { createAppointment } from "../../utils/demo-store";
 import { apiBaseUrl, requestAppointment } from "../../utils/lecheng-api";
 import { pageUrl, openService, goBack } from "../../utils/navigation";
-const doctor = ref(null),
-	dates = ref(upcomingDates()),
+const doctorId = ref("");
+const doctor = computed(() => doctors.find((d) => d.id === doctorId.value));
+const dates = ref(upcomingDates()),
 	date = ref(""),
 	slot = ref(""),
 	name = ref(""),
@@ -118,7 +119,7 @@ const doctor = ref(null),
 	error = ref(""),
 	submitting = ref(false);
 onLoad((o) => {
-	doctor.value = doctors.find((d) => d.id === o.doctorId);
+	doctorId.value = o.doctorId || "";
 	const p = readProfile();
 	name.value = p.name === "乐城用户" ? "" : p.name;
 	phone.value = p.phone || "";
@@ -126,10 +127,12 @@ onLoad((o) => {
 });
 onShow(() => {
 	dates.value = upcomingDates();
+	if (!dates.value.some((item) => item.value === date.value)) date.value = dates.value[0].value;
 });
 async function submit() {
 	error.value = "";
 	if (submitting.value) return;
+	if (!doctor.value) { error.value = "请先选择医生"; return; }
 	if (!consent.value) {
 		error.value = "请先勾选申请说明";
 		return;
