@@ -4,7 +4,7 @@
 
 ## 运行
 
-在 HBuilderX 中打开本目录，选择「运行 → 运行到小程序模拟器 → 微信开发者工具」。在 `manifest.json` 的 `mp-weixin.appid` 中填写自己的小程序 AppID。原有 uni-app AppID 已保留。
+在 HBuilderX 中打开本目录，选择「运行 → 运行到小程序模拟器 → 微信开发者工具」。`manifest.json` 已设置本项目提供的小程序 AppID；AppSecret 只放在后端服务器环境变量中。原有 uni-app AppID 已保留。
 
 也可使用命令行：
 
@@ -35,9 +35,9 @@ H5 开发地址为 `http://127.0.0.1:5186`。微信编译输出在 `unpackage/di
 
 ## 数据与接口
 
-`data/medical.js`、`data/catalog.js` 保留离线演示资料。配置 `VITE_LECHENG_API_BASE_URL` 后，首页、查询、资讯和医生目录会由后台已发布内容替换；客服留言、预约咨询申请、反馈从后台读写。开发模式默认连接 `http://127.0.0.1:8080`，构建体验版时应设置可由微信访问的 HTTPS 地址。若接口不可用，目录保留演示资料；提交型操作会报告失败，避免误称已同步。
+`data/medical.js`、`data/catalog.js` 保留离线演示资料。生产构建通过 `.env.production` 将内容与登录接口指向 `https://lechenght.oksja.cn/prod-api`；该地址需由服务器反向代理至后台。首页、查询、资讯和医生目录会由后台已发布内容替换；客服留言、预约咨询申请、反馈从后台读写。开发模式默认连接 `http://127.0.0.1:8080`。若接口不可用，目录保留演示资料；提交型操作会报告失败，避免误称已同步。
 
-微信账号接口由 `VITE_AUTH_BASE_URL` 配置，正式小程序必须使用 HTTPS；微信 AppID 和 AppSecret 只在后端配置。当前本机已用模拟微信服务验证 code 交换、手机号授权、刷新与退出；没有真实微信凭据和合法请求域名时，无法完成真机登录或体验版在线联调。具体配置见 `docs/login-map-integration.md`。
+微信账号接口由 `VITE_AUTH_BASE_URL` 配置，正式小程序必须使用 HTTPS；微信 AppID 已在 `manifest.json` 配置，AppSecret 只在后端配置。当前本机已用模拟微信服务验证 code 交换、手机号授权、刷新与退出；服务器 API 和微信后台 request 合法域名配置完成前，无法完成真机登录或体验版在线联调。具体配置见 `docs/login-map-integration.md`。
 
 `utils/storage.js` 管理本机收藏、浏览记录及所在城市。昵称在登录后可同步到后台账号；手机号只由微信授权接口验证后显示。个人中心数字由实际本地记录产生。
 
