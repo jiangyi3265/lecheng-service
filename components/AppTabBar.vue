@@ -12,27 +12,15 @@
 				><image v-if="tab.key === 'support'" class="support-mascot" src="/static/images/customer-service-mascot.png" mode="aspectFit" aria-label="客服形象" /><AppIcon v-else
 					:name="active === tab.key ? tab.activeIcon : tab.icon"
 					:color="active === tab.key ? 'blue' : 'ink'"
-					:size="43" /><view
-					v-if="tab.key === 'support' && unread"
-					class="tab-dot" /></view
+					:size="43" /></view
 			><text>{{ tab.title }}</text>
 		</button></view
 	>
 </template>
 <script setup>
 import AppIcon from "./AppIcon.vue";
-import { ref, onMounted, onUnmounted } from "vue";
-import { onShow } from "@dcloudio/uni-app";
 import { openTab } from "../utils/navigation";
-import { hasUnread } from "../utils/demo-store";
-const props = defineProps({ active: { type: String, default: "home" } });
-const unread = ref(hasUnread());
-const refresh = () => {
-	unread.value = hasUnread();
-};
-onShow(refresh);
-onMounted(() => uni.$on("lecheng:data", refresh));
-onUnmounted(() => uni.$off("lecheng:data", refresh));
+defineProps({ active: { type: String, default: "home" } });
 const tabs = [
 	{
 		key: "home",
@@ -107,18 +95,9 @@ function open(tab) {
 	justify-content: center;
 	height: 47rpx;
 }
-.mascot-wrap { height: 118rpx; margin-top: -53rpx; }
-.support-mascot { width: 112rpx; height: 118rpx; }
+.mascot-wrap { height: 94rpx; margin-top: -29rpx; }
+.support-mascot { width: 88rpx; height: 94rpx; }
 .tab-item.is-support { overflow: visible; }
-.tab-dot {
-	position: absolute;
-	width: 10rpx;
-	height: 10rpx;
-	background: #ff7474;
-	border-radius: 50%;
-	right: -7rpx;
-	top: 0;
-}
 /* #ifdef H5 */
 @media (min-width: 600px) {
 	.app-tabbar {

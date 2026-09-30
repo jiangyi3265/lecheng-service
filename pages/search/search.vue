@@ -45,7 +45,7 @@
 							? `找到 ${results.length} 条批复项目`
 							: `共 ${results.length} 条批复项目`
 					}}</text></view>
-				<ArticleList v-if="results.length" :items="projectArticles" @select="openResource($event.id)" />
+				<ArticleList v-if="results.length" :items="projectArticles" layout="stacked" @select="openResource($event.id)" />
 				<view v-if="!results.length" class="empty-state"
 					><AppIcon name="search" color="muted" :size="76" /><text
 						class="empty-title"
@@ -67,7 +67,7 @@
 				<template v-if="category === '药品'">
 					<ResourceCard v-for="item in resourceResults" :key="item.id" :item="item" medicine-layout />
 				</template>
-				<ArticleList v-else-if="resourceResults.length" :items="healthArticles" @select="openResource($event.id)" />
+				<ArticleList v-else-if="resourceResults.length" :items="healthArticles" layout="stacked" @select="openResource($event.id)" />
 				<view v-if="!resourceResults.length" class="empty-state"
 					><AppIcon name="search" color="muted" :size="76" /><text
 						class="empty-title"
@@ -166,6 +166,7 @@ const results = computed(() => approvedProjects.filter(item => matchesSearchFilt
 const projectArticles = computed(() => results.value.map(item => ({
 	id: item.id,
 	title: item.name,
+	coverImage: item.coverImage,
 	scene: item.scene,
 	tags: item.tags || [item.category],
 	summary: item.spec || item.summary,
@@ -173,6 +174,7 @@ const projectArticles = computed(() => results.value.map(item => ({
 const healthArticles = computed(() => resourceResults.value.map(item => ({
 	id: item.id,
 	title: item.name,
+	coverImage: item.coverImage,
 	scene: hospitals.find(hospital => hospital.id === item.hospitalIds?.[0])?.scene ?? 0,
 	tags: [item.category, '亚健康项目'],
 	summary: item.summary,

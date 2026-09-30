@@ -3,7 +3,7 @@
     <AppHeader title="动态" back back-label="返回" />
     <view class="content-pad case-content">
       <text class="case-heading">案例资讯</text>
-      <ArticleList :items="news" @select="openService('资讯详情', { id: $event.id })" />
+      <ArticleList :items="news" layout="stacked" @select="openService('资讯详情', { id: $event.id })" />
     </view>
     <AppTabBar active="messages" />
   </view>

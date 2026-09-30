@@ -3,6 +3,7 @@
     <view class="about-features" role="group" aria-label="乐城资讯分类">
       <button v-for="feature in features" :key="feature.id" class="about-feature" role="button" hover-class="none"
         :class="{ 'is-active': activeTopic === feature.id }"
+        :disabled="feature.id !== 'news'" :aria-disabled="feature.id !== 'news'"
         :aria-pressed="activeTopic === feature.id" @tap="selectTopic(feature.id)">
         <view class="feature-icon">
           <AppIcon :name="feature.icon" :color="activeTopic === feature.id ? 'blue' : 'teal'" :size="56" />
@@ -24,17 +25,7 @@
       </view>
       <view v-else-if="activeTopic === 'news'" class="news-list">
         <text class="content-title">乐城动态</text>
-        <button v-for="article in news" :key="article.id" class="news-card" hover-class="none"
-          :aria-label="'查看详情：' + article.title" @tap="openService('资讯详情', { id: article.id })">
-          <view class="news-card-photo"><ScenePhoto :src="article.coverImage" :scene="article.scene" :label="article.title" /></view>
-          <view class="news-card-copy">
-            <text class="news-card-title">{{ article.title }}</text>
-            <view class="article-tags"><text class="pill">{{ article.category }}</text><text v-if="article.contentVersion !== 2" class="pill">资讯示例</text></view>
-            <text class="news-card-summary">{{ article.summary }}</text>
-            <text class="article-action">查看详情 <AppIcon name="chevron" color="blue" :size="22" /></text>
-          </view>
-        </button>
-        <text v-if="!news.length" class="content-empty">暂无乐城动态内容</text>
+        <ArticleList :items="news" layout="stacked" empty-text="暂无乐城动态内容" @select="openService('资讯详情', { id: $event.id })" />
       </view>
       <template v-else>
         <text class="content-title">{{ activeTitle }}</text>
@@ -77,6 +68,7 @@
 import { computed, ref } from "vue";
 import AppIcon from "./AppIcon.vue";
 import ScenePhoto from "./ScenePhoto.vue";
+import ArticleList from "./ArticleList.vue";
 import { news } from "../data/catalog";
 import { policies } from "../data/policies";
 import { openService } from "../utils/navigation";
@@ -120,6 +112,7 @@ const aboutSections = [
   },
 ];
 function selectTopic(id) {
+  if (id !== "news") return;
   if (activeTopic.value === id) return;
   activeTopic.value = id;
   expandedArticle.value = "";
@@ -139,18 +132,11 @@ function toggleArticle(id) {
 .feature-indicator { width: 40rpx; height: 5rpx; margin-top: 3rpx; border-radius: 5rpx; background: transparent; }
 .is-active .feature-indicator { background: var(--primary); }
 .about-feature:focus-visible, .article-toggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
-.about-feature:active, .article-toggle:active { opacity: 0.75; }
+.about-feature:not([disabled]):active, .article-toggle:active { opacity: 0.75; }
+.about-feature[disabled] { opacity: 1; color: inherit; background: transparent; cursor: default; }
 .topic-content { padding: 30rpx 0 20rpx; }
 .content-title { display: block; font-size: 35rpx; font-weight: 600; }
 .news-list { display: flex; flex-direction: column; }
-.news-card { display: flex; align-items: center; gap: 25rpx; width: 100%; padding: 24rpx 0; border-bottom: 1rpx solid var(--line); text-align: left; }
-.news-card:last-of-type { border-bottom: 0; }
-.news-card-photo { width: 290rpx; height: 205rpx; flex-shrink: 0; overflow: hidden; border-radius: 14rpx; }
-.news-card-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: flex-start; gap: 9rpx; }
-.news-card-title { display: block; font-size: 27rpx; line-height: 1.35; font-weight: 650; color: #142c4d; overflow-wrap: anywhere; }
-.news-card-summary { display: block; color: #65788f; font-size: 23rpx; line-height: 1.5; }
-.news-card:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
-.news-card:active { opacity: 0.85; }
 .article { padding: 24rpx 0; border-bottom: 1rpx solid var(--line); }
 .article:last-child { border-bottom: 0; }
 .article-toggle { display: block; width: 100%; text-align: left; }

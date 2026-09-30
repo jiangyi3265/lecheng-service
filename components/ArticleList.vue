@@ -1,7 +1,7 @@
 <template>
-  <view class="article-list">
-    <button v-for="article in items" :key="article.id" class="article-list-item" @tap="$emit('select', article)">
-      <view class="article-list-cover"><ScenePhoto :src="article.coverImage" :scene="article.scene" :label="article.title" /></view>
+  <view class="article-list" :class="{ 'is-stacked': layout === 'stacked' }">
+    <button v-for="article in items" :key="article.id" class="article-list-item" hover-class="none" :aria-label="'查看详情：' + article.title" @tap="$emit('select', article)">
+      <view class="article-list-cover"><view class="article-list-photo"><ScenePhoto :src="article.coverImage" :scene="article.scene" :label="article.title" /></view></view>
       <view class="article-list-body">
         <text class="article-list-title">{{ article.title }}</text>
         <view v-if="article.tags?.length || article.category" class="article-list-tags">
@@ -16,17 +16,26 @@
 </template>
 <script setup>
 import ScenePhoto from './ScenePhoto.vue';
-defineProps({ items: { type: Array, default: () => [] }, emptyText: { type: String, default: '暂无内容' } });
+defineProps({ items: { type: Array, default: () => [] }, emptyText: { type: String, default: '暂无内容' }, layout: { type: String, default: 'row' } });
 defineEmits(['select']);
 </script>
 <style scoped>
 .article-list-item { display: flex; align-items: stretch; gap: 22rpx; width: 100%; padding: 25rpx 0; text-align: left; border-bottom: 1rpx solid #eaf0f7; }
 .article-list-item:last-child { border-bottom: 0; }
-.article-list-cover { width: 40%; min-height: 188rpx; flex-shrink: 0; border-radius: 14rpx; overflow: hidden; }
+.article-list-cover { position: relative; width: 40%; min-height: 188rpx; flex-shrink: 0; border-radius: 14rpx; overflow: hidden; }
+.article-list-photo { position: absolute; inset: 0; }
 .article-list-body { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: flex-start; justify-content: center; gap: 6rpx; }
 .article-list-title { display: block; width: 100%; font-size: 27rpx; line-height: 1.32; font-weight: 650; color: #172a3c; overflow-wrap: anywhere; }
 .article-list-tags { display: flex; gap: 6rpx; flex-wrap: wrap; }
 .article-list-tag { padding: 2rpx 8rpx; border-radius: 5rpx; background: #eef7ff; color: #3384bd; font-size: 21rpx; line-height: 1.3; }
 .article-list-summary { display: -webkit-box; width: 100%; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; color: #82909e; font-size: 22rpx; line-height: 1.4; }
 .article-list-link { color: #2283be; font-size: 22rpx; font-weight: 600; }
+.is-stacked .article-list-item { flex-direction: column; gap: 18rpx; padding: 28rpx 0; }
+.is-stacked .article-list-cover { width: 100%; height: 0; min-height: 0; padding-top: 50%; }
+.is-stacked .article-list-body { flex: none; width: 100%; gap: 10rpx; }
+.is-stacked .article-list-title { font-size: 30rpx; line-height: 1.5; }
+.is-stacked .article-list-summary { font-size: 25rpx; line-height: 1.6; }
+.is-stacked .article-list-link { font-size: 24rpx; }
+.article-list-item:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.article-list-item:active { opacity: 0.85; }
 </style>
