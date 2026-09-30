@@ -5,7 +5,6 @@
 			<ScenePhoto :src="hospital.coverImage" :scene="hospital.scene" :label="hospital.name">
 				<view class="cover-caption">
 					<text class="cover-name">{{ hospital.name }}</text>
-					<AppIcon name="chevron" color="white" :size="28" />
 				</view>
 			</ScenePhoto>
 		</view>

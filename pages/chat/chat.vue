@@ -5,9 +5,8 @@
 		<view class="chat-content"
 			><view class="chat-date">服务咨询</view
 			><view class="chat-row"
-				><view class="chat-avatar"
-					><AppIcon name="robot" color="blue" :size="51" /></view
-				><view class="chat-bubble">{{ apiBaseUrl ? '您好：我是人工客服，我可以为您提供博鳌乐城项目介绍、预约评估、陪诊服务咨询和预约流程相关信息。人工在线时间：早8：00-晚22：00。' : greeting(name) }}</view></view
+				><image class="chat-avatar" src="/static/images/customer-service-avatar.jpg" mode="aspectFill" aria-label="客服头像" />
+				<view class="chat-bubble">{{ apiBaseUrl ? '您好：我是人工客服，我可以为您提供博鳌乐城项目介绍、预约评估、陪诊服务咨询和预约流程相关信息。人工在线时间：早8：00-晚22：00。' : greeting(name) }}</view></view
 			>
 			<view class="quick-questions"
 				><button @tap="openSearch()">查询医院</button
@@ -19,9 +18,8 @@
 				:key="message.id"
 				class="chat-row"
 				:class="{ own: message.role === 'user' }"
-				><view v-if="message.role !== 'user'" class="chat-avatar"
-					><AppIcon name="robot" color="blue" :size="51" /></view
-				><view
+				><image v-if="message.role !== 'user'" class="chat-avatar" src="/static/images/customer-service-avatar.jpg" mode="aspectFill" aria-label="客服头像" />
+				<view
 					:class="
 						message.role === 'user' ? 'own-bubble' : 'chat-bubble'
 					"

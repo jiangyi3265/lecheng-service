@@ -1,6 +1,6 @@
 <template>
   <view class="page messages-page">
-    <AppHeader title="动态" back back-label="返回" />
+    <AppHeader title="动态" back />
     <view class="content-pad case-content">
       <text class="case-heading">案例资讯</text>
       <ArticleList :items="news" layout="stacked" @select="openService('资讯详情', { id: $event.id })" />

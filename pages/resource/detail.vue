@@ -1,6 +1,6 @@
 <template>
 	<view class="page resource-detail-page">
-		<AppHeader :title="item ? pageKind + '详情' : '资源详情'" back back-label="返回" fallback="/pages/search/search" />
+		<AppHeader :title="item ? pageKind + '详情' : '资源详情'" back fallback="/pages/search/search" />
 		<template v-if="item">
 			<view class="resource-hero">
 				<ScenePhoto v-if="item.coverImage" :src="item.coverImage" :label="item.name" />

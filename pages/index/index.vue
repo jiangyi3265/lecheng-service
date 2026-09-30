@@ -1,13 +1,6 @@
 <template>
 	<view class="page home-page">
-		<AppHeader title="乐城服务" home
-			><button
-				class="icon-button"
-				aria-label="消息通知"
-				@tap="openMessages"
-			>
-				<AppIcon name="bell" :size="42" /></button
-		></AppHeader>
+		<AppHeader title="乐城服务" home />
 		<swiper
 			class="hero-swiper"
 			:autoplay="false"
@@ -54,14 +47,12 @@
 <script setup>
 import { ref } from "vue";
 import AppHeader from "../../components/AppHeader.vue";
-import AppIcon from "../../components/AppIcon.vue";
 import AppTabBar from "../../components/AppTabBar.vue";
 import ScenePhoto from "../../components/ScenePhoto.vue";
 import HospitalCard from "../../components/HospitalCard.vue";
 import HospitalDirectoryBanner from "../../components/HospitalDirectoryBanner.vue";
 import LechengIntro from "../../components/LechengIntro.vue";
 import { hospitals, directoryTotal } from "../../data/medical";
-import { navigate } from "../../utils/navigation";
 const activeIntro = ref("hospitals");
 const slides = [
 	{ scene: 0, title: "走进乐城", subtitle: "发现身边的优质医疗" },
@@ -69,9 +60,6 @@ const slides = [
 ];
 function openAbout() {
 	activeIntro.value = "about";
-}
-function openMessages() {
-	navigate("/pages/messages/messages");
 }
 </script>
 <style scoped>

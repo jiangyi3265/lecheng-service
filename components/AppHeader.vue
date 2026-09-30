@@ -28,8 +28,7 @@
 				aria-label="返回"
 				@tap="goBack"
 			>
-				<AppIcon name="back" :size="39" />
-				<text v-if="backLabel" class="back-label">{{ backLabel }}</text>
+				<image class="wechat-back-icon" src="/static/icons/back-ink.png" mode="aspectFit" aria-hidden="true" />
 			</button>
 			<text class="header-title" :class="{ 'home-title': home, 'brand-title': brand }">{{
 				title
@@ -46,7 +45,6 @@ const props = defineProps({
 	title: String,
 	home: Boolean,
 	back: Boolean,
-	backLabel: { type: String, default: "" },
 	tint: Boolean,
 	brand: Boolean,
 	fallback: { type: String, default: "/pages/index/index" },
@@ -152,7 +150,7 @@ function goBack() {
 	color: #63778e;
 }
 .home-title {
-	left: 54%;
+	left: 50%;
 	font-size: 32rpx;
 }
 .header-action {
@@ -162,13 +160,13 @@ function goBack() {
 	z-index: 1;
 }
 .back-button {
-	width: auto;
-	gap: 8rpx;
-	margin-left: -22rpx;
+	width: 44px;
+	height: 44px;
+	margin-left: -16px;
 	position: relative;
 	z-index: 3;
 }
-.back-label { font-size: 28rpx; white-space: nowrap; }
+.wechat-back-icon { width: 30px; height: 30px; }
 .header-action:empty {
 	display: none;
 }
@@ -179,11 +177,11 @@ function goBack() {
 	font-size: 18rpx;
 }
 .home-title {
-	left: 47%;
+	left: 50%;
 	font-size: 28rpx;
 }
 .header-title {
-	left: 43%;
+	left: 50%;
 }
 /* #endif */
 .header-title.brand-title { left: 30rpx; transform: none; color: #fff; font-size: 39rpx; font-weight: 700; }

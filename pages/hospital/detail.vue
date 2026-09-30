@@ -1,6 +1,6 @@
 <template>
 	<view class="page detail-page">
-		<AppHeader title="医院信息" back back-label="返回" />
+		<AppHeader title="医院信息" back />
 		<template v-if="hospital">
 			<view class="hospital-cover">
 				<ScenePhoto :src="hospital.coverImage" :scene="hospital.scene" :label="hospital.name" />
@@ -56,15 +56,14 @@
 					<view class="environment-grid">
 						<button v-for="(photo, index) in environmentPhotos" :key="index" class="environment-tile"
 							:aria-label="'查看第' + (index + 1) + '张医疗环境示意图'" @tap="showEnvironment(index)">
-							<ScenePhoto :scene="scene" :label="'医疗环境示意图' + (index + 1)" />
+							<ScenePhoto :src="photo.src" :scene="photo.scene" :label="'医疗环境' + (index + 1)" />
 						</button>
 					</view>
-					<button class="floating-consult" aria-label="预约问诊" @tap="openConsultation">
-						<view class="floating-consult-icon"><AppIcon name="heart-pulse" color="white" :size="48" /></view>
-						<text>预约问诊</text>
-					</button>
 				</view>
 			</view>
+			<button class="floating-consult" aria-label="预约问诊" @tap="openConsultation">
+				<image class="floating-consult-image" src="/static/images/customer-service-badge.jpg" mode="scaleToFill" aria-hidden="true" />
+			</button>
 		</template>
 		<view v-else class="empty-state">
 			<text class="empty-title">暂未找到这家医院</text>
@@ -150,7 +149,9 @@ function openConsultation() {
 .environment-swiper { height: 350rpx; background: #dcecf8; }
 .environment-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20rpx; padding: 20rpx 4rpx 4rpx; }
 .environment-tile { width: 100%; height: 190rpx; overflow: hidden; border-radius: 16rpx; }
-.floating-consult { position: absolute; z-index: 2; right: 2rpx; bottom: 64rpx; display: flex; flex-direction: column; align-items: center; width: 204rpx; padding: 0 0 16rpx; color: #fff; filter: drop-shadow(0 8rpx 14rpx rgba(21, 104, 197, .24)); }
-.floating-consult-icon { display: flex; align-items: center; justify-content: center; width: 104rpx; height: 104rpx; margin-bottom: -18rpx; border: 7rpx solid #d5edff; border-radius: 50%; background: #5fa9f4; }
-.floating-consult text { display: block; width: 100%; padding: 17rpx 0; border-radius: 40rpx; background: #2387e9; font-size: 27rpx; font-weight: 650; text-align: center; }
+.floating-consult { position: fixed; z-index: 40; right: 24rpx; bottom: calc(170rpx + env(safe-area-inset-bottom)); width: 112rpx; height: 112rpx; overflow: hidden; border-radius: 50%; background: #0e3051; box-shadow: 0 6rpx 18rpx rgba(14, 48, 81, .18); }
+.floating-consult-image { position: absolute; width: 178%; height: 163%; left: -58.6%; top: -55.3%; }
+/* #ifdef H5 */
+@media (min-width: 600px) { .floating-consult { right: calc((100vw - 480px) / 2 + 16px); } }
+/* #endif */
 </style>

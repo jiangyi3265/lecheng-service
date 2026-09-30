@@ -5,7 +5,7 @@
         <text class="consultation-caption">乐城服务为您服务</text>
         <text class="consultation-note">{{ apiBaseUrl ? '客服留言 · 消息同步至乐城后台' : '演示咨询 · 消息仅保存在本机' }}</text>
         <view class="consultation-row">
-          <view class="consultation-avatar"><AppIcon name="robot" color="blue" :size="48" /></view>
+          <image class="consultation-avatar" src="/static/images/customer-service-avatar.jpg" mode="aspectFill" aria-label="客服头像" />
           <view class="consultation-bubble">
             <text selectable>您好：我是人工客服，我可以为您提供博鳌乐城：项目介绍、预约评估、陪诊服务咨询、预约流程相关信息。</text>
             <text class="consultation-hours" selectable>人工在线时间：早8：00-晚22：00</text>
@@ -13,7 +13,7 @@
         </view>
         <view v-for="(message, index) in messages" :id="'consultation-message-' + index" :key="message.id"
           class="consultation-row" :class="{ own: message.role === 'user' }">
-          <view v-if="message.role !== 'user'" class="consultation-avatar"><AppIcon name="robot" color="blue" :size="48" /></view>
+          <image v-if="message.role !== 'user'" class="consultation-avatar" src="/static/images/customer-service-avatar.jpg" mode="aspectFill" aria-label="客服头像" />
           <text class="consultation-bubble" :class="{ 'user-bubble': message.role === 'user' }" selectable>{{ message.text }}</text>
           <image v-if="message.role === 'user'" class="consultation-avatar" src="/static/images/avatar.png" mode="aspectFill" aria-label="我的头像" />
         </view>
@@ -33,7 +33,6 @@
 <script setup>
 import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { onShow, onHide } from "@dcloudio/uni-app";
-import AppIcon from "./AppIcon.vue";
 import { chatMessages, sendDemoMessage, markChatRead } from "../utils/demo-store";
 import { apiBaseUrl, getMessages, sendMessage } from "../utils/lecheng-api";
 

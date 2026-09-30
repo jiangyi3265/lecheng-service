@@ -1,6 +1,6 @@
 <template>
   <view class="page support-page" :style="keyboardHeight > 0 ? { paddingBottom: keyboardHeight + 'px' } : {}">
-    <view class="support-header"><AppHeader title="客服" back back-label="返回" /></view>
+    <view class="support-header"><AppHeader title="客服" back /></view>
     <view class="support-chat">
       <InlineConsultation @keyboard-height-change="keyboardHeight = $event" />
     </view>

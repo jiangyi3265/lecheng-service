@@ -79,13 +79,13 @@ const landmarks = [
 	display: flex;
 	align-items: center;
 	flex-direction: column;
-	width: 100rpx;
+	width: 84rpx;
 	overflow: visible;
 }
 .landmark-image {
-	width: 88rpx;
-	height: 85rpx;
-	margin-bottom: -13rpx;
+	width: 66rpx;
+	height: 64rpx;
+	margin-bottom: -7rpx;
 }
 .landmark-label {
 	position: relative;
@@ -94,8 +94,8 @@ const landmarks = [
 	border-radius: 26rpx;
 	background: #2799ad;
 	color: #f3fcff;
-	font-size: 20rpx;
-	line-height: 30rpx;
+	font-size: 16rpx;
+	line-height: 26rpx;
 	white-space: nowrap;
 }
 </style>

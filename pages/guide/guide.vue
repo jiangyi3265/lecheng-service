@@ -36,7 +36,7 @@ function copyAddress() { uni.setClipboardData({ data: '博鳌乐城国际医疗�
 </script>
 <style scoped>
 .guide-page { font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif; }
-.park-map { display: block; width: 100%; height: 60vh; min-height: 580rpx; }
+.park-map { display: block; width: 100%; height: 68vh; min-height: 700rpx; }
 .web-map { border: 0; }
 .map-content { padding: 32rpx 32rpx 0; }
 .map-title { display: block; font-size: 32rpx; font-weight: 650; line-height: 1.6; }

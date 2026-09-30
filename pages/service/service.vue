@@ -1,6 +1,6 @@
 <template>
 	<view class="page secondary-page" :class="{ 'settings-page': isSettingsPage }">
-		<AppHeader :title="title" back :back-label="type === '资讯详情' || isSettingsPage ? '返回' : ''" :fallback="fallback" />
+		<AppHeader :title="title" back :fallback="fallback" />
 		<SettingsPanel v-if="isSettingsPage" :page="type" />
 		<NewsArticle v-else-if="type === '资讯详情' && article" :article="article" />
 		<NewsArticle v-else-if="serviceArticle" :article="serviceArticle" :show-favorite="false" />

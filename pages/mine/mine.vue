@@ -1,13 +1,12 @@
 <template>
   <view class="page mine-page">
     <view class="profile-header">
-      <AppHeader title="乐城服务" tint brand />
+      <AppHeader tint />
       <view class="profile-row">
         <button class="profile" aria-label="编辑个人资料" @tap="editProfile">
           <view class="user-avatar"><AppIcon name="user-fill" color="white" :size="88" /></view>
           <view class="profile-copy"><text class="user-name">{{ session ? profile.name : '点击登录' }}</text><text class="phone-number">{{ session ? maskedPhone : '微信一键登录 / 手机号快捷登录' }}</text></view>
         </button>
-        <button class="profile-chat" aria-label="在线客服" @tap="openConsultation"><AppIcon name="chat" color="white" :size="36" /></button>
       </view>
     </view>
     <view class="mine-content">
@@ -29,7 +28,7 @@
       <view class="contact-panel">
         <view class="contact-hours-row">
           <AppIcon name="clock" :size="38" />
-          <text class="business-hours">营业时间：{{ serviceContact.hours || '待更新' }}</text>
+          <text class="business-hours">客服在线时间：{{ serviceContact.hours || '待更新' }}</text>
         </view>
         <view class="contact-address-row">
           <AppIcon name="pin" :size="42" />
@@ -75,7 +74,6 @@ function callService() { if (serviceContact.phone) uni.makePhoneCall({ phoneNumb
 .profile-copy { display: flex; flex-direction: column; gap: 10rpx; min-width: 0; }
 .user-name { font-size: 37rpx; font-weight: 650; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .phone-number { font-size: 26rpx; color: #f2f8ff; line-height: 1.5; }
-.profile-chat { display: flex; align-items: center; justify-content: center; width: 76rpx; height: 76rpx; flex-shrink: 0; }
 .mine-content { position: relative; margin-top: -40rpx; padding: 0 24rpx 40rpx; }
 .feature-cards { display: flex; gap: 22rpx; }
 .feature-card { position: relative; display: flex; align-items: center; flex: 1; min-width: 0; height: 166rpx; padding: 20rpx 18rpx; text-align: left; border-radius: 20rpx; overflow: hidden; color: #fff; }
@@ -92,7 +90,7 @@ function callService() { if (serviceContact.phone) uni.makePhoneCall({ phoneNumb
 .contact-hours-row, .contact-address-row { display: flex; align-items: center; gap: 20rpx; }
 .contact-hours-row { padding-bottom: 28rpx; border-bottom: 1rpx solid #f0f2f5; }
 .contact-address-row { padding-top: 28rpx; }
-.business-hours { display: block; color: #303944; font-size: 30rpx; line-height: 1.7; }
+.business-hours { display: block; flex: 1; min-width: 0; color: #303944; font-size: 30rpx; line-height: 1.7; }
 .address-text { display: block; flex: 1; min-width: 0; font-size: 30rpx; line-height: 1.7; color: #555f6e; }
 .phone-button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6rpx; width: 104rpx; min-height: 104rpx; flex-shrink: 0; border-left: 1rpx solid #f0f2f5; }
 .contact-panel .phone-button[disabled] { opacity: 1; background: transparent; }
