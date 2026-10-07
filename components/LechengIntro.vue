@@ -3,7 +3,6 @@
     <view class="about-features" role="group" aria-label="乐城资讯分类">
       <button v-for="feature in features" :key="feature.id" class="about-feature" role="button" hover-class="none"
         :class="{ 'is-active': activeTopic === feature.id }"
-        :disabled="feature.id !== 'news'" :aria-disabled="feature.id !== 'news'"
         :aria-pressed="activeTopic === feature.id" @tap="selectTopic(feature.id)">
         <view class="feature-icon">
           <AppIcon :name="feature.icon" :color="activeTopic === feature.id ? 'blue' : 'teal'" :size="56" />
@@ -112,7 +111,6 @@ const aboutSections = [
   },
 ];
 function selectTopic(id) {
-  if (id !== "news") return;
   if (activeTopic.value === id) return;
   activeTopic.value = id;
   expandedArticle.value = "";
@@ -132,8 +130,7 @@ function toggleArticle(id) {
 .feature-indicator { width: 40rpx; height: 5rpx; margin-top: 3rpx; border-radius: 5rpx; background: transparent; }
 .is-active .feature-indicator { background: var(--primary); }
 .about-feature:focus-visible, .article-toggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
-.about-feature:not([disabled]):active, .article-toggle:active { opacity: 0.75; }
-.about-feature[disabled] { opacity: 1; color: inherit; background: transparent; cursor: default; }
+.about-feature:active, .article-toggle:active { opacity: 0.75; }
 .topic-content { padding: 30rpx 0 20rpx; }
 .content-title { display: block; font-size: 35rpx; font-weight: 600; }
 .news-list { display: flex; flex-direction: column; }

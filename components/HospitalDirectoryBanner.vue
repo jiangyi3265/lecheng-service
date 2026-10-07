@@ -6,20 +6,19 @@
 		</view>
 		<view class="directory-count"><text class="directory-number">{{ total }}</text><text>家</text></view>
 		<view class="directory-landmarks">
-			<button v-for="item in landmarks" :key="item.id" class="directory-landmark" :aria-label="item.name" @tap="openHospital(item.id)">
+			<view v-for="item in landmarks" :key="item.id" class="directory-landmark">
 				<image :src="`/static/images/hospital-${item.art}.png`" mode="aspectFit" class="landmark-image" />
 				<text class="landmark-label">{{ item.label }}</text>
-			</button>
+			</view>
 		</view>
 	</view>
 </template>
 <script setup>
 import AppIcon from "./AppIcon.vue";
-import { openHospital } from "../utils/navigation";
 defineProps({ total: { type: Number, required: true } });
 const landmarks = [
-	{ id: "international", name: "乐城国际医学中心", label: "国际医学", art: "general" },
-	{ id: "specialist", name: "乐城专科医疗中心", label: "专科医疗", art: "specialist" },
+	{ id: "international", label: "国际医学", art: "general" },
+	{ id: "specialist", label: "专科医疗", art: "specialist" },
 ];
 </script>
 <style scoped>
@@ -27,8 +26,7 @@ const landmarks = [
 	position: relative;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	gap: 14rpx;
+	gap: 20rpx;
 	height: 112rpx;
 	margin-top: 32rpx;
 	padding: 0 16rpx;
@@ -55,7 +53,6 @@ const landmarks = [
 	flex: 1;
 	height: 66rpx;
 	min-width: 100rpx;
-	max-width: 166rpx;
 	border: 2rpx solid #f5fbff;
 	border-radius: 12rpx;
 	background: #e5f2ff;
