@@ -64,7 +64,7 @@ function openAbout() {
 </script>
 <style scoped>
 .hero-swiper {
-	height: 420rpx;
+	height: 310rpx;
 }
 .hero-slide {
 	height: 100%;

@@ -137,8 +137,7 @@
 					<view class="between"
 						><text class="section-title">意见反馈</text
 						><text class="pill">{{ item.status }}</text></view
-					><text class="detail-description">{{ item.text }}</text
-					><text class="link">查看详情 ›</text>
+					><text class="detail-description">{{ item.text }}</text>
 				</button>
 				<view v-if="!feedbacks.length" class="empty-state"
 					><text class="empty-title">还没有反馈记录</text

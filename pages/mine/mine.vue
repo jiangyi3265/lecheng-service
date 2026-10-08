@@ -26,17 +26,19 @@
         </button>
       </view>
       <view class="contact-panel">
-        <view class="contact-hours-row">
-          <AppIcon name="clock" :size="38" />
-          <text class="business-hours">客服在线时间：{{ serviceContact.hours || '待更新' }}</text>
+        <view class="contact-rows">
+          <view class="contact-hours-row">
+            <AppIcon name="clock" :size="38" />
+            <text class="business-hours">客服在线时间：{{ serviceContact.hours || '待更新' }}</text>
+          </view>
+          <view class="contact-address-row">
+            <AppIcon name="pin" :size="42" />
+            <text class="address-text">{{ serviceContact.address }}</text>
+          </view>
         </view>
-        <view class="contact-address-row">
-          <AppIcon name="pin" :size="42" />
-          <text class="address-text">{{ serviceContact.address }}</text>
-          <button class="phone-button" :disabled="!serviceContact.phone" :aria-label="serviceContact.phone ? '拨打客服电话' : '客服电话待更新'" @tap="callService">
+        <button class="phone-button" :disabled="!serviceContact.phone" :aria-label="serviceContact.phone ? '拨打客服电话' : '客服电话待更新'" @tap="callService">
             <image class="contact-phone-icon" src="/static/icons/mine-phone.png" mode="aspectFit" /><text v-if="!serviceContact.phone" class="phone-hint">待更新</text>
-          </button>
-        </view>
+        </button>
       </view>
     </view>
     <AppTabBar active="mine" />
@@ -86,7 +88,8 @@ function callService() { if (serviceContact.phone) uni.makePhoneCall({ phoneNumb
 .shortcut-grid { display: flex; background: #fff; border-radius: 22rpx; margin-top: 24rpx; padding: 30rpx 8rpx; }
 .shortcut { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: center; gap: 18rpx; font-size: 27rpx; line-height: 1.5; color: #272d35; white-space: nowrap; }
 .shortcut-icon { width: 88rpx; height: 88rpx; }
-.contact-panel { margin-top: 26rpx; background: #fff; border-radius: 20rpx; padding: 36rpx 26rpx; }
+.contact-panel { display: flex; align-items: stretch; margin-top: 26rpx; background: #fff; border-radius: 20rpx; padding: 36rpx 26rpx; }
+.contact-rows { flex: 1; min-width: 0; padding-right: 20rpx; }
 .contact-hours-row, .contact-address-row { display: flex; align-items: center; gap: 20rpx; }
 .contact-hours-row { padding-bottom: 28rpx; border-bottom: 1rpx solid #f0f2f5; }
 .contact-address-row { padding-top: 28rpx; }

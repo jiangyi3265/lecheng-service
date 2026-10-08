@@ -14,14 +14,12 @@
 				<text class="hospital-name">{{ hospital.name }}</text>
 				<view class="hospital-tags"><text v-for="tag in hospital.tags" :key="tag" class="pill">{{ tag }}</text></view>
 				<text class="hospital-description">{{ hospital.subtitle }}</text>
-				<view class="hospital-more"><text>查看详情</text><AppIcon name="chevron" color="blue" :size="22" /></view>
 			</view>
 		</template>
 	</button>
 </template>
 <script setup>
 import ScenePhoto from "./ScenePhoto.vue";
-import AppIcon from "./AppIcon.vue";
 import { openHospital } from "../utils/navigation";
 defineProps({ hospital: { type: Object, required: true }, compact: Boolean, cover: Boolean });
 </script>
@@ -68,14 +66,6 @@ defineProps({ hospital: { type: Object, required: true }, compact: Boolean, cove
 	font-size: 23rpx;
 	line-height: 1.5;
 	color: #8292a8;
-}
-.hospital-more {
-	display: flex;
-	align-items: center;
-	color: #0785ff;
-	font-size: 24rpx;
-	font-weight: 500;
-	margin-top: 2rpx;
 }
 .is-compact {
 	gap: 25rpx;

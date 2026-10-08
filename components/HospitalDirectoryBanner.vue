@@ -26,7 +26,7 @@ const landmarks = [
 	position: relative;
 	display: flex;
 	align-items: center;
-	gap: 20rpx;
+	justify-content: space-between;
 	height: 112rpx;
 	margin-top: 32rpx;
 	padding: 0 16rpx;
@@ -50,9 +50,12 @@ const landmarks = [
 	align-items: baseline;
 	justify-content: center;
 	gap: 9rpx;
-	flex: 1;
+	position: absolute;
+	left: 50%;
+	top: 23rpx;
+	transform: translateX(-50%);
+	width: 128rpx;
 	height: 66rpx;
-	min-width: 100rpx;
 	border: 2rpx solid #f5fbff;
 	border-radius: 12rpx;
 	background: #e5f2ff;

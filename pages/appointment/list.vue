@@ -33,8 +33,7 @@
 						>{{ item.date }} {{ item.slot }}</text
 					></view
 				><view class="between muted small"
-					><text>就诊人：{{ item.name }}</text
-					><text class="link">查看详情 ›</text></view
+					><text>就诊人：{{ item.name }}</text></view
 				></button
 			><view v-if="!filtered.length" class="empty-state"
 				><AppIcon name="calendar" color="muted" :size="90" /><text

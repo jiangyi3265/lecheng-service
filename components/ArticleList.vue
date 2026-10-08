@@ -8,7 +8,6 @@
           <text v-for="tag in article.tags?.length ? article.tags : [article.category]" :key="tag" class="article-list-tag">{{ tag }}</text>
         </view>
         <text v-if="article.summary || article.paragraphs?.length" class="article-list-summary">{{ article.summary || article.paragraphs[0] }}</text>
-        <text class="article-list-link">查看详情 ›</text>
       </view>
     </button>
     <view v-if="!items.length" class="empty-state"><text class="empty-title">{{ emptyText }}</text></view>

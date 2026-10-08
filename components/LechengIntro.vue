@@ -43,7 +43,6 @@
                   <text v-for="tag in (article.tags || [article.category, '资讯示例'])" :key="tag" class="pill">{{ tag }}</text>
                 </view>
                 <text class="article-summary">{{ article.summary }}</text>
-                <text class="article-action">{{ expandedArticle === article.id ? '收起详情' : '查看详情' }}<AppIcon name="chevron" color="blue" :size="22" :class="{ 'is-expanded': expandedArticle === article.id }" /></text>
               </view>
             </view>
           </button>
