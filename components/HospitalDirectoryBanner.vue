@@ -27,7 +27,7 @@ const landmarks = [
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	height: 112rpx;
+	height: 92rpx;
 	margin-top: 20rpx;
 	padding: 0 16rpx;
 	border-radius: 28rpx 28rpx 0 0;
@@ -52,27 +52,27 @@ const landmarks = [
 	gap: 9rpx;
 	position: absolute;
 	left: 50%;
-	top: 23rpx;
+	top: 17rpx;
 	transform: translateX(-50%);
 	width: 128rpx;
-	height: 66rpx;
+	height: 58rpx;
 	border: 2rpx solid #f5fbff;
 	border-radius: 12rpx;
 	background: #e5f2ff;
 	color: #233e52;
 	font-size: 24rpx;
-	line-height: 60rpx;
+	line-height: 52rpx;
 }
 .directory-number {
 	color: #327fd7;
-	font-size: 44rpx;
+	font-size: 40rpx;
 	font-weight: 750;
 }
 .directory-landmarks {
 	display: flex;
 	align-self: flex-end;
 	gap: 8rpx;
-	margin-bottom: 7rpx;
+	margin-bottom: 6rpx;
 }
 .directory-landmark {
 	position: relative;
@@ -83,13 +83,16 @@ const landmarks = [
 	overflow: visible;
 }
 .landmark-image {
-	width: 66rpx;
-	height: 64rpx;
-	margin-bottom: -7rpx;
+	width: 56rpx;
+	height: 54rpx;
+	margin-bottom: -6rpx;
 }
 .landmark-label {
 	position: relative;
+	display: block;
+	box-sizing: border-box;
 	width: 100%;
+	text-align: center;
 	border: 2rpx solid #a5e1ee;
 	border-radius: 26rpx;
 	background: #2799ad;

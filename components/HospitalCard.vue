@@ -98,10 +98,10 @@ defineProps({ hospital: { type: Object, required: true }, compact: Boolean, cove
 	display: flex;
 	align-items: center;
 	gap: 16rpx;
-	padding: 20rpx 24rpx;
+	padding: 12rpx 24rpx;
 	background: rgba(17, 89, 162, .82);
 	color: #f7faff;
 	text-align: left;
 }
-.cover-name { flex: 1; min-width: 0; font-size: 29rpx; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+.cover-name { flex: 1; min-width: 0; font-size: 29rpx; font-weight: 600; line-height: 40rpx; overflow-wrap: anywhere; }
 </style>

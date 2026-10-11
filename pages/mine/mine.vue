@@ -88,14 +88,14 @@ function callService() { if (serviceContact.phone) uni.makePhoneCall({ phoneNumb
 .shortcut-grid { display: flex; background: #fff; border-radius: 22rpx; margin-top: 24rpx; padding: 30rpx 8rpx; }
 .shortcut { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: center; gap: 18rpx; font-size: 27rpx; line-height: 1.5; color: #272d35; white-space: nowrap; }
 .shortcut-icon { width: 88rpx; height: 88rpx; }
-.contact-panel { display: flex; align-items: stretch; margin-top: 26rpx; background: #fff; border-radius: 20rpx; padding: 36rpx 26rpx; }
+.contact-panel { display: flex; align-items: center; margin-top: 26rpx; background: #fff; border-radius: 20rpx; padding: 36rpx 26rpx; }
 .contact-rows { flex: 1; min-width: 0; padding-right: 20rpx; }
-.contact-hours-row, .contact-address-row { display: flex; align-items: center; gap: 20rpx; }
-.contact-hours-row { padding-bottom: 28rpx; border-bottom: 1rpx solid #f0f2f5; }
-.contact-address-row { padding-top: 28rpx; }
+/* 两行固定 80rpx，合计 160rpx，与电话区宽度相同，保证任何机型都是正方形 */
+.contact-hours-row, .contact-address-row { display: flex; align-items: center; gap: 20rpx; box-sizing: border-box; height: 80rpx; }
+.contact-hours-row { border-bottom: 1rpx solid #f0f2f5; }
 .business-hours { display: block; flex: 1; min-width: 0; color: #303944; font-size: 30rpx; line-height: 1.7; }
 .address-text { display: block; flex: 1; min-width: 0; font-size: 30rpx; line-height: 1.7; color: #555f6e; }
-.phone-button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6rpx; width: 160rpx; min-height: 104rpx; flex-shrink: 0; border-left: 1rpx solid #f0f2f5; }
+.phone-button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6rpx; box-sizing: border-box; width: 160rpx; height: 160rpx; padding: 0; margin: 0; flex-shrink: 0; border-left: 1rpx solid #f0f2f5; }
 .contact-panel .phone-button[disabled] { opacity: 1; background: transparent; }
 .contact-phone-icon { width: 60rpx; height: 60rpx; }
 .phone-hint { font-size: 21rpx; color: #819096; }
