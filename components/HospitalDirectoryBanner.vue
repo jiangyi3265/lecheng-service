@@ -28,7 +28,7 @@ const landmarks = [
 	align-items: center;
 	justify-content: space-between;
 	height: 112rpx;
-	margin-top: 32rpx;
+	margin-top: 20rpx;
 	padding: 0 16rpx;
 	border-radius: 28rpx 28rpx 0 0;
 	background: linear-gradient(118deg, rgba(255,255,255,.16) 0 13%, transparent 13% 20%, rgba(255,255,255,.10) 20% 31%, transparent 31%), linear-gradient(180deg, #8dc6fc, #398bea);

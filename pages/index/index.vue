@@ -94,7 +94,10 @@ function openAbout() {
 	letter-spacing: 1rpx;
 }
 .home-switch {
-	margin: 24rpx 0 22rpx;
+	margin: 20rpx 0 0;
+}
+.home-switch .segment {
+	font-weight: 700;
 }
 .home-hospitals {
 	display: flex;

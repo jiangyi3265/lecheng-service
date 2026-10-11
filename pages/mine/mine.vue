@@ -95,7 +95,7 @@ function callService() { if (serviceContact.phone) uni.makePhoneCall({ phoneNumb
 .contact-address-row { padding-top: 28rpx; }
 .business-hours { display: block; flex: 1; min-width: 0; color: #303944; font-size: 30rpx; line-height: 1.7; }
 .address-text { display: block; flex: 1; min-width: 0; font-size: 30rpx; line-height: 1.7; color: #555f6e; }
-.phone-button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6rpx; width: 104rpx; min-height: 104rpx; flex-shrink: 0; border-left: 1rpx solid #f0f2f5; }
+.phone-button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6rpx; width: 160rpx; min-height: 104rpx; flex-shrink: 0; border-left: 1rpx solid #f0f2f5; }
 .contact-panel .phone-button[disabled] { opacity: 1; background: transparent; }
 .contact-phone-icon { width: 60rpx; height: 60rpx; }
 .phone-hint { font-size: 21rpx; color: #819096; }
