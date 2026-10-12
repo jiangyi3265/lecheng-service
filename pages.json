@@ -8,7 +8,7 @@
 		},
 		{
 			"style": {
-				"navigationBarTitleText": "医疗资源查询"
+				"navigationBarTitleText": "查询"
 			},
 			"path": "pages/search/search"
 		},
