@@ -1,7 +1,7 @@
 <template>
 	<button class="doctor-card" @tap="openDoctor(doctor.id)">
 		<view class="doctor-face"
-			><image v-if="doctor.coverImage" class="doctor-photo" :src="doctor.coverImage" mode="aspectFill" :aria-label="doctor.name" /><AppIcon v-else name="user-fill" color="blue" :size="72" /></view
+			><image v-if="doctor.coverImage" class="doctor-photo" :src="doctor.coverImage" mode="aspectFill" :aria-label="doctor.name" /><AppIcon v-else name="user-fill" color="green" :size="72" /></view
 		><view class="doctor-copy"
 			><view class="row"
 				><text class="doctor-name">{{ doctor.name }}</text
@@ -24,7 +24,7 @@ defineProps({ doctor: { type: Object, required: true } });
 	gap: 22rpx;
 	width: 100%;
 	padding: 28rpx 0;
-	border-bottom: 1rpx solid #eaf0f7;
+	border-bottom: 1rpx solid #eaf2eb;
 	text-align: left;
 }
 .doctor-face {
@@ -34,7 +34,7 @@ defineProps({ doctor: { type: Object, required: true } });
 	width: 118rpx;
 	height: 128rpx;
 	border-radius: 24rpx;
-	background: #eaf5ff;
+	background: #ebf7ed;
 	flex-shrink: 0;
 }
 .doctor-copy {

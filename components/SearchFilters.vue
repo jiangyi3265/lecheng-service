@@ -52,16 +52,16 @@ function select(type, value) {
 .filter-trigger { flex: 1; min-width: 0; min-height: 98rpx; display: flex; align-items: center; justify-content: center; gap: 12rpx; font-size: 28rpx; color: #273744; }
 .filter-trigger.expanded { font-weight: 650; }
 .filter-arrow { width: 0; height: 0; border-left: 6rpx solid transparent; border-right: 6rpx solid transparent; border-top: 8rpx solid currentColor; }
-.filter-trigger.selected .filter-arrow, .filter-trigger.expanded .filter-arrow { color: #109bd0; }
+.filter-trigger.selected .filter-arrow, .filter-trigger.expanded .filter-arrow { color: var(--primary-text); }
 .filter-trigger.expanded .filter-arrow { transform: rotate(180deg); }
 .filter-panel { position: absolute; top: 100%; left: 0; right: 0; overflow: hidden; background: #fff; border-radius: 0 0 36rpx 36rpx; }
 .department-panel { display: flex; height: 100%; }
 .department-options { width: 38.3%; height: 100%; background: #f6f7fa; flex-shrink: 0; }
 .department-option { width: 100%; min-height: 80rpx; display: flex; align-items: center; padding: 18rpx 24rpx 18rpx 48rpx; text-align: left; border-bottom: 1rpx solid #e7e9ee; font-size: 28rpx; line-height: 1.5; color: #30343a; }
-.department-option.chosen { color: #0785ff; background: #edf6ff; }
+.department-option.chosen { color: var(--primary-text); background: #eef8f0; }
 .department-space { flex: 1; background: #fff; }
 .disease-options { height: 100%; }
 .disease-list { display: flex; flex-direction: column; gap: 20rpx; padding: 20rpx 24rpx; }
 .disease-option { width: 100%; min-height: 80rpx; padding: 20rpx 44rpx; border-radius: 16rpx; background: #f5f5f9; text-align: left; font-size: 28rpx; line-height: 1.5; color: #30343a; }
-.disease-option.chosen { color: #0785ff; background: #edf6ff; }
+.disease-option.chosen { color: var(--primary-text); background: #eef8f0; }
 </style>

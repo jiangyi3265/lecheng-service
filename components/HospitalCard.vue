@@ -29,7 +29,7 @@ defineProps({ hospital: { type: Object, required: true }, compact: Boolean, cove
 	gap: 26rpx;
 	text-align: left;
 	padding: 24rpx 0;
-	border-bottom: 1rpx solid #edf1f7;
+	border-bottom: 1rpx solid #edf3ee;
 	width: 100%;
 }
 .hospital-row:last-child {
@@ -101,7 +101,7 @@ defineProps({ hospital: { type: Object, required: true }, compact: Boolean, cove
 	padding: 12rpx 24rpx;
 	background: linear-gradient(90deg, rgba(7, 193, 96, .94), rgba(7, 193, 96, .62));
 	text-shadow: 0 1rpx 3rpx rgba(3, 80, 40, .35);
-	color: #f7faff;
+	color: #f6fbf7;
 	text-align: left;
 }
 .cover-name { flex: 1; min-width: 0; font-size: 29rpx; font-weight: 600; line-height: 40rpx; overflow-wrap: anywhere; }

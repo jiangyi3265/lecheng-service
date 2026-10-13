@@ -23,13 +23,13 @@
 					><text class="section-title">{{ item.hospitalName }}</text
 					><text
 						class="status-pill"
-						:class="{ cancelled: item.status === '已取消' }"
+						:class="{ cancelled: item.status === '已取消', pending: item.status === '待处理' || item.status === '待就诊' }"
 						>{{ item.status }}</text
 					></view
 				><text class="appointment-doctor"
 					>{{ item.doctorName }} · {{ item.department }}</text
 				><view class="row appointment-time"
-					><AppIcon name="calendar" color="blue" :size="33" /><text
+					><AppIcon name="calendar" color="green" :size="33" /><text
 						>{{ item.date }} {{ item.slot }}</text
 					></view
 				><view class="between muted small"
@@ -77,7 +77,7 @@ const filtered = computed(() =>
 .appointment-card {
 	width: 100%;
 	text-align: left;
-	border: 1rpx solid #e3edf8;
+	border: 1rpx solid #e3efe6;
 	border-radius: 24rpx;
 	padding: 27rpx;
 	margin: 24rpx 0;
@@ -93,7 +93,7 @@ const filtered = computed(() =>
 	font-size: 29rpx;
 }
 .appointment-time {
-	color: #5c799c;
+	color: #6b7480;
 	font-size: 26rpx;
 	gap: 13rpx;
 }

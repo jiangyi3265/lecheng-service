@@ -2,7 +2,7 @@
   <view class="page login-page">
     <AppHeader title="登录" back fallback="/pages/mine/mine" />
     <view class="login-content">
-      <view class="login-symbol"><AppIcon name="building" color="blue" :size="90" /></view>
+      <view class="login-symbol"><AppIcon name="building" color="green" :size="90" /></view>
       <text class="login-title">欢迎使用乐城服务</text>
       <text class="login-subtitle">登录后，继续您的健康之旅</text>
       <button class="login-button wechat-login" :disabled="busy" :loading="busy" @tap="loginWechat">微信一键登录</button>
@@ -14,7 +14,7 @@
       <button class="login-button phone-login" @tap="previewHint">手机号快捷登录</button>
       <!-- #endif -->
       <view class="login-consent">
-        <checkbox-group @change="agreed = $event.detail.value.includes('agree')"><label class="consent-check"><checkbox value="agree" :checked="agreed" color="#0785ff" /><text>我已阅读并同意</text></label></checkbox-group>
+        <checkbox-group @change="agreed = $event.detail.value.includes('agree')"><label class="consent-check"><checkbox value="agree" :checked="agreed" color="#07c160" /><text>我已阅读并同意</text></label></checkbox-group>
         <button class="privacy-link" @tap="openService('隐私说明')">隐私说明</button>
       </view>
       <text v-if="error" class="login-error" role="alert">{{ error }}</text>
@@ -62,16 +62,16 @@ function loginPhone(event) {
 <style scoped>
 .login-page { font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif; }
 .login-content { padding: 84rpx 54rpx 40rpx; }
-.login-symbol { display: flex; align-items: center; justify-content: center; width: 144rpx; height: 144rpx; margin: 0 auto 36rpx; background: #edf6ff; border-radius: 36rpx; }
+.login-symbol { display: flex; align-items: center; justify-content: center; width: 144rpx; height: 144rpx; margin: 0 auto 36rpx; background: #eef8f0; border-radius: 36rpx; }
 .login-title { display: block; text-align: center; font-size: 40rpx; font-weight: 650; }
 .login-subtitle { display: block; text-align: center; color: #8292a8; font-size: 26rpx; margin: 18rpx 0 76rpx; }
 .login-button { width: 100%; min-height: 92rpx; line-height: 92rpx; border-radius: 48rpx; font-size: 29rpx; margin-bottom: 24rpx; }
-.wechat-login { background: #07b566; color: #fff; }
-.phone-login { background: #edf6ff; color: #0785ff; }
+.wechat-login { background: #07c160; color: #fff; }
+.phone-login { background: #eef8f0; color: var(--primary-text); }
 .login-consent { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; font-size: 23rpx; color: #7b899a; margin-top: 36rpx; }
 .consent-check { display: flex; align-items: center; }
 .consent-check checkbox { transform: scale(.75); }
-.privacy-link { color: #0785ff; font-size: 23rpx; padding: 12rpx 4rpx; }
+.privacy-link { color: var(--primary-text); font-size: 23rpx; padding: 12rpx 4rpx; }
 .login-error { display: block; color: #be534e; font-size: 24rpx; text-align: center; margin-top: 24rpx; line-height: 1.6; }
 .browse-button { margin: 38rpx auto 0; color: #8292a8; font-size: 25rpx; padding: 16rpx; }
 </style>

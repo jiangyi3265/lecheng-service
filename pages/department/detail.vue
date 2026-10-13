@@ -9,14 +9,14 @@
 				><view class="department-symbol"
 					><AppIcon
 						:name="feature.icon"
-						color="blue"
+						color="green"
 						:size="79" /></view
 				><text class="detail-heading">{{ feature.name }}</text
 				><button class="row link" @tap="openHospital(hospital.id)">
 					{{ hospital.name
 					}}<AppIcon
 						name="chevron"
-						color="blue"
+						color="green"
 						:size="25"
 					/></button></view
 			><text class="section-title">科室介绍</text
@@ -99,7 +99,7 @@ onLoad((o) => {
 .department-symbol {
 	width: 138rpx;
 	height: 138rpx;
-	background: #e8f5ff;
+	background: #eaf7ec;
 	border-radius: 36rpx;
 	display: flex;
 	align-items: center;

@@ -72,15 +72,15 @@ function callService() { if (serviceContact.phone) uni.makePhoneCall({ phoneNumb
 .profile-header { background: linear-gradient(155deg, #07c160 0%, #34d07f 58%, #aaecc8 100%); padding-bottom: 66rpx; }
 .profile-row { display: flex; align-items: center; gap: 18rpx; padding: 50rpx 30rpx 36rpx; }
 .profile { display: flex; align-items: center; gap: 24rpx; flex: 1; min-width: 0; text-align: left; color: #fff; }
-.user-avatar { display: flex; align-items: flex-end; justify-content: center; width: 116rpx; height: 116rpx; flex-shrink: 0; border: 2rpx solid #e7f7ff; border-radius: 50%; overflow: hidden; background: #ffffff16; box-shadow: 0 0 0 7rpx #ffffff14; }
+.user-avatar { display: flex; align-items: flex-end; justify-content: center; width: 116rpx; height: 116rpx; flex-shrink: 0; border: 2rpx solid #ebf8ed; border-radius: 50%; overflow: hidden; background: #ffffff16; box-shadow: 0 0 0 7rpx #ffffff14; }
 .profile-copy { display: flex; flex-direction: column; gap: 10rpx; min-width: 0; }
 .user-name { font-size: 37rpx; font-weight: 650; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.phone-number { font-size: 26rpx; color: #f2f8ff; line-height: 1.5; }
+.phone-number { font-size: 26rpx; color: #f2faf3; line-height: 1.5; }
 .mine-content { position: relative; margin-top: -40rpx; padding: 0 24rpx 40rpx; }
 .feature-cards { display: flex; gap: 22rpx; }
 .feature-card { position: relative; display: flex; align-items: center; flex: 1; min-width: 0; height: 166rpx; padding: 20rpx 18rpx; text-align: left; border-radius: 20rpx; overflow: hidden; color: #fff; }
 .support-card { background: linear-gradient(110deg, #f592a1, #fa647b); }
-.collection-card { background: linear-gradient(110deg, #80b5f9, #438ff2); }
+.collection-card { background: linear-gradient(110deg, #34d07f, #05994c); }
 .feature-copy { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 12rpx; align-self: center; }
 .feature-title { font-size: 28rpx; font-weight: 700; }
 .feature-subtitle { font-size: 18rpx; line-height: 1.5; white-space: nowrap; }

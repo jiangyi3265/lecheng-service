@@ -14,7 +14,7 @@
 		</template>
 		<template v-else>
 			<view v-if="photoLayout || item.coverImage" class="resource-photo"><ScenePhoto :src="item.coverImage" :scene="scene" :label="item.name + ' · 示意配图'" /></view>
-			<view v-else class="resource-picture"><AppIcon :name="item.icon" color="blue" :size="66" /><text>{{ item.kind }}</text></view>
+			<view v-else class="resource-picture"><AppIcon :name="item.icon || 'building'" color="green" :size="66" /><text>{{ item.kind }}</text></view>
 			<view class="resource-copy">
 				<text class="resource-name">{{ item.name }}</text>
 				<view><text class="pill">{{ item.category }}</text><text v-if="item.contentVersion !== 2" class="resource-demo">示例资料</text></view>
@@ -36,8 +36,8 @@ const landingHospital = computed(() => hospitals.find(hospital => hospital.id ==
 </script>
 
 <style scoped>
-.resource-card { display: flex; align-items: center; gap: 24rpx; width: 100%; padding: 26rpx 0; border-bottom: 1rpx solid #eaf0f7; text-align: left; }
-.resource-picture { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10rpx; width: 174rpx; height: 176rpx; flex-shrink: 0; border-radius: 20rpx; background: #eef7ff; color: #76a2ca; font-size: 23rpx; }
+.resource-card { display: flex; align-items: center; gap: 24rpx; width: 100%; padding: 26rpx 0; border-bottom: 1rpx solid #eaf2eb; text-align: left; }
+.resource-picture { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 10rpx; width: 174rpx; height: 176rpx; flex-shrink: 0; border-radius: 20rpx; background: #eff9f1; color: var(--primary-text); font-size: 23rpx; }
 .resource-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 10rpx; }
 .resource-name { font-size: 29rpx; font-weight: 600; }
 .resource-demo { margin-left: 12rpx; color: #90a0b2; font-size: 22rpx; }
@@ -47,9 +47,9 @@ const landingHospital = computed(() => hospitals.find(hospital => hospital.id ==
 .medicine-name { flex: 1; min-width: 0; color: #142c4d; font-size: 30rpx; line-height: 1.38; font-weight: 650; overflow-wrap: anywhere; }
 .medicine-state { flex-shrink: 0; color: #8b9aaa; font-size: 22rpx; }
 .medicine-body { display: flex; align-items: stretch; gap: 20rpx; }
-.medicine-thumb { width: 174rpx; height: 174rpx; flex-shrink: 0; overflow: hidden; border: 1rpx solid #e1eaf0; border-radius: 15rpx; }
+.medicine-thumb { width: 174rpx; height: 174rpx; flex-shrink: 0; overflow: hidden; border: 1rpx solid #e3ebe4; border-radius: 15rpx; }
 .medicine-meta { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: flex-start; gap: 5rpx; color: #78899a; font-size: 23rpx; line-height: 1.45; }
 .medicine-meta text { overflow-wrap: anywhere; }
-.medicine-badge { margin-bottom: 4rpx; padding: 3rpx 10rpx; border-radius: 8rpx; background: #e4f5f4; color: #149493; font-size: 22rpx; font-weight: 650; }
+.medicine-badge { margin-bottom: 4rpx; padding: 3rpx 10rpx; border-radius: 8rpx; background: #eaf6ec; color: var(--primary-text); font-size: 22rpx; font-weight: 650; }
 .medicine-meta .link { margin-top: 3rpx; }
 </style>

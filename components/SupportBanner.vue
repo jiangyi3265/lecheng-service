@@ -1,6 +1,6 @@
 <template>
 	<view class="support-banner"
-		><AppIcon name="chat" color="blue" :size="57" /><view
+		><AppIcon name="chat" color="green" :size="57" /><view
 			class="support-copy"
 			><text class="support-title">不知道如何选择？</text
 			><text class="support-subtitle">专业客服为您提供建议</text></view
@@ -18,7 +18,7 @@ import { navigate } from "../utils/navigation";
 	display: flex;
 	align-items: center;
 	gap: 17rpx;
-	background: #e8f3ff;
+	background: #e8f6eb;
 	border-radius: 18rpx;
 	padding: 18rpx 20rpx;
 }
@@ -29,7 +29,7 @@ import { navigate } from "../utils/navigation";
 	flex-direction: column;
 }
 .support-title {
-	color: #0785ff;
+	color: var(--primary-text);
 	font-size: 26rpx;
 	font-weight: 600;
 }
@@ -40,7 +40,7 @@ import { navigate } from "../utils/navigation";
 .support-button {
 	flex-shrink: 0;
 	border-radius: 40rpx;
-	background: #0785ff;
+	background: #07c160;
 	color: #fff;
 	font-size: 24rpx;
 	padding: 12rpx 24rpx;

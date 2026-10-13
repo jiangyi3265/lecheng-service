@@ -51,7 +51,7 @@ const filtered = computed(() =>
 </script>
 <style scoped>
 .news-item {
-	border: 1rpx solid #e5eef8;
+	border: 1rpx solid #e5f0e7;
 	border-radius: 24rpx;
 	overflow: hidden;
 	text-align: left;

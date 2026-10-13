@@ -4,7 +4,7 @@
 		<view class="news-sheet">
 			<view v-if="showFavorite" class="news-actions">
 				<button class="news-favorite" :class="{ selected: favorite }" :aria-label="favorite ? '取消收藏' : '收藏文章'" @tap="toggleSaved">
-					<AppIcon name="star" :color="favorite ? 'blue' : 'muted'" :size="30" />
+					<AppIcon name="star" :color="favorite ? 'green' : 'muted'" :size="30" />
 					<text>{{ favorite ? '已收藏' : '收藏' }}</text>
 				</button>
 			</view>
@@ -40,7 +40,7 @@ function toggleSaved() { favorite.value = toggleFavorite('news:' + props.article
 .news-sheet { position: relative; margin-top: -14rpx; padding: 28rpx 28rpx 64rpx; border-radius: 20rpx 20rpx 0 0; background: #fff; }
 .news-actions { display: flex; justify-content: flex-end; margin-bottom: 26rpx; }
 .news-favorite { display: flex; align-items: center; justify-content: center; gap: 12rpx; min-width: 128rpx; min-height: 68rpx; padding: 8rpx 20rpx; border: 2rpx solid #dedfe1; border-radius: 40rpx; color: #494d52; font-size: 26rpx; line-height: 1.4; }
-.news-favorite.selected { border-color: #b8dfff; color: #0785ff; background: #f5faff; }
+.news-favorite.selected { border-color: #bde6c6; color: var(--primary-text); background: #f5fbf6; }
 .news-title { display: block; font-size: 32rpx; font-weight: 700; line-height: 1.4; color: #24282d; overflow-wrap: anywhere; }
 .news-date { display: block; margin: 36rpx 0 56rpx; text-align: right; font-size: 24rpx; color: #969ba0; }
 .news-body { border-top: 1rpx solid #e9ebee; margin-top: 30rpx; padding-top: 30rpx; }

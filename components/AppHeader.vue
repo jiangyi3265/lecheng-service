@@ -18,7 +18,7 @@
 			}"
 		>
 			<view v-if="home" class="home-location"
-				><AppIcon name="pin" color="blue" :size="27" /><text
+				><AppIcon name="pin" color="green" :size="27" /><text
 					>海南 · 博鳌乐城</text
 				></view
 			>

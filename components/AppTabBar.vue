@@ -72,7 +72,7 @@ function open(tab) {
 	height: calc(116rpx + env(safe-area-inset-bottom));
 	padding: 12rpx 16rpx calc(8rpx + env(safe-area-inset-bottom));
 	background: #fff;
-	border-top: 1rpx solid #e7edf5;
+	border-top: 1rpx solid #e7efe8;
 }
 .tab-item {
 	display: flex;

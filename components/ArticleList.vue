@@ -19,16 +19,16 @@ defineProps({ items: { type: Array, default: () => [] }, emptyText: { type: Stri
 defineEmits(['select']);
 </script>
 <style scoped>
-.article-list-item { display: flex; align-items: stretch; gap: 22rpx; width: 100%; padding: 25rpx 0; text-align: left; border-bottom: 1rpx solid #eaf0f7; }
+.article-list-item { display: flex; align-items: stretch; gap: 22rpx; width: 100%; padding: 25rpx 0; text-align: left; border-bottom: 1rpx solid #eaf2eb; }
 .article-list-item:last-child { border-bottom: 0; }
 .article-list-cover { position: relative; width: 40%; min-height: 188rpx; flex-shrink: 0; border-radius: 14rpx; overflow: hidden; }
 .article-list-photo { position: absolute; inset: 0; }
 .article-list-body { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: flex-start; justify-content: center; gap: 6rpx; }
 .article-list-title { display: block; width: 100%; font-size: 27rpx; line-height: 1.32; font-weight: 650; color: #172a3c; overflow-wrap: anywhere; }
 .article-list-tags { display: flex; gap: 6rpx; flex-wrap: wrap; }
-.article-list-tag { padding: 2rpx 8rpx; border-radius: 5rpx; background: #eef7ff; color: #3384bd; font-size: 21rpx; line-height: 1.3; }
+.article-list-tag { padding: 2rpx 8rpx; border-radius: 5rpx; background: #eaf6ec; color: var(--primary-text); font-size: 21rpx; line-height: 1.3; }
 .article-list-summary { display: -webkit-box; width: 100%; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; color: #82909e; font-size: 22rpx; line-height: 1.4; }
-.article-list-link { color: #2283be; font-size: 22rpx; font-weight: 600; }
+.article-list-link { color: var(--primary-text); font-size: 22rpx; font-weight: 600; }
 .is-stacked .article-list-item { flex-direction: column; gap: 18rpx; padding: 28rpx 0; }
 .is-stacked .article-list-cover { width: 100%; height: 0; min-height: 0; padding-top: 50%; }
 .is-stacked .article-list-body { flex: none; width: 100%; gap: 10rpx; }

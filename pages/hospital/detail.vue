@@ -17,16 +17,16 @@
 					<view class="hospital-contact-row">
 						<view class="hospital-contact-copy">
 						<button class="hospital-address" @tap="openGuide(hospital.id)">
-							<AppIcon name="pin" color="blue" :size="29" />
+							<AppIcon name="pin" color="green" :size="29" />
 							<text>{{ hospital.address }}</text>
 						</button>
 						<button v-if="hospital.phone" class="contact-link" @tap="callHospital">
-							<AppIcon name="phone" color="blue" :size="29" /><text>联系电话：{{ hospital.phone }}</text>
+							<AppIcon name="phone" color="green" :size="29" /><text>联系电话：{{ hospital.phone }}</text>
 						</button>
 						<view v-else class="contact-link contact-unavailable"><AppIcon name="phone" color="muted" :size="29" /><text>联系电话：待更新</text></view>
 						</view>
 						<button class="favorite-button" :aria-label="saved ? '取消收藏' : '收藏医院'" @tap="save">
-							<AppIcon name="star" :color="saved ? 'blue' : 'muted'" :size="28" />
+							<AppIcon name="star" :color="saved ? 'green' : 'muted'" :size="28" />
 							<text>{{ saved ? '已收藏' : '收藏' }}</text>
 						</button>
 					</view>
@@ -121,35 +121,35 @@ function openConsultation() {
 	gap: 24rpx;
 	min-height: 110rpx;
 	padding: 0 26rpx 0 0;
-	background: #2f80df;
-	color: #f5faff;
+	background: #05994c;
+	color: #f5fbf6;
 	font-size: 24rpx;
 }
-.hospital-type { align-self: stretch; display: flex; align-items: center; justify-content: center; width: 168rpx; flex-shrink: 0; padding: 20rpx 12rpx; border-radius: 0 36rpx 0 0; background: #4e9bef; font-size: 34rpx; font-weight: 700; line-height: 1.3; text-align: center; }
+.hospital-type { align-self: stretch; display: flex; align-items: center; justify-content: center; width: 168rpx; flex-shrink: 0; padding: 20rpx 12rpx; border-radius: 0 36rpx 0 0; background: rgba(255, 255, 255, .18); color: #fff; font-size: 34rpx; font-weight: 700; line-height: 1.3; text-align: center; }
 .hospital-category-info { flex: 1; min-width: 0; padding: 16rpx 0; }
 .hospital-tags { display: flex; flex-wrap: wrap; gap: 8rpx; }
-.hospital-tags text { padding: 3rpx 12rpx; border-radius: 7rpx; background: #e8f5ff; color: #267dbb; }
+.hospital-tags text { padding: 3rpx 12rpx; border-radius: 7rpx; background: #eaf7ec; color: var(--primary-text); }
 .hospital-identity { padding: 38rpx 0 34rpx; }
 .hospital-title { display: block; font-size: 37rpx; font-weight: 700; line-height: 1.4; }
 .hospital-contact-row { display: flex; align-items: flex-start; gap: 16rpx; margin-top: 19rpx; }
 .hospital-contact-copy { flex: 1; min-width: 0; }
 .hospital-address { display: flex; align-items: flex-start; flex: 1; min-width: 0; gap: 8rpx; color: #596b7e; text-align: left; font-size: 25rpx; }
 .hospital-address text { flex: 1; }
-.favorite-button { display: flex; align-items: center; gap: 7rpx; flex-shrink: 0; min-width: 106rpx; padding: 7rpx 14rpx; border: 1rpx solid #dbe4ed; border-radius: 30rpx; font-size: 22rpx; }
-.contact-link { display: flex; align-items: flex-start; gap: 8rpx; margin-top: 16rpx; color: #2685d8; font-size: 25rpx; text-align: left; overflow-wrap: anywhere; }
+.favorite-button { display: flex; align-items: center; gap: 7rpx; flex-shrink: 0; min-width: 106rpx; padding: 7rpx 14rpx; border: 1rpx solid #dce6de; border-radius: 30rpx; font-size: 22rpx; }
+.contact-link { display: flex; align-items: flex-start; gap: 8rpx; margin-top: 16rpx; color: var(--primary-text); font-size: 25rpx; text-align: left; overflow-wrap: anywhere; }
 .contact-unavailable { color: #8191a3; }
 .detail-section { padding-top: 36rpx; }
-.introduction-section { border-top: 12rpx solid #f5f7fa; margin: 0 -36rpx; padding: 26rpx 26rpx 0; }
+.introduction-section { border-top: 12rpx solid #f5f8f5; margin: 0 -36rpx; padding: 26rpx 26rpx 0; }
 .introduction-photo { position: relative; height: 350rpx; overflow: hidden; border-radius: 16rpx; }
 .basics-heading { display: block; margin: 44rpx 0 20rpx; text-align: center; color: #162a3d; font-size: 47rpx; font-weight: 700; }
 .body-copy { display: block; margin: 0 0 18rpx; color: #4b5e72; font-size: 27rpx; line-height: 1.75; }
 .environment-section { position: relative; margin: 46rpx 0 0; overflow: hidden; border-radius: 22rpx 22rpx 0 0; }
-.environment-heading { display: flex; align-items: center; gap: 18rpx; min-height: 88rpx; padding: 0 28rpx; background: #368be5; color: #f7fbff; font-size: 32rpx; font-weight: 700; }
-.environment-note { margin-left: auto; color: #e4f2ff; font-size: 22rpx; font-weight: 400; }
-.environment-swiper { height: 350rpx; background: #dcecf8; }
+.environment-heading { display: flex; align-items: center; gap: 18rpx; min-height: 88rpx; padding: 0 28rpx; background: #05994c; color: #f7fcf8; font-size: 32rpx; font-weight: 700; }
+.environment-note { margin-left: auto; color: #e5f5e8; font-size: 22rpx; font-weight: 400; }
+.environment-swiper { height: 350rpx; background: #dfeee2; }
 .environment-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20rpx; padding: 20rpx 4rpx 4rpx; }
 .environment-tile { width: 100%; height: 190rpx; overflow: hidden; border-radius: 16rpx; }
-.floating-consult { position: fixed; z-index: 40; right: 24rpx; bottom: calc(170rpx + env(safe-area-inset-bottom)); width: 112rpx; height: 112rpx; overflow: hidden; border-radius: 50%; background: #0e3051; box-shadow: 0 6rpx 18rpx rgba(14, 48, 81, .18); }
+.floating-consult { position: fixed; z-index: 40; right: 24rpx; bottom: calc(170rpx + env(safe-area-inset-bottom)); width: 112rpx; height: 112rpx; overflow: hidden; border-radius: 50%; border: 4rpx solid #fff; background: #0e3051; box-shadow: 0 6rpx 18rpx rgba(14, 48, 81, .18); }
 .floating-consult-image { position: absolute; width: 178%; height: 163%; left: -58.6%; top: -55.3%; }
 /* #ifdef H5 */
 @media (min-width: 600px) { .floating-consult { right: calc((100vw - 480px) / 2 + 16px); } }

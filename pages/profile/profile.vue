@@ -70,7 +70,7 @@ async function save() {
 </script>
 <style scoped>
 .profile-page {
-	background: #f7fafe;
+	background: #f6f7f8;
 }
 .profile-avatar-wrap {
 	display: flex;
@@ -93,7 +93,7 @@ async function save() {
 	align-items: center;
 	gap: 20rpx;
 	min-height: 120rpx;
-	border-bottom: 1rpx solid #edf1f7;
+	border-bottom: 1rpx solid #edf3ee;
 }
 .field:last-child {
 	border: 0;
@@ -124,7 +124,7 @@ async function save() {
 .saved-label {
 	display: block;
 	text-align: center;
-	color: #0785ff;
+	color: var(--primary-text);
 	margin-top: 25rpx;
 }
 </style>

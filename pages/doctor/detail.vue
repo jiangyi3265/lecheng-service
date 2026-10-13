@@ -9,13 +9,13 @@
 			>
 				<AppIcon
 					:name="saved ? 'bookmark-fill' : 'bookmark'"
-					:color="saved ? 'blue' : 'ink'"
+					:color="saved ? 'green' : 'ink'"
 					:size="40"
 				/></button></AppHeader
 		><view v-if="doctor" class="detail-content"
 			><view class="doctor-intro"
 				><view class="doctor-avatar"
-					><image v-if="doctor.coverImage" class="doctor-photo" :src="doctor.coverImage" mode="aspectFill" :aria-label="doctor.name" /><AppIcon v-else name="user-fill" color="blue" :size="100" /></view
+					><image v-if="doctor.coverImage" class="doctor-photo" :src="doctor.coverImage" mode="aspectFill" :aria-label="doctor.name" /><AppIcon v-else name="user-fill" color="green" :size="100" /></view
 				><view class="flex-1"
 					><text class="detail-heading">{{ doctor.name }}</text
 					><text class="muted">{{ doctor.title }}</text
@@ -27,7 +27,7 @@
 				class="list-row hospital-link"
 				@tap="openHospital(doctor.hospitalId)"
 			>
-				<AppIcon name="building" color="blue" :size="40" /><text
+				<AppIcon name="building" color="green" :size="40" /><text
 					class="flex-1"
 					>{{ doctor.hospitalName }}</text
 				><AppIcon name="chevron" color="muted" :size="25" /></button
@@ -117,14 +117,14 @@ function save() {
 	width: 168rpx;
 	height: 182rpx;
 	border-radius: 26rpx;
-	background: #e8f5ff;
+	background: #eaf7ec;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 .doctor-dept {
 	display: block;
-	color: #0785ff;
+	color: var(--primary-text);
 	margin-top: 9rpx;
 }
 .hospital-link {
@@ -136,7 +136,7 @@ function save() {
 	align-items: center;
 	justify-content: space-between;
 	padding: 22rpx 0;
-	border-bottom: 1rpx solid #deebf8;
+	border-bottom: 1rpx solid #dfeee2;
 	font-size: 26rpx;
 }
 .schedule-line:last-child {

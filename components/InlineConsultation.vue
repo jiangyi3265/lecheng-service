@@ -98,7 +98,7 @@ async function send() {
 .consultation-caption { display: block; text-align: center; color: #889199; font-size: 25rpx; margin: 12rpx 0; }
 .consultation-note { display: block; text-align: center; color: #737d87; font-size: 21rpx; margin-bottom: 38rpx; }
 .consultation-row { display: flex; align-items: flex-start; gap: 20rpx; margin-bottom: 28rpx; }
-.consultation-avatar { display: flex; align-items: center; justify-content: center; width: 76rpx; height: 76rpx; border-radius: 10rpx; flex-shrink: 0; background: #e1effc; }
+.consultation-avatar { display: flex; align-items: center; justify-content: center; width: 76rpx; height: 76rpx; border-radius: 10rpx; flex-shrink: 0; background: #e2f2e5; }
 .consultation-bubble { position: relative; display: block; min-width: 0; max-width: calc(100% - 100rpx); padding: 18rpx 22rpx; border-radius: 9rpx; background: #fff; color: #22303d; font-size: 29rpx; line-height: 1.65; word-break: break-word; white-space: pre-wrap; }
 .consultation-bubble::before { content: ""; position: absolute; top: 25rpx; left: -12rpx; width: 0; height: 0; border-top: 12rpx solid transparent; border-bottom: 12rpx solid transparent; border-right: 14rpx solid #fff; }
 .consultation-hours { display: block; margin-top: 18rpx; }
@@ -108,6 +108,6 @@ async function send() {
 .consultation-end { height: 4rpx; }
 .consultation-composer { display: flex; align-items: center; flex-shrink: 0; gap: 18rpx; padding: 18rpx 24rpx; border-top: 1rpx solid #dfe3e7; background: #f7f8fa; }
 .consultation-input { flex: 1; min-width: 0; height: 78rpx; padding: 0 20rpx; border-radius: 10rpx; background: #fff; font-size: 27rpx; }
-.consultation-send { flex-shrink: 0; min-width: 100rpx; padding: 17rpx 18rpx; background: #0785ff; border-radius: 10rpx; color: #fff; font-size: 26rpx; }
-.consultation-send[disabled] { background: #d6e8f7; color: #647d93; opacity: 1; }
+.consultation-send { flex-shrink: 0; min-width: 100rpx; padding: 17rpx 18rpx; background: #07c160; border-radius: 10rpx; color: #fff; font-size: 26rpx; }
+.consultation-send[disabled] { background: #e9ecef; color: #9aa4ae; opacity: 1; }
 </style>

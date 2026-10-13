@@ -6,7 +6,7 @@
 			fallback="/pages/search/search"
 		/><view v-if="doctor" class="detail-content"
 			><view class="booking-summary"
-				><AppIcon name="calendar" color="blue" :size="66" /><view
+				><AppIcon name="calendar" color="green" :size="66" /><view
 					><text class="section-title"
 						>{{ doctor.name }} · {{ doctor.department }}</text
 					><text class="muted small">{{
@@ -71,7 +71,7 @@
 						><checkbox
 							value="agree"
 							:checked="consent"
-							color="#0785ff"
+							color="#07c160"
 						/><text>{{ apiBaseUrl ? '我已了解这只是预约咨询申请，并非医院挂号' : '我已了解本次为静态预约演示' }}</text></label
 					></checkbox-group
 				></label
@@ -193,8 +193,8 @@ async function submit() {
 .date-option {
 	width: 126rpx;
 	padding: 20rpx 0;
-	border: 1rpx solid #e0e9f4;
-	background: #f6f9fe;
+	border: 1rpx solid #e0ece2;
+	background: #f5faf6;
 	border-radius: 20rpx;
 	display: flex;
 	flex-direction: column;
@@ -204,9 +204,9 @@ async function submit() {
 	flex-shrink: 0;
 }
 .date-option.selected {
-	color: #0785ff;
-	background: #eaf5ff;
-	border-color: #0785ff;
+	color: var(--primary-text);
+	background: #ebf7ed;
+	border-color: #07c160;
 }
 .consent-row {
 	display: block;

@@ -43,7 +43,7 @@ function clearCache() {
 function logout() {
   if (loggingOut.value) return;
   if (!auth.session()) { status.value = '当前未登录'; uni.showToast({ title: status.value, icon: 'none' }); return; }
-  uni.showModal({ title: '退出登录', content: '确定退出当前账号吗？', success: async (result) => {
+  uni.showModal({ title: '退出登录', content: '确定退出当前账号吗？', confirmColor: '#07c160', success: async (result) => {
     if (!result.confirm) return;
     loggingOut.value = true;
     try { await auth.logout(); status.value = '已退出登录'; }

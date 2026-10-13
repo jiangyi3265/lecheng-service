@@ -5,7 +5,7 @@
         :class="{ 'is-active': activeTopic === feature.id }"
         :aria-pressed="activeTopic === feature.id" @tap="selectTopic(feature.id)">
         <view class="feature-icon">
-          <AppIcon :name="feature.icon" :color="activeTopic === feature.id ? 'blue' : 'teal'" :size="56" />
+          <AppIcon :name="feature.icon" color="green" :size="56" />
         </view>
         <text class="feature-title">{{ feature.title }}</text>
         <view class="feature-indicator" />
@@ -29,7 +29,7 @@
       <template v-else>
         <text class="content-title">{{ activeTitle }}</text>
         <view v-if="!visibleArticles.length" class="content-empty">
-          <AppIcon name="document" color="blue" :size="56" />
+          <AppIcon name="document" color="green" :size="56" />
           <text class="empty-title">暂无{{ activeTitle }}内容</text>
           <text class="empty-copy">相关内容发布后将在这里展示</text>
         </view>
@@ -122,10 +122,10 @@ function toggleArticle(id) {
 <style scoped>
 .about-features { display: flex; gap: 12rpx; padding-top: 14rpx; border-bottom: 1rpx solid var(--line); }
 .about-feature { flex: 1; min-width: 0; display: flex; align-items: center; flex-direction: column; gap: 12rpx; }
-.feature-icon { display: flex; align-items: center; justify-content: center; width: 114rpx; height: 114rpx; border-radius: 50%; background: #dff5f7; }
-.is-active .feature-icon { background: #e3f2ff; }
+.feature-icon { display: flex; align-items: center; justify-content: center; width: 114rpx; height: 114rpx; border-radius: 50%; background: #f2faf4; }
+.is-active .feature-icon { background: #c2edd3; }
 .feature-title { font-size: 29rpx; font-weight: 600; }
-.is-active .feature-title { color: var(--primary); }
+.is-active .feature-title { color: var(--primary-text); }
 .feature-indicator { width: 40rpx; height: 5rpx; margin-top: 3rpx; border-radius: 5rpx; background: transparent; }
 .is-active .feature-indicator { background: var(--primary); }
 .about-feature:focus-visible, .article-toggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
@@ -143,7 +143,7 @@ function toggleArticle(id) {
 .article-tags { display: flex; flex-wrap: wrap; gap: 8rpx; }
 .article-summary { display: block; color: #65788f; font-size: 23rpx; line-height: 1.5; }
 .article-cover { width: 290rpx; height: 205rpx; flex-shrink: 0; border-radius: 14rpx; overflow: hidden; }
-.article-action { display: flex; align-items: center; color: var(--primary); font-size: 24rpx; font-weight: 500; margin-top: 2rpx; }
+.article-action { display: flex; align-items: center; color: var(--primary-text); font-size: 24rpx; font-weight: 500; margin-top: 2rpx; }
 .article-action .is-expanded { transform: rotate(-90deg); }
 .article-source { display: flex; flex-direction: column; gap: 10rpx; color: #65788f; font-size: 22rpx; overflow-wrap: anywhere; word-break: break-word; }
 .article-body { display: flex; flex-direction: column; gap: 16rpx; padding-top: 22rpx; font-size: 27rpx; line-height: 1.85; }

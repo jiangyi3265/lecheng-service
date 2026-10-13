@@ -28,7 +28,7 @@ import ScenePhoto from "../../components/ScenePhoto.vue";
 	inset: 0;
 	background: linear-gradient(
 		180deg,
-		rgba(226, 244, 255, 0.65),
+		rgba(230, 246, 233, 0.65),
 		transparent 62%
 	);
 }

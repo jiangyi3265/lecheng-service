@@ -101,7 +101,7 @@ function openAbout() {
 }
 /* 选中态：浅绿到微信绿渐变 */
 .home-switch .segment.is-active {
-	background: linear-gradient(135deg, #46d98e, #07c160);
+	background: linear-gradient(135deg, #34d07f, #07c160);
 	box-shadow: 0 5rpx 12rpx rgba(7, 193, 96, 0.22);
 	text-shadow: 0 1rpx 2rpx rgba(3, 90, 45, 0.25);
 }

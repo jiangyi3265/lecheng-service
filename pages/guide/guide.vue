@@ -28,7 +28,7 @@ import { ref } from 'vue';
 import AppHeader from '../../components/AppHeader.vue';
 import { destination, amapUrl, tencentUrl } from '../../data/park-map';
 const mapError = ref(false);
-const markers = [{ id: 1, latitude: destination.latitude, longitude: destination.longitude, iconPath: '/static/icons/pin-blue.png', width: 32, height: 32, callout: { content: '乐城综合服务中心', display: 'ALWAYS', padding: 8, borderRadius: 8, color: '#183451', bgColor: '#ffffff' } }];
+const markers = [{ id: 1, latitude: destination.latitude, longitude: destination.longitude, iconPath: '/static/icons/pin-green.png', width: 32, height: 32, callout: { content: '乐城综合服务中心', display: 'ALWAYS', padding: 8, borderRadius: 8, color: '#183451', bgColor: '#ffffff' } }];
 function openNativeMap() {
   uni.openLocation({ ...destination, scale: 15, fail: (error) => { if (!/cancel/.test(error.errMsg || '')) uni.showToast({ title: '地图暂时无法打开，请稍后重试', icon: 'none' }); } });
 }
@@ -45,6 +45,6 @@ function copyAddress() { uni.setClipboardData({ data: '博鳌乐城国际医疗�
 .map-navigation { margin-top: 28rpx; }
 .map-links { display: flex; gap: 20rpx; margin-top: 28rpx; }
 .map-provider { flex: 1; text-align: center; font-size: 28rpx; padding: 20rpx 10rpx; border-radius: 44rpx; text-decoration: none; color: #fff; }
-.amap { background: #0785ff; }.tencent { background: #12a674; }
-.copy-address { display: block; margin: 24rpx auto 0; padding: 16rpx; font-size: 25rpx; color: #0785ff; }
+.amap { background: #07c160; }.tencent { background: #eef8f0; color: var(--primary-text); border: 2rpx solid #bfe9cf; }
+.copy-address { display: block; margin: 24rpx auto 0; padding: 16rpx; font-size: 25rpx; color: var(--primary-text); }
 </style>

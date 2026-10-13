@@ -112,13 +112,13 @@ async function send() {
 <style scoped>
 .chat-page {
 	min-height: 100vh;
-	background: #f3f7fc;
+	background: #ededed;
 	padding-bottom: calc(160rpx + env(safe-area-inset-bottom));
 }
 .demo-note {
 	text-align: center;
-	background: #e9f3ff;
-	color: #6992bd;
+	background: #f7f7f7;
+	color: #8a9099;
 	padding: 15rpx;
 	font-size: 23rpx;
 }
@@ -138,7 +138,7 @@ async function send() {
 	margin-bottom: 30rpx;
 }
 .chat-avatar {
-	background: #dceeff;
+	background: #def2e2;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -163,9 +163,9 @@ async function send() {
 	margin: 0 0 40rpx 103rpx;
 }
 .quick-questions button {
-	border: 1rpx solid #cfe4f9;
+	border: 1rpx solid #d1e9d5;
 	background: #fff;
-	color: #0785ff;
+	color: var(--primary-text);
 	font-size: 25rpx;
 	border-radius: 40rpx;
 	padding: 12rpx 24rpx;
@@ -174,8 +174,8 @@ async function send() {
 	justify-content: flex-end;
 }
 .own-bubble {
-	background: #0785ff;
-	color: #fff;
+	background: #a9ed78;
+	color: #22303d;
 	border-radius: 24rpx 4rpx 24rpx 24rpx;
 }
 .chat-user-avatar {
@@ -189,7 +189,7 @@ async function send() {
 	left: 0;
 	right: 0;
 	background: #fff;
-	border-top: 1rpx solid #e5ecf5;
+	border-top: 1rpx solid #e5eee6;
 	padding: 23rpx 28rpx calc(23rpx + env(safe-area-inset-bottom));
 	display: flex;
 	align-items: center;
@@ -199,7 +199,7 @@ async function send() {
 	flex: 1;
 	height: 86rpx;
 	padding: 0 24rpx;
-	background: #f2f6fc;
+	background: #f7f7f7;
 	border-radius: 44rpx;
 	font-size: 27rpx;
 }
@@ -207,13 +207,13 @@ async function send() {
 	width: 82rpx;
 	height: 82rpx;
 	border-radius: 50%;
-	background: #0785ff;
+	background: #07c160;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 .composer button[disabled] {
-	background: #a6cef4;
+	background: #a9d6b3;
 }
 /* #ifdef H5 */
 @media (min-width: 600px) {

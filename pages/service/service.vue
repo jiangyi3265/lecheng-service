@@ -75,7 +75,7 @@
 					class="list-row conversation-link"
 					@tap="openChat(chat.name)"
 				>
-					<AppIcon name="chat" color="blue" :size="53" /><view
+					<AppIcon name="chat" color="green" :size="53" /><view
 						class="flex-1"
 						><text class="section-title">{{ chat.name }}</text
 						><text class="muted small preview">{{
@@ -151,7 +151,7 @@
 			</template>
 			<template v-else-if="type === '联系医院' && contactHospital">
 				<view class="contact-symbol"
-					><AppIcon name="headset" color="blue" :size="84" /></view
+					><AppIcon name="headset" color="green" :size="84" /></view
 				><text class="detail-heading">{{ contactHospital.name }}</text
 				><text class="detail-description"
 					>您可以通过在线咨询体验服务流程，也可以查看科室和到院指引。</text
@@ -185,7 +185,7 @@
 				><view class="article-head"
 					><AppIcon
 						:name="article.icon || 'document'"
-						color="blue"
+						color="green"
 						:size="57"
 					/><text class="detail-heading">{{ article.title }}</text
 					><text v-if="article.time" class="muted small">{{
@@ -382,7 +382,7 @@ function clearHistory() {
 	uni.showModal({
 		title: "清空浏览记录",
 		content: "仅清空浏览记录，收藏和预约不会受到影响。",
-		confirmColor: "#0785ff",
+		confirmColor: "#07c160",
 		success: (r) => {
 			if (r.confirm) {
 				saveList("history", []);
@@ -442,7 +442,7 @@ function runAction(action) {
 	margin-top: 10rpx;
 }
 .faq {
-	border-bottom: 1rpx solid #eaf0f7;
+	border-bottom: 1rpx solid #eaf2eb;
 }
 .faq-question {
 	display: flex;
@@ -459,8 +459,8 @@ function runAction(action) {
 	height: 270rpx;
 	margin: 25rpx 0 15rpx;
 	padding: 24rpx;
-	background: #f3f7fc;
-	border: 1rpx solid #e3edf6;
+	background: #f3f8f4;
+	border: 1rpx solid #e4efe6;
 	border-radius: 22rpx;
 	font-size: 27rpx;
 	line-height: 1.7;
@@ -468,7 +468,7 @@ function runAction(action) {
 .feedback-record {
 	width: 100%;
 	padding: 25rpx;
-	border: 1rpx solid #e3edf6;
+	border: 1rpx solid #e4efe6;
 	border-radius: 22rpx;
 	margin-bottom: 24rpx;
 	text-align: left;
@@ -495,7 +495,7 @@ function runAction(action) {
 	width: 138rpx;
 	height: 138rpx;
 	border-radius: 38rpx;
-	background: #e9f5ff;
+	background: #ebf7ed;
 	margin: 25rpx 0;
 }
 .article-image {

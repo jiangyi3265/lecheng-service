@@ -6,12 +6,12 @@
 			fallback="/pages/appointment/list"
 		/><view v-if="appointment" class="detail-content"
 			><view class="appointment-state"
-				><view class="state-icon"
+				><view class="state-icon" :class="{ 'is-cancelled': appointment.status === '已取消', 'is-pending': appointment.status === '待处理' || appointment.status === '待就诊' }"
 					><AppIcon
 						:name="
-							appointment.status === '已取消' ? 'close' : 'check'
+							appointment.status === '已取消' ? 'close' : (appointment.status === '待处理' || appointment.status === '待就诊') ? 'clock' : 'check'
 						"
-						color="blue"
+						:color="appointment.status === '已取消' ? 'muted' : 'green'"
 						:size="67" /></view
 				><text class="detail-heading">{{
 					appointment.status === "已取消"
@@ -132,7 +132,7 @@ function cancel() {
 		title: "取消这次预约？",
 		content: apiBaseUrl ? "取消后后台会同步更新申请状态。" : "取消后可重新选择时段，当前操作仅修改本机模拟记录。",
 		confirmText: "确认取消",
-		confirmColor: "#0785ff",
+		confirmColor: "#07c160",
 		success: async (r) => {
 			if (r.confirm) {
 				try {
@@ -155,10 +155,16 @@ function cancel() {
 	gap: 8rpx;
 	padding: 30rpx 0;
 }
+.state-icon.is-pending {
+	background: #fff4e0;
+}
+.state-icon.is-cancelled {
+	background: #f1f3f5;
+}
 .state-icon {
 	width: 128rpx;
 	height: 128rpx;
-	background: #e7f4ff;
+	background: #e9f6eb;
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
@@ -174,7 +180,7 @@ function cancel() {
 }
 .cancel-booking {
 	height: 80rpx;
-	border: 1rpx solid #e4eaf3;
+	border: 1rpx solid #e3ece5;
 	border-radius: 44rpx;
 	color: #8796aa;
 	display: flex;

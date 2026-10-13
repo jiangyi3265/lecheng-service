@@ -211,7 +211,7 @@ function clearFilters() {
 	gap: 18rpx;
 	height: 91rpx;
 	padding: 0 28rpx;
-	border: 2rpx solid #e8eef6;
+	border: 2rpx solid #e8f0e9;
 	border-radius: 60rpx;
 	box-shadow: 0 5rpx 16rpx rgba(28, 78, 122, 0.08);
 }
@@ -231,7 +231,7 @@ function clearFilters() {
 }
 .category-tabs {
 	display: flex;
-	border-bottom: 1rpx solid #edf1f7;
+	border-bottom: 1rpx solid #edf3ee;
 	margin-top: 28rpx;
 }
 .category {
@@ -244,7 +244,7 @@ function clearFilters() {
 	font-size: 31rpx;
 }
 .category.active {
-	color: #0785ff;
+	color: var(--primary-text);
 	font-weight: 600;
 }
 .category.active::after {
@@ -254,7 +254,7 @@ function clearFilters() {
 	width: 124rpx;
 	height: 5rpx;
 	border-radius: 4rpx;
-	background: #0785ff;
+	background: #07c160;
 }
 .filter-summary { margin: 4rpx 0 22rpx; gap: 16rpx; }
 .filter-selection { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6rpx; }
