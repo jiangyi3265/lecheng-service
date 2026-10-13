@@ -99,7 +99,8 @@ defineProps({ hospital: { type: Object, required: true }, compact: Boolean, cove
 	align-items: center;
 	gap: 16rpx;
 	padding: 12rpx 24rpx;
-	background: rgba(17, 89, 162, .82);
+	background: linear-gradient(90deg, rgba(7, 193, 96, .94), rgba(7, 193, 96, .62));
+	text-shadow: 0 1rpx 3rpx rgba(3, 80, 40, .35);
 	color: #f7faff;
 	text-align: left;
 }

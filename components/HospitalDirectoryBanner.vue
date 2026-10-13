@@ -31,8 +31,8 @@ const landmarks = [
 	margin-top: 20rpx;
 	padding: 0 16rpx;
 	border-radius: 28rpx 28rpx 0 0;
-	background: linear-gradient(118deg, rgba(255,255,255,.16) 0 13%, transparent 13% 20%, rgba(255,255,255,.10) 20% 31%, transparent 31%), linear-gradient(180deg, #8dc6fc, #398bea);
-	box-shadow: inset 0 2rpx 0 #c1e0ff;
+	background: linear-gradient(118deg, rgba(255,255,255,.16) 0 13%, transparent 13% 20%, rgba(255,255,255,.10) 20% 31%, transparent 31%), linear-gradient(180deg, #9ce9c0, #07c160);
+	box-shadow: inset 0 2rpx 0 #cdf6df;
 }
 .directory-brand {
 	display: flex;
@@ -43,7 +43,7 @@ const landmarks = [
 	font-weight: 750;
 	font-style: italic;
 	white-space: nowrap;
-	text-shadow: 0 3rpx 3rpx rgba(31,91,173,.26);
+	text-shadow: 0 3rpx 3rpx rgba(4,110,55,.28);
 }
 .directory-count {
 	display: flex;
@@ -58,13 +58,13 @@ const landmarks = [
 	height: 58rpx;
 	border: 2rpx solid #f5fbff;
 	border-radius: 12rpx;
-	background: #e5f2ff;
+	background: #e8f8ef;
 	color: #233e52;
 	font-size: 24rpx;
 	line-height: 52rpx;
 }
 .directory-number {
-	color: #327fd7;
+	color: #05994c;
 	font-size: 40rpx;
 	font-weight: 750;
 }
@@ -93,9 +93,9 @@ const landmarks = [
 	box-sizing: border-box;
 	width: 100%;
 	text-align: center;
-	border: 2rpx solid #a5e1ee;
+	border: 2rpx solid #c3f2d8;
 	border-radius: 26rpx;
-	background: #2799ad;
+	background: #05994c;
 	color: #f3fcff;
 	font-size: 16rpx;
 	line-height: 26rpx;

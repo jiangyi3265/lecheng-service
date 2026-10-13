@@ -11,7 +11,7 @@
 			<view class="tab-icon-wrap" :class="{ 'mascot-wrap': tab.key === 'support' }"
 				><image v-if="tab.key === 'support'" class="support-mascot" src="/static/images/customer-service-mascot.png" mode="aspectFit" aria-label="客服形象" /><AppIcon v-else
 					:name="active === tab.key ? tab.activeIcon : tab.icon"
-					:color="active === tab.key ? 'blue' : 'ink'"
+					:color="active === tab.key ? 'green' : 'ink'"
 					:size="43" /></view
 			><text>{{ tab.title }}</text>
 		</button></view
@@ -85,7 +85,7 @@ function open(tab) {
 	color: #7d8da4;
 }
 .tab-item.is-active {
-	color: #0785ff;
+	color: #07c160;
 	font-weight: 600;
 }
 .tab-icon-wrap {
