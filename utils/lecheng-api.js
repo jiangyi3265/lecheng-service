@@ -40,6 +40,11 @@ export function loadCatalog() {
     return list;
   })).then(lists => {
     bindings.forEach(([, target], index) => target.splice(0, target.length, ...lists[index]));
+    // 医生资料里存的医院名可能是旧的（医院改过名），按医院编号用当前医院名显示
+    for (const doctor of doctors) {
+      const current = hospitals.find((item) => item.id === doctor.hospitalId);
+      if (current) doctor.hospitalName = current.name;
+    }
     catalogSource.value = "remote"; return true;
   })
     .catch(error => { catalogSource.value = "demo"; throw error; })

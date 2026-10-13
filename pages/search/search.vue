@@ -169,7 +169,8 @@ const projectArticles = computed(() => results.value.map(item => ({
 	coverImage: item.coverImage,
 	scene: item.scene,
 	tags: item.tags || [item.category],
-	summary: item.spec || item.summary,
+	// 列表里优先显示后台填写的“列表摘要”，没填时再用“规格 / 项目说明”
+	summary: item.summary || item.spec,
 })));
 const healthArticles = computed(() => resourceResults.value.map(item => ({
 	id: item.id,

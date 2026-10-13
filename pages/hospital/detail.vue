@@ -16,7 +16,7 @@
 					<text class="hospital-title">{{ hospital.name }}</text>
 					<view class="hospital-contact-row">
 						<view class="hospital-contact-copy">
-						<button class="hospital-address" @tap="openGuide(hospital.id)">
+						<button v-if="hospital.address" class="hospital-address" @tap="openGuide(hospital.id)">
 							<AppIcon name="pin" color="blue" :size="29" />
 							<text>{{ hospital.address }}</text>
 						</button>
@@ -60,6 +60,10 @@
 						</button>
 					</view>
 				</view>
+				<view v-if="hospitalDoctors.length" class="doctor-section" aria-label="医生团队">
+					<text class="basics-heading doctor-heading">医生团队</text>
+					<DoctorCard v-for="doctor in hospitalDoctors" :key="doctor.id" :doctor="doctor" />
+				</view>
 			</view>
 			<button class="floating-consult" aria-label="预约问诊" @tap="openConsultation">
 				<image class="floating-consult-image" src="/static/images/customer-service-badge.jpg" mode="scaleToFill" aria-hidden="true" />
@@ -79,12 +83,16 @@ import AppHeader from "../../components/AppHeader.vue";
 import AppIcon from "../../components/AppIcon.vue";
 import ContentBlocks from "../../components/ContentBlocks.vue";
 import ScenePhoto from "../../components/ScenePhoto.vue";
+import DoctorCard from "../../components/DoctorCard.vue";
 import { hospitals } from "../../data/medical";
+import { doctors } from "../../data/catalog";
 import { readList, toggleFavorite, recordVisit } from "../../utils/storage";
 import { openSearch, openGuide, navigate } from "../../utils/navigation";
 
 const hospitalId = ref('');
 const hospital = computed(() => hospitals.find(item => item.id === hospitalId.value));
+// 后台“医生管理”里属于这家医院的医生，点开可看详情并预约
+const hospitalDoctors = computed(() => hospital.value ? doctors.filter(item => item.hospitalId === hospital.value.id) : []);
 const saved = ref(false);
 const selectedEnvironment = ref(0);
 const environmentPhotos = computed(() => hospital.value?.environmentImages?.length
@@ -143,6 +151,8 @@ function openConsultation() {
 .introduction-photo { position: relative; height: 350rpx; overflow: hidden; border-radius: 16rpx; }
 .basics-heading { display: block; margin: 44rpx 0 20rpx; text-align: center; color: #162a3d; font-size: 47rpx; font-weight: 700; }
 .body-copy { display: block; margin: 0 0 18rpx; color: #4b5e72; font-size: 27rpx; line-height: 1.75; }
+/* 医生团队：底部多留空，避免最后一张卡片被右下角悬浮的客服按钮挡住 */
+.doctor-section { padding-bottom: 260rpx; }
 .environment-section { position: relative; margin: 46rpx 0 0; overflow: hidden; border-radius: 22rpx 22rpx 0 0; }
 .environment-heading { display: flex; align-items: center; gap: 18rpx; min-height: 88rpx; padding: 0 28rpx; background: #368be5; color: #f7fbff; font-size: 32rpx; font-weight: 700; }
 .environment-note { margin-left: auto; color: #e4f2ff; font-size: 22rpx; font-weight: 400; }
