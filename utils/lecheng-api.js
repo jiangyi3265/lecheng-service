@@ -59,7 +59,14 @@ export async function getSessionToken() {
 
 async function personalRequest(path, method = "GET", data) {
   const token = await getSessionToken();
-  return request(path, method, data, token);
+  try {
+    return await request(path, method, data, token);
+  } catch (error) {
+    // 服务器已不认识这个会话（例如数据重置）：丢弃本机旧会话，新建后重试一次
+    if (!String(error?.message || "").includes("会话已失效")) throw error;
+    uni.removeStorageSync(SESSION_KEY);
+    return request(path, method, data, await getSessionToken());
+  }
 }
 
 export const getMessages = () => personalRequest("/open/lecheng/messages");

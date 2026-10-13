@@ -83,7 +83,7 @@ import { hospitals } from "../../data/medical";
 import { readList, toggleFavorite, recordVisit } from "../../utils/storage";
 import { openSearch, openGuide, navigate } from "../../utils/navigation";
 
-const hospitalId = ref('international');
+const hospitalId = ref('');
 const hospital = computed(() => hospitals.find(item => item.id === hospitalId.value));
 const saved = ref(false);
 const selectedEnvironment = ref(0);

@@ -116,6 +116,7 @@
 		"navigationBarBackgroundColor": "#FFFFFF",
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "乐城服务",
-		"backgroundTextStyle": "dark"
+		"backgroundTextStyle": "dark",
+		"rpxCalcMaxDeviceWidth": 480
 	}
 }
