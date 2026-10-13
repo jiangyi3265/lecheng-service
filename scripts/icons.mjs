@@ -64,7 +64,6 @@ for (const [name, shape] of Object.entries(shapes))
 		muted: "#8292A8",
 		white: "#FFFFFF",
 		teal: "#0CB6C4",
-		green: "#07C160",
 	})) {
 		const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${hex}" color="${hex}" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round">${shape}</svg>`;
 		await sharp(Buffer.from(svg), { density: 288 })
@@ -79,5 +78,5 @@ await sharp(Buffer.from(avatar), { density: 144 })
 	.png()
 	.toFile(path.resolve("static/images/avatar.png"));
 console.log(
-	`Generated ${Object.keys(shapes).length * 6} local icons and avatar`,
+	`Generated ${Object.keys(shapes).length * 5} local icons and avatar`,
 );

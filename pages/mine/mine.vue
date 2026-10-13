@@ -69,7 +69,7 @@ function callService() { if (serviceContact.phone) uni.makePhoneCall({ phoneNumb
 </script>
 <style scoped>
 .mine-page { background: #f6f7f9; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
-.profile-header { background: linear-gradient(155deg, #07c160 0%, #34d07f 58%, #aaecc8 100%); padding-bottom: 66rpx; }
+.profile-header { background: linear-gradient(155deg, #3586ef 0%, #499bfa 60%, #a8cefa 100%); padding-bottom: 66rpx; }
 .profile-row { display: flex; align-items: center; gap: 18rpx; padding: 50rpx 30rpx 36rpx; }
 .profile { display: flex; align-items: center; gap: 24rpx; flex: 1; min-width: 0; text-align: left; color: #fff; }
 .user-avatar { display: flex; align-items: flex-end; justify-content: center; width: 116rpx; height: 116rpx; flex-shrink: 0; border: 2rpx solid #e7f7ff; border-radius: 50%; overflow: hidden; background: #ffffff16; box-shadow: 0 0 0 7rpx #ffffff14; }
