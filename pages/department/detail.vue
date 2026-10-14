@@ -72,8 +72,11 @@ import {
 	openChat,
 	goBack,
 } from "../../utils/navigation";
-const hospital = ref(null),
-	feature = ref(null);
+const hospitalId = ref(""),
+	featureName = ref("");
+// 用 computed 跟随后台数据：直接打开本页时后台医院资料可能稍后才到，届时医院名要自动换成最新的
+const hospital = computed(() => hospitals.find((h) => h.id === hospitalId.value) || null);
+const feature = computed(() => hospital.value?.features?.find((f) => f.name === featureName.value) || null);
 const members = computed(() =>
 	doctors.filter(
 		(d) =>
@@ -82,10 +85,8 @@ const members = computed(() =>
 	),
 );
 onLoad((o) => {
-	hospital.value = hospitals.find((h) => h.id === o.hospitalId);
-	feature.value = hospital.value?.features.find(
-		(f) => f.name === routeText(o.name),
-	);
+	hospitalId.value = o.hospitalId || "";
+	featureName.value = routeText(o.name);
 });
 </script>
 <style scoped>
