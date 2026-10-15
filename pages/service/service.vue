@@ -3,7 +3,7 @@
 		<AppHeader :title="title" back :fallback="fallback" />
 		<SettingsPanel v-if="isSettingsPage" :page="type" />
 		<NewsArticle v-else-if="type === '资讯详情' && article" :article="article" />
-		<NewsArticle v-else-if="serviceArticle" :article="serviceArticle" :show-favorite="false" />
+		<NewsArticle v-else-if="serviceArticle" :article="serviceArticle" :show-favorite="false" paragraph-blocks />
 		<view v-else class="detail-content">
 			<template v-if="type === '我的收藏' || type === '浏览记录'">
 				<view class="between"

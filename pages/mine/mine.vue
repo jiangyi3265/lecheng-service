@@ -30,14 +30,14 @@
         <view class="contact-rows">
           <view class="contact-hours-row">
             <AppIcon name="clock" :size="38" />
-            <text class="business-hours">客服在线时间：{{ serviceContact.hours || '待更新' }}</text>
+            <text class="business-hours" :class="{ 'is-compact': hoursCompact }">{{ hoursText }}</text>
           </view>
           <view class="contact-address-row">
             <AppIcon name="pin" :size="42" />
-            <text class="address-text">{{ serviceContact.address }}</text>
+            <text class="address-text" :class="{ 'is-compact': addressCompact }">{{ serviceContact.address }}</text>
           </view>
         </view>
-        <button class="phone-button" :disabled="!serviceContact.phone" :aria-label="serviceContact.phone ? '拨打客服电话' : '客服电话待更新'" @tap="callService">
+        <button class="phone-button" :disabled="!serviceContact.phone" :aria-label="serviceContact.phone ? '拨打客服电话 ' + serviceContact.phone : '客服电话待更新'" @tap="callService">
             <image class="contact-phone-icon" src="/static/icons/mine-phone.png" mode="aspectFit" /><text v-if="!serviceContact.phone" class="phone-hint">待更新</text>
         </button>
       </view>
@@ -53,7 +53,9 @@ import AppTabBar from '../../components/AppTabBar.vue';
 import AppIcon from '../../components/AppIcon.vue';
 import { readProfile } from '../../utils/storage';
 import { navigate, openService, openGuide } from '../../utils/navigation';
+// 在线时间、地址、电话由后台“客服设置 → 「我的」页联系方式”维护，未填写的项用 data/service-contact.js 的默认值
 import { serviceContact } from '../../data/service-contact';
+import { dialNumber } from '../../utils/content-mapping';
 import { auth } from '../../utils/auth';
 import { unreadCount, badgeText } from '../../utils/chat-unread';
 const session = ref(auth.session());
@@ -69,7 +71,13 @@ onUnmounted(() => uni.$off('lecheng:auth', refreshProfile));
 function editProfile() { navigate(session.value ? '/pages/profile/profile' : '/pages/login/login'); }
 function openConsultation() { navigate('/pages/support/support'); }
 function openShortcut(title) { title === '园区导航' ? openGuide() : openService(title); }
-function callService() { if (serviceContact.phone) uni.makePhoneCall({ phoneNumber: serviceContact.phone }); }
+// 后台填写的在线时间或地址超过一行时缩小字号、最多两行，保持两行各 80rpx 的固定高度（电话区为正方形）。
+// 按字符估算宽度：中文 1、英文数字约 0.55；默认内容都在一行内，显示不变
+const textUnits = (value) => [...String(value || '')].reduce((sum, char) => sum + (/[\x20-\x7e]/.test(char) ? 0.55 : 1), 0);
+const hoursText = computed(() => '客服在线时间：' + (serviceContact.hours || '待更新'));
+const hoursCompact = computed(() => textUnits(hoursText.value) > 13.5);
+const addressCompact = computed(() => textUnits(serviceContact.address) > 13.5);
+function callService() { const phoneNumber = dialNumber(serviceContact.phone); if (phoneNumber) uni.makePhoneCall({ phoneNumber }); }
 </script>
 <style scoped>
 .mine-page { background: #f6f7f9; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
@@ -100,6 +108,7 @@ function callService() { if (serviceContact.phone) uni.makePhoneCall({ phoneNumb
 .contact-hours-row { border-bottom: 1rpx solid #f0f2f5; }
 .business-hours { display: block; flex: 1; min-width: 0; color: #303944; font-size: 30rpx; line-height: 1.7; }
 .address-text { display: block; flex: 1; min-width: 0; font-size: 30rpx; line-height: 1.7; color: #555f6e; }
+.contact-rows .is-compact { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 25rpx; line-height: 1.35; overflow-wrap: anywhere; }
 .phone-button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6rpx; box-sizing: border-box; width: 160rpx; height: 160rpx; padding: 0; margin: 0; flex-shrink: 0; border-left: 1rpx solid #f0f2f5; }
 .contact-panel .phone-button[disabled] { opacity: 1; background: transparent; }
 .contact-phone-icon { width: 60rpx; height: 60rpx; }

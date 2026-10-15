@@ -4,7 +4,13 @@ import { approvedProjects, doctors, news, resources } from "../data/catalog.js";
 import { policies } from "../data/policies.js";
 import { aboutSections } from "../data/about.js";
 import { DEFAULT_SUPPORT_SETTINGS, supportSettings } from "../data/support.js";
-import { mapAboutSection, mapPolicy, mapSupportSettings } from "./content-mapping.js";
+import { DEFAULT_SERVICE_CONTACT, serviceContact } from "../data/service-contact.js";
+import { DEFAULT_BANNERS, banners } from "../data/banners.js";
+import { benefitArticles, processArticles } from "../data/service-articles.js";
+import { DEFAULT_PARK_GUIDE, destination } from "../data/park-map.js";
+import {
+  mapAboutSection, mapBanners, mapBenefit, mapParkGuide, mapPolicy, mapProcess, mapServiceContact, mapSupportSettings,
+} from "./content-mapping.js";
 
 const configured = (import.meta.env.VITE_LECHENG_API_BASE_URL || "").trim();
 export const apiBaseUrl = configured.replace(/\/$/, "") || (import.meta.env.DEV ? "http://127.0.0.1:8080" : "");
@@ -57,8 +63,9 @@ export function loadCatalog() {
   return catalogRequest;
 }
 
-// 国家政策、了解乐城、客服设置：三项各自加载，任一失败（含旧版后台不认识该分类）只保留该项内置内容，
-// 不影响其他两项和 loadCatalog
+// 国家政策、了解乐城、客服设置（含“我的”页联系方式）、首页轮播、福利活动、服务流程、园区导航：各自加载，
+// 任一失败（含旧版后台不认识该分类）只保留该项内置内容，不影响其他各项和 loadCatalog。
+// 列表类以后台为准（后台为空就显示空状态），只有首页轮播在后台为空时保留内置两张，首页不出现空白大图
 let extrasRequest;
 export function loadExtras() {
   if (!apiBaseUrl) return Promise.resolve(false);
@@ -72,7 +79,14 @@ export function loadExtras() {
   extrasRequest = Promise.all([
     load("policy", list => policies.splice(0, policies.length, ...list.map(mapPolicy))),
     load("about", list => aboutSections.splice(0, aboutSections.length, ...list.map(mapAboutSection))),
-    load("support", list => Object.assign(supportSettings, mapSupportSettings(list, DEFAULT_SUPPORT_SETTINGS, apiBaseUrl))),
+    load("support", list => {
+      Object.assign(supportSettings, mapSupportSettings(list, DEFAULT_SUPPORT_SETTINGS, apiBaseUrl));
+      Object.assign(serviceContact, mapServiceContact(list, DEFAULT_SERVICE_CONTACT));
+    }),
+    load("banner", list => banners.splice(0, banners.length, ...mapBanners(list, DEFAULT_BANNERS))),
+    load("benefit", list => benefitArticles.splice(0, benefitArticles.length, ...list.map(mapBenefit))),
+    load("process", list => processArticles.splice(0, processArticles.length, ...list.map(mapProcess))),
+    load("guide", list => Object.assign(destination, mapParkGuide(list, DEFAULT_PARK_GUIDE))),
   ]).then(results => results.every(Boolean))
     .finally(() => { extrasRequest = null; });
   return extrasRequest;

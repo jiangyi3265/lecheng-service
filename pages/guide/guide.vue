@@ -6,12 +6,12 @@
     <text v-if="mapError" class="map-error">地图加载失败，请检查网络或点击下方按钮打开地图。</text>
     <!-- #endif -->
     <!-- #ifdef H5 -->
-    <iframe class="park-map web-map" title="博鳌乐城园区地图" src="https://www.openstreetmap.org/export/embed.html?bbox=110.461%2C19.135%2C110.515%2C19.194&amp;layer=mapnik&amp;marker=19.15095%2C110.49425" />
+    <iframe class="park-map web-map" title="博鳌乐城园区地图" :src="osmEmbedUrl" />
     <!-- #endif -->
     <view class="map-content">
-      <text class="map-title">博鳌乐城国际医疗旅游先行区</text>
-      <text class="map-address">海南省琼海市博鳌镇</text>
-      <text class="map-note">地图标记为园区综合服务中心。前往医院，请在地图中确认具体院区与入口。</text>
+      <text class="map-title">{{ destination.title }}</text>
+      <text v-if="destination.address" class="map-address">{{ destination.address }}</text>
+      <text v-if="destination.note" class="map-note">{{ destination.note }}</text>
       <!-- #ifdef MP-WEIXIN -->
       <button class="primary-button map-navigation" @tap="openNativeMap">打开地图导航</button>
       <text class="map-note">在导航页选择手机支持的地图应用</text>
@@ -19,20 +19,21 @@
       <!-- #ifdef H5 -->
       <view class="map-links"><a class="map-provider amap" :href="amapUrl" target="_blank" rel="noopener noreferrer">高德地图</a><a class="map-provider tencent" :href="tencentUrl" target="_blank" rel="noopener noreferrer">腾讯地图</a></view>
       <!-- #endif -->
-      <button class="copy-address" @tap="copyAddress">复制园区名称和地址</button>
+      <button class="copy-address" @tap="copyAddress">{{ destination.address ? '复制园区名称和地址' : '复制园区名称' }}</button>
     </view>
   </view>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import AppHeader from '../../components/AppHeader.vue';
-import { destination, amapUrl, tencentUrl } from '../../data/park-map';
+// 园区名称、地址、说明、标记文字和坐标由后台“园区导航”维护；未发布或接口不可用时用 data/park-map.js 的内置内容
+import { destination, amapUrl, tencentUrl, osmEmbedUrl, placeName } from '../../data/park-map';
 const mapError = ref(false);
-const markers = [{ id: 1, latitude: destination.latitude, longitude: destination.longitude, iconPath: '/static/icons/pin-blue.png', width: 32, height: 32, callout: { content: '乐城综合服务中心', display: 'ALWAYS', padding: 8, borderRadius: 8, color: '#183451', bgColor: '#ffffff' } }];
+const markers = computed(() => [{ id: 1, latitude: destination.latitude, longitude: destination.longitude, iconPath: '/static/icons/pin-blue.png', width: 32, height: 32, callout: { content: placeName(destination), display: 'ALWAYS', padding: 8, borderRadius: 8, color: '#183451', bgColor: '#ffffff' } }]);
 function openNativeMap() {
-  uni.openLocation({ ...destination, scale: 15, fail: (error) => { if (!/cancel/.test(error.errMsg || '')) uni.showToast({ title: '地图暂时无法打开，请稍后重试', icon: 'none' }); } });
+  uni.openLocation({ latitude: destination.latitude, longitude: destination.longitude, name: placeName(destination), address: destination.address, scale: 15, fail: (error) => { if (!/cancel/.test(error.errMsg || '')) uni.showToast({ title: '地图暂时无法打开，请稍后重试', icon: 'none' }); } });
 }
-function copyAddress() { uni.setClipboardData({ data: '博鳌乐城国际医疗旅游先行区，海南省琼海市博鳌镇' }); }
+function copyAddress() { uni.setClipboardData({ data: [destination.title, destination.address].filter(Boolean).join('，') }); }
 </script>
 <style scoped>
 .guide-page { font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif; }

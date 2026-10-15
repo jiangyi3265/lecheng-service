@@ -9,8 +9,22 @@
 				</button>
 			</view>
 			<text class="news-title">{{ article.title }}</text>
-			<text v-if="article.date" class="news-date">发布日期：{{ article.date }}{{ article.contentVersion === 2 ? '' : ' · 示例' }}</text>
-			<ContentBlocks v-if="article.contentBlocks?.length" :blocks="article.contentBlocks" />
+			<text v-if="article.period" class="news-date">活动时间：{{ article.period }}</text>
+			<text v-else-if="article.date" class="news-date">发布日期：{{ article.date }}{{ article.contentVersion === 2 ? '' : ' · 示例' }}</text>
+			<!-- 福利活动、服务流程：文字块按换行分段、沿用下方段落样式（与内置内容显示一致）；图片块整宽圆角 + 居中小字说明 -->
+			<view v-if="paragraphBlocks && article.contentBlocks?.length" class="news-body">
+				<view v-for="(block, index) in article.contentBlocks" :key="index" class="news-paragraph">
+					<template v-if="block.type === 'image'">
+						<image class="news-image" :src="block.url" mode="widthFix" :aria-label="block.caption || article.title" @tap="previewImage(block.url)" />
+						<text v-if="block.caption" class="news-caption">{{ block.caption }}</text>
+					</template>
+					<template v-else>
+						<text v-if="block.title" class="news-subheading">{{ block.title }}</text>
+						<text v-for="(line, lineIndex) in block.lines" :key="lineIndex" class="news-copy" selectable>{{ line }}</text>
+					</template>
+				</view>
+			</view>
+			<ContentBlocks v-else-if="article.contentBlocks?.length" :blocks="article.contentBlocks" />
 			<view v-else class="news-body">
 				<view v-for="(paragraph, index) in article.paragraphs" :key="index" class="news-paragraph">
 					<text v-if="paragraph.title" class="news-subheading">{{ paragraph.title }}</text>
@@ -27,12 +41,14 @@ import ScenePhoto from './ScenePhoto.vue';
 import ContentBlocks from './ContentBlocks.vue';
 import AppIcon from './AppIcon.vue';
 import { readList, toggleFavorite } from '../utils/storage';
-const props = defineProps({ article: { type: Object, required: true }, showFavorite: { type: Boolean, default: true } });
+// paragraphBlocks：图文块用正文段落样式显示（福利活动、服务流程）；不传时沿用 ContentBlocks（乐城动态）
+const props = defineProps({ article: { type: Object, required: true }, showFavorite: { type: Boolean, default: true }, paragraphBlocks: { type: Boolean, default: false } });
 const favorite = ref(false);
 function refresh() { favorite.value = readList('favorites').includes('news:' + props.article.id); }
 watch(() => props.article.id, refresh, { immediate: true });
 onShow(refresh);
 function toggleSaved() { favorite.value = toggleFavorite('news:' + props.article.id); }
+function previewImage(current) { uni.previewImage({ current, urls: props.article.contentBlocks.filter((block) => block.type === 'image' && block.url).map((block) => block.url) }); }
 </script>
 <style scoped>
 .news-article { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; }
@@ -47,4 +63,7 @@ function toggleSaved() { favorite.value = toggleFavorite('news:' + props.article
 .news-paragraph + .news-paragraph { margin-top: 40rpx; }
 .news-copy { display: block; font-size: 36rpx; line-height: 1.8; color: #202429; overflow-wrap: anywhere; white-space: pre-wrap; }
 .news-subheading { display: block; margin-bottom: 20rpx; font-size: 36rpx; line-height: 1.5; font-weight: 700; color: #202429; }
+.news-copy + .news-copy { margin-top: 40rpx; }
+.news-image { display: block; width: 100%; border-radius: 12rpx; }
+.news-caption { display: block; margin-top: 12rpx; text-align: center; font-size: 24rpx; line-height: 1.5; color: #969ba0; }
 </style>

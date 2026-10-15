@@ -1,6 +1,9 @@
-// 尚未发布真实福利活动。发布时填写真实标题、配图 scene 和 paragraphs。
-export const benefitArticles = [];
-export const processArticles = [
+import { reactive } from 'vue';
+
+// “我的 → 福利活动 / 服务流程”。后台发布后由 loadExtras 整体替换（后台为空时列表显示空状态）；
+// 接口不可用时显示这里的内置内容。尚未发布真实福利活动。
+export const benefitArticles = reactive([]);
+export const processArticles = reactive([
   { id: 'find-care', title: '浏览与查询：找到需要的医疗信息', scene: 0, paragraphs: [
     '从首页浏览医院介绍，或进入查询页面，按医院、药品、器械查找相关信息。',
     '打开条目可查看详情，感兴趣的医院、药械和资讯可以收藏，之后从“我的收藏”继续查看。',
@@ -13,5 +16,5 @@ export const processArticles = [
     '在医院详情中查看医疗环境，并使用“预约问诊”进入客服页面咨询。',
     '通过“园区导航”查看博鳌乐城地图，使用地图应用查找实际接诊医院并规划路线。出发前请通过医院官方渠道确认接诊安排。',
   ] },
-];
+]);
 export function serviceArticlesFor(type) { return type === '福利活动' ? benefitArticles : type === '服务流程' ? processArticles : []; }

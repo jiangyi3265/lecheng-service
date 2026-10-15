@@ -4,17 +4,17 @@
 		<swiper
 			class="hero-swiper"
 			:autoplay="false"
-			circular
-			indicator-dots
+			:circular="banners.length > 1"
+			:indicator-dots="banners.length > 1"
 			indicator-color="rgba(255,255,255,.5)"
 			indicator-active-color="#ffffff"
 		>
-			<swiper-item v-for="slide in slides" :key="slide.title"
+			<swiper-item v-for="slide in banners" :key="slide.id"
 				><view class="hero-slide" @tap="openAbout"
-					><ScenePhoto :scene="slide.scene"
+					><ScenePhoto :src="slide.coverImage" :scene="slide.scene"
 						><view class="hero-shade" /><view class="hero-copy"
-							><text class="hero-title">{{ slide.title }}</text
-							><text class="hero-subtitle">{{
+							><text v-if="slide.title" class="hero-title">{{ slide.title }}</text
+							><text v-if="slide.subtitle" class="hero-subtitle">{{
 								slide.subtitle
 							}}</text></view
 						></ScenePhoto
@@ -53,11 +53,9 @@ import HospitalCard from "../../components/HospitalCard.vue";
 import HospitalDirectoryBanner from "../../components/HospitalDirectoryBanner.vue";
 import LechengIntro from "../../components/LechengIntro.vue";
 import { hospitals, directoryTotal } from "../../data/medical";
+// 轮播内容由后台“首页轮播”维护；上传了图片显示图片，否则显示示意配图
+import { banners } from "../../data/banners";
 const activeIntro = ref("hospitals");
-const slides = [
-	{ scene: 0, title: "走进乐城", subtitle: "发现身边的优质医疗" },
-	{ scene: 3, title: "你好，乐城", subtitle: "让优质医疗，更近一步" },
-];
 function openAbout() {
 	activeIntro.value = "about";
 }
@@ -78,6 +76,7 @@ function openAbout() {
 	position: absolute;
 	bottom: 63rpx;
 	left: 44rpx;
+	right: 44rpx;
 	display: flex;
 	flex-direction: column;
 	gap: 3rpx;
