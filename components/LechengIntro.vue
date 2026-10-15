@@ -15,11 +15,31 @@
       <view v-if="activeTopic === 'about'" class="about-article">
         <text class="content-title">了解乐城</text>
         <text class="about-byline">博鳌乐城 · 图文介绍</text>
-        <view v-for="section in aboutSections" :key="section.title" class="about-section">
-          <view class="about-photo"><ScenePhoto :scene="section.scene" :label="section.caption" /></view>
-          <text class="about-caption">{{ section.caption }}</text>
-          <text class="about-section-title">{{ section.title }}</text>
-          <text v-for="paragraph in section.paragraphs" :key="paragraph" class="about-copy" selectable>{{ paragraph }}</text>
+        <view v-if="!aboutSections.length" class="content-empty">
+          <AppIcon name="building" color="blue" :size="56" />
+          <text class="empty-title">暂无了解乐城内容</text>
+          <text class="empty-copy">相关内容发布后将在这里展示</text>
+        </view>
+        <view v-for="section in aboutSections" :key="section.id" class="about-section">
+          <view class="about-photo"><ScenePhoto :src="section.coverImage" :scene="section.scene" :label="section.caption || section.title" /></view>
+          <text v-if="section.caption" class="about-caption">{{ section.caption }}</text>
+          <text v-if="section.title" class="about-section-title">{{ section.title }}</text>
+          <!-- 后台图文内容：文字块按换行分段、沿用原正文样式；图片块整宽圆角 + 居中小字说明 -->
+          <template v-if="section.contentBlocks && section.contentBlocks.length">
+            <view v-for="(block, index) in section.contentBlocks" :key="index" class="about-block">
+              <template v-if="block.type === 'image'">
+                <image class="block-image" :src="block.url" mode="widthFix" :aria-label="block.caption || section.title" @tap="previewImage(section.contentBlocks, block.url)" />
+                <text v-if="block.caption" class="block-caption">{{ block.caption }}</text>
+              </template>
+              <template v-else>
+                <text v-if="block.title" class="about-block-title">{{ block.title }}</text>
+                <text v-for="(line, lineIndex) in block.lines" :key="lineIndex" class="about-copy" selectable>{{ line }}</text>
+              </template>
+            </view>
+          </template>
+          <template v-else>
+            <text v-for="(paragraph, index) in section.paragraphs" :key="index" class="about-copy" selectable>{{ paragraph }}</text>
+          </template>
         </view>
       </view>
       <view v-else-if="activeTopic === 'news'" class="news-list">
@@ -48,11 +68,25 @@
           </button>
           <view v-if="expandedArticle === article.id" class="article-body">
             <text v-if="article.fullTitle" class="article-title">{{ article.fullTitle }}</text>
-            <text class="article-meta">{{ article.source ? '成文日期' : '示例资讯' }} · {{ article.date }}</text>
-            <text v-for="paragraph in article.paragraphs" :key="paragraph">{{ paragraph }}</text>
+            <text v-if="article.date" class="article-meta">成文日期 · {{ article.date }}</text>
+            <template v-if="article.contentBlocks && article.contentBlocks.length">
+              <view v-for="(block, index) in article.contentBlocks" :key="index" class="article-block">
+                <template v-if="block.type === 'image'">
+                  <image class="block-image" :src="block.url" mode="widthFix" :aria-label="block.caption || article.title" @tap="previewImage(article.contentBlocks, block.url)" />
+                  <text v-if="block.caption" class="block-caption">{{ block.caption }}</text>
+                </template>
+                <template v-else>
+                  <text v-if="block.title" class="article-block-title">{{ block.title }}</text>
+                  <text v-for="(line, lineIndex) in block.lines" :key="lineIndex">{{ line }}</text>
+                </template>
+              </view>
+            </template>
+            <template v-else>
+              <text v-for="(paragraph, index) in article.paragraphs" :key="index">{{ paragraph }}</text>
+            </template>
             <view v-if="article.source" class="article-source">
-              <text>来源：{{ article.source.name }}</text>
-              <text selectable>{{ article.source.url }}</text>
+              <text v-if="article.source.name">来源：{{ article.source.name }}</text>
+              <text v-if="article.source.url" selectable>{{ article.source.url }}</text>
               <text>历史文件资料，具体适用以官方现行规定为准。</text>
             </view>
           </view>
@@ -69,6 +103,7 @@ import ScenePhoto from "./ScenePhoto.vue";
 import ArticleList from "./ArticleList.vue";
 import { news } from "../data/catalog";
 import { policies } from "../data/policies";
+import { aboutSections } from "../data/about";
 import { openService } from "../utils/navigation";
 
 const features = [
@@ -80,35 +115,6 @@ const activeTopic = ref("news");
 const expandedArticle = ref("");
 const activeTitle = computed(() => features.find((feature) => feature.id === activeTopic.value).title);
 const visibleArticles = computed(() => activeTopic.value === "policy" ? policies : news);
-const aboutSections = [
-  {
-    title: "走进乐城，了解身边的医疗资源",
-    scene: 3,
-    caption: "园区风貌 · 示意配图",
-    paragraphs: [
-      "从医疗资源到园区生活，认识乐城，可以从一所医院、一段行程开始。在这里，我们将医院信息、就医服务与园区动态放在一起，让每一位来访者在出发之前，对乐城多一份了解。",
-      "浏览医院介绍，了解科室与服务特色；阅读园区动态，关注生活与服务资讯。无论是为自己做准备，还是陪伴家人出行，都可以从这些信息开始规划。",
-    ],
-  },
-  {
-    title: "了解就医服务，从容安排行程",
-    scene: 0,
-    caption: "医疗建筑 · 示意配图",
-    paragraphs: [
-      "就医之前，先了解意向医院的科室设置、接诊安排和资料要求，可以让行程准备更有条理。将需要咨询的问题、既往就诊资料和出行安排提前整理，也方便与医院进一步沟通。",
-      "您可以在医院介绍中浏览相关信息，收藏关注的医院，方便再次查找。具体接诊时间、预约要求与服务安排，请通过医院官方渠道确认。",
-    ],
-  },
-  {
-    title: "发现园区生活中的片刻闲适",
-    scene: 2,
-    caption: "园区绿意 · 示意配图",
-    paragraphs: [
-      "了解乐城，也是在了解一段行程中的日常。除了医院与就医服务，园区环境、交通和休憩安排，同样是出行前可以关注的内容。给行程留出适当余量，让每一步更加从容。",
-      "在乐城动态中，您可以继续阅读园区生活与服务资讯；在国家政策中，可以查看相关政策文件与来源，逐步认识乐城的更多方面。",
-    ],
-  },
-];
 function selectTopic(id) {
   if (activeTopic.value === id) return;
   activeTopic.value = id;
@@ -116,6 +122,9 @@ function selectTopic(id) {
 }
 function toggleArticle(id) {
   expandedArticle.value = expandedArticle.value === id ? "" : id;
+}
+function previewImage(blocks, current) {
+  uni.previewImage({ current, urls: blocks.filter((block) => block.type === "image" && block.url).map((block) => block.url) });
 }
 </script>
 
@@ -153,6 +162,13 @@ function toggleArticle(id) {
 .about-caption { display: block; margin-top: 10rpx; color: #65788f; font-size: 22rpx; text-align: center; }
 .about-section-title { display: block; margin-top: 28rpx; font-size: 31rpx; font-weight: 650; line-height: 1.6; }
 .about-copy { display: block; margin-top: 18rpx; color: #344b63; font-size: 29rpx; line-height: 2; text-indent: 2em; }
+.about-block-title { display: block; margin-top: 24rpx; font-size: 29rpx; font-weight: 650; line-height: 1.8; }
+.about-block .block-image { margin-top: 24rpx; }
+.article-block { display: flex; flex-direction: column; gap: 16rpx; }
+.article-block-title { display: block; font-weight: 650; }
+.block-image { display: block; width: 100%; border-radius: 12rpx; }
+.block-caption { display: block; margin-top: 10rpx; color: #65788f; font-size: 22rpx; line-height: 1.5; text-align: center; }
+.article-block .block-caption { margin-top: 0; }
 .content-empty { display: flex; align-items: center; flex-direction: column; padding: 55rpx 0; gap: 14rpx; }
 .empty-title { font-size: 28rpx; }
 .empty-copy { color: #65788f; font-size: 25rpx; text-align: center; }

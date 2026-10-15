@@ -4,7 +4,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"test": "node --test qa/demo-store.test.mjs qa/auth-client.test.mjs qa/settings.test.mjs qa/search-filters.test.mjs",
+		"test": "node --test qa/demo-store.test.mjs qa/auth-client.test.mjs qa/settings.test.mjs qa/search-filters.test.mjs qa/content-mapping.test.mjs qa/chat-unread.test.mjs",
 		"dev:h5": "node scripts/uni.mjs h5",
 		"build:h5": "node scripts/uni.mjs h5 build",
 		"dev:mp-weixin": "node scripts/uni.mjs mp-weixin",

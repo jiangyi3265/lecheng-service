@@ -1,6 +1,9 @@
+import { reactive } from "vue";
+
 // 官方历史文件目录。短标题用于列表，展开显示完整标题、成文日期和来源。
 // 仅介绍文件主题，不将历史文件摘要作为当前办理条件或医疗建议。
-export const policies = [
+// 后台“国家政策”发布后由 loadExtras 替换；接口不可用时显示这里的内置内容。
+export const policies = reactive([
   {
     id: "policy-development-2019",
     title: "支持建设乐城先行区",
@@ -31,4 +34,4 @@ export const policies = [
     ],
     source: { name: "商务部转载国务院文件", url: "https://www.mofcom.gov.cn/zcfb/zgdwjjmywg/art/2018/art_662566da1a694f1d9ae10cb17261750f.html" },
   },
-];
+]);

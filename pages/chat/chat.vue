@@ -5,8 +5,11 @@
 		<view class="chat-content"
 			><view class="chat-date">服务咨询</view
 			><view class="chat-row"
-				><image class="chat-avatar" src="/static/images/customer-service-avatar.jpg" mode="aspectFill" aria-label="客服头像" />
-				<view class="chat-bubble">{{ apiBaseUrl ? '您好：我是人工客服，我可以为您提供博鳌乐城项目介绍、预约评估、陪诊服务咨询和预约流程相关信息。人工在线时间：早8：00-晚22：00。' : greeting(name) }}</view></view
+				><image class="chat-avatar" :src="supportAvatar" mode="aspectFill" aria-label="客服头像" />
+				<view v-if="apiBaseUrl" class="chat-bubble"
+					><text>{{ supportSettings.greeting }}</text
+					><text v-if="supportSettings.hours" class="chat-hours">{{ supportSettings.hours }}</text></view
+				><view v-else class="chat-bubble">{{ greeting(name) }}</view></view
 			>
 			<view class="quick-questions"
 				><button @tap="openSearch()">查询医院</button
@@ -18,7 +21,7 @@
 				:key="message.id"
 				class="chat-row"
 				:class="{ own: message.role === 'user' }"
-				><image v-if="message.role !== 'user'" class="chat-avatar" src="/static/images/customer-service-avatar.jpg" mode="aspectFill" aria-label="客服头像" />
+				><image v-if="message.role !== 'user'" class="chat-avatar" :src="supportAvatar" mode="aspectFill" aria-label="客服头像" />
 				<view
 					:class="
 						message.role === 'user' ? 'own-bubble' : 'chat-bubble'
@@ -50,6 +53,8 @@
 import { ref, nextTick, watch } from "vue";
 import { onLoad, onShow, onHide, onUnload } from "@dcloudio/uni-app";
 import { apiBaseUrl, getMessages, sendMessage } from "../../utils/lecheng-api";
+import { markRead } from "../../utils/chat-unread";
+import { supportSettings, supportAvatar } from "../../data/support";
 import AppHeader from "../../components/AppHeader.vue";
 import AppIcon from "../../components/AppIcon.vue";
 import {
@@ -75,32 +80,39 @@ onLoad((o) => {
 	draft.value = uni.getStorageSync("lecheng-draft-" + name.value) || "";
 	refresh();
 });
-onShow(() => { stopPolling(); refresh(); if (apiBaseUrl) poller = setInterval(refresh, 8000); });
+onShow(() => { stopPolling(); refresh(); if (apiBaseUrl) poller = setInterval(refresh, 3000); });
 onHide(stopPolling);
 onUnload(stopPolling);
 watch(draft, (value) =>
 	uni.setStorageSync("lecheng-draft-" + name.value, value),
 );
-async function refresh() {
-	if (apiBaseUrl) {
-		try {
-			const latest = await getMessages();
-			const changed = latest[latest.length - 1]?.id !== messages.value[messages.value.length - 1]?.id;
-			messages.value = latest;
-			if (changed) { await nextTick(); uni.pageScrollTo({ selector: "#chat-end", duration: 180 }); }
-		}
-		catch (error) { console.warn("客服消息同步失败", error); }
-	} else {
+let loading;
+async function load() {
+	try {
+		const latest = await getMessages();
+		const changed = latest[latest.length - 1]?.id !== messages.value[messages.value.length - 1]?.id;
+		messages.value = latest;
+		markRead(latest);
+		if (changed) { await nextTick(); uni.pageScrollTo({ selector: "#chat-end", duration: 180 }); }
+	}
+	catch (error) { console.warn("客服消息同步失败", error); }
+}
+function refresh() {
+	if (!apiBaseUrl) {
 		messages.value = chatMessages(name.value);
 		markChatRead(name.value);
+		return Promise.resolve();
 	}
+	// 上一次同步未返回时不重复请求
+	if (!loading) loading = load().finally(() => { loading = undefined; });
+	return loading;
 }
 async function send() {
 	const text = draft.value.trim();
 	if (!text || sending.value) return;
 	sending.value = true;
 	try {
-		if (apiBaseUrl) { await sendMessage(text); await refresh(); }
+		if (apiBaseUrl) { await sendMessage(text); if (loading) await loading; await refresh(); }
 		else messages.value = sendDemoMessage(name.value, text);
 	} catch (error) { uni.showToast({ title: error.message || "发送失败", icon: "none" }); return; }
 	finally { sending.value = false; }
@@ -146,6 +158,9 @@ async function send() {
 	height: 84rpx;
 	border-radius: 50%;
 	flex-shrink: 0;
+}
+.chat-hours {
+	display: block;
 }
 .chat-bubble,
 .own-bubble {

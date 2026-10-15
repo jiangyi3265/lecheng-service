@@ -1,6 +1,10 @@
 import { ref } from "vue";
 import { hospitals } from "../data/medical.js";
 import { approvedProjects, doctors, news, resources } from "../data/catalog.js";
+import { policies } from "../data/policies.js";
+import { aboutSections } from "../data/about.js";
+import { DEFAULT_SUPPORT_SETTINGS, supportSettings } from "../data/support.js";
+import { mapAboutSection, mapPolicy, mapSupportSettings } from "./content-mapping.js";
 
 const configured = (import.meta.env.VITE_LECHENG_API_BASE_URL || "").trim();
 export const apiBaseUrl = configured.replace(/\/$/, "") || (import.meta.env.DEV ? "http://127.0.0.1:8080" : "");
@@ -19,7 +23,8 @@ function request(path, method = "GET", data, token = "") {
       success(response) {
         if (response.statusCode >= 200 && response.statusCode < 300 && response.data?.code === 200)
           resolve(response.data.data);
-        else reject(new Error(response.data?.msg || `接口请求失败 (${response.statusCode})`));
+        // status 表示后台有响应（含旧版后台没有该接口的 404/500），区别于断网
+        else reject(Object.assign(new Error(response.data?.msg || `接口请求失败 (${response.statusCode})`), { status: response.statusCode, code: response.data?.code }));
       },
       fail(error) { reject(new Error(error.errMsg || "连接后台失败")); },
     });
@@ -52,6 +57,27 @@ export function loadCatalog() {
   return catalogRequest;
 }
 
+// 国家政策、了解乐城、客服设置：三项各自加载，任一失败（含旧版后台不认识该分类）只保留该项内置内容，
+// 不影响其他两项和 loadCatalog
+let extrasRequest;
+export function loadExtras() {
+  if (!apiBaseUrl) return Promise.resolve(false);
+  if (extrasRequest) return extrasRequest;
+  const load = (kind, apply) => request(`/open/lecheng/content/${kind}`)
+    .then(list => {
+      if (!Array.isArray(list)) throw new Error(`${kind} 内容格式错误`);
+      apply(list); return true;
+    })
+    .catch(error => { console.warn(`${kind} 内容加载失败`, error); return false; });
+  extrasRequest = Promise.all([
+    load("policy", list => policies.splice(0, policies.length, ...list.map(mapPolicy))),
+    load("about", list => aboutSections.splice(0, aboutSections.length, ...list.map(mapAboutSection))),
+    load("support", list => Object.assign(supportSettings, mapSupportSettings(list, DEFAULT_SUPPORT_SETTINGS, apiBaseUrl))),
+  ]).then(results => results.every(Boolean))
+    .finally(() => { extrasRequest = null; });
+  return extrasRequest;
+}
+
 let sessionRequest;
 export async function getSessionToken() {
   const saved = uni.getStorageSync(SESSION_KEY);
@@ -82,3 +108,29 @@ export const cancelRequestedAppointment = id => personalRequest(`/open/lecheng/a
 const feedbackRecord = item => ({ ...item, id: `FB${item.id}` });
 export const getFeedback = () => personalRequest("/open/lecheng/feedback").then(list => list.map(feedbackRecord));
 export const sendFeedback = text => personalRequest("/open/lecheng/feedback", "POST", { text }).then(feedbackRecord);
+
+// 客服未读数：只用本机已保存的会话凭证查询，从不为了轮询新建会话。
+// 旧版后台没有这两个接口（404/500）时按 0 处理且不提示；断网时抛出，由调用方保留上次结果
+const savedSessionToken = () => (apiBaseUrl ? uni.getStorageSync(SESSION_KEY) || "" : "");
+export async function getUnreadCount() {
+  const token = savedSessionToken();
+  if (!token) return { count: 0, lastId: 0 };
+  try {
+    const data = await request("/open/lecheng/messages/unread", "GET", undefined, token);
+    return { count: Math.max(0, Number(data?.count) || 0), lastId: Number(data?.lastId) || 0 };
+  } catch (error) {
+    if (error.status) return { count: 0, lastId: 0 };
+    throw error;
+  }
+}
+export async function markMessagesRead(lastId) {
+  const token = savedSessionToken();
+  if (!token) return { count: 0 };
+  try {
+    const data = await request("/open/lecheng/messages/read", "POST", { lastId: Number(lastId) || 0 }, token);
+    return { count: Math.max(0, Number(data?.count) || 0) };
+  } catch (error) {
+    if (error.status) return { count: 0 };
+    throw error;
+  }
+}

@@ -11,9 +11,10 @@
     </view>
     <view class="mine-content">
       <view class="feature-cards">
-        <button class="feature-card support-card" @tap="openConsultation">
+        <button class="feature-card support-card" :aria-label="supportBadge ? '在线客服，' + supportBadge + '条未读回复' : '在线客服'" @tap="openConsultation">
           <view class="feature-copy"><text class="feature-title">在线客服</text><text class="feature-subtitle">咨询服务，贴心解答</text></view>
           <image class="feature-icon" src="/static/icons/mine-support.png" mode="aspectFit" />
+          <text v-if="supportBadge" class="unread-badge">{{ supportBadge }}</text>
         </button>
         <button class="feature-card collection-card" @tap="openService('我的收藏')">
           <view class="feature-copy"><text class="feature-title">我的收藏</text><text class="feature-subtitle">精选沉淀，心选收藏</text></view>
@@ -54,7 +55,10 @@ import { readProfile } from '../../utils/storage';
 import { navigate, openService, openGuide } from '../../utils/navigation';
 import { serviceContact } from '../../data/service-contact';
 import { auth } from '../../utils/auth';
+import { unreadCount, badgeText } from '../../utils/chat-unread';
 const session = ref(auth.session());
+// 客服有未读回复时，在线客服卡片右上角显示与底部导航相同的红色数字角标
+const supportBadge = computed(() => badgeText(unreadCount.value));
 const profile = ref(readProfile());
 const maskedPhone = computed(() => profile.value.phone ? profile.value.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') : '点击完善个人资料');
 const shortcuts = [{ title: '福利活动', icon: 'benefits' }, { title: '园区导航', icon: 'guide' }, { title: '服务流程', icon: 'process' }, { title: '设置', icon: 'settings' }];
@@ -85,6 +89,7 @@ function callService() { if (serviceContact.phone) uni.makePhoneCall({ phoneNumb
 .feature-title { font-size: 28rpx; font-weight: 700; }
 .feature-subtitle { font-size: 18rpx; line-height: 1.5; white-space: nowrap; }
 .feature-icon { position: absolute; right: 8rpx; top: 33rpx; width: 92rpx; height: 92rpx; }
+.unread-badge { position: absolute; top: 16rpx; right: 10rpx; z-index: 2; box-sizing: border-box; min-width: 32rpx; height: 32rpx; padding: 0 9rpx; border-radius: 16rpx; background: #fa5151; box-shadow: 0 0 0 2rpx #fff; color: #fff; font-size: 20rpx; font-weight: 700; line-height: 32rpx; text-align: center; white-space: nowrap; }
 .shortcut-grid { display: flex; background: #fff; border-radius: 22rpx; margin-top: 24rpx; padding: 30rpx 8rpx; }
 .shortcut { display: flex; flex: 1; min-width: 0; flex-direction: column; align-items: center; gap: 18rpx; font-size: 27rpx; line-height: 1.5; color: #272d35; white-space: nowrap; }
 .shortcut-icon { width: 88rpx; height: 88rpx; }

@@ -2,18 +2,18 @@
   <view class="inline-consultation">
     <scroll-view class="consultation-history" scroll-y :scroll-into-view="scrollTarget" @tap="dismissKeyboard">
       <view class="history-content">
-        <text class="consultation-caption">乐城服务为您服务</text>
+        <text class="consultation-caption">{{ supportSettings.caption }}</text>
         <text class="consultation-note">{{ apiBaseUrl ? '客服留言 · 消息同步至乐城后台' : '演示咨询 · 消息仅保存在本机' }}</text>
         <view class="consultation-row">
-          <image class="consultation-avatar" src="/static/images/customer-service-avatar.jpg" mode="aspectFill" aria-label="客服头像" />
+          <image class="consultation-avatar" :src="supportAvatar" mode="aspectFill" aria-label="客服头像" />
           <view class="consultation-bubble">
-            <text selectable>您好：我是人工客服，我可以为您提供博鳌乐城：项目介绍、预约评估、陪诊服务咨询、预约流程相关信息。</text>
-            <text class="consultation-hours" selectable>人工在线时间：早8：00-晚22：00</text>
+            <text selectable>{{ supportSettings.greeting }}</text>
+            <text v-if="supportSettings.hours" class="consultation-hours" selectable>{{ supportSettings.hours }}</text>
           </view>
         </view>
         <view v-for="(message, index) in messages" :id="'consultation-message-' + index" :key="message.id"
           class="consultation-row" :class="{ own: message.role === 'user' }">
-          <image v-if="message.role !== 'user'" class="consultation-avatar" src="/static/images/customer-service-avatar.jpg" mode="aspectFill" aria-label="客服头像" />
+          <image v-if="message.role !== 'user'" class="consultation-avatar" :src="supportAvatar" mode="aspectFill" aria-label="客服头像" />
           <text class="consultation-bubble" :class="{ 'user-bubble': message.role === 'user' }" selectable>{{ message.text }}</text>
           <image v-if="message.role === 'user'" class="consultation-avatar" src="/static/images/avatar.png" mode="aspectFill" aria-label="我的头像" />
         </view>
@@ -35,6 +35,8 @@ import { ref, watch, nextTick, onMounted, onUnmounted } from "vue";
 import { onShow, onHide } from "@dcloudio/uni-app";
 import { chatMessages, sendDemoMessage, markChatRead } from "../utils/demo-store";
 import { apiBaseUrl, getMessages, sendMessage } from "../utils/lecheng-api";
+import { markRead } from "../utils/chat-unread";
+import { supportSettings, supportAvatar } from "../data/support";
 
 defineOptions({ options: { virtualHost: true } });
 const emit = defineEmits(["keyboard-height-change"]);
@@ -45,25 +47,38 @@ const inputFocused = ref(false);
 const messages = ref(chatMessages(name));
 const sending = ref(false);
 const scrollTarget = ref("");
-let poller;
+let poller, loading, loaded = false;
 watch(draft, (value) => uni.setStorageSync(draftKey, value));
 async function scrollToLatest() {
   scrollTarget.value = "";
   await nextTick();
   scrollTarget.value = "consultation-end";
 }
-async function refresh() {
-  if (apiBaseUrl) {
-    try { messages.value = await getMessages(); scrollToLatest(); }
-    catch (error) { console.warn("客服消息同步失败", error); }
-  } else {
+const lastId = (list) => list[list.length - 1]?.id;
+async function load() {
+  try {
+    const latest = await getMessages();
+    // 只在首次加载或有新消息时定位到最新，轮询不打断用户往上翻看记录
+    const grew = !loaded || latest.length > messages.value.length || lastId(latest) !== lastId(messages.value);
+    messages.value = latest;
+    loaded = true;
+    markRead(latest);
+    if (grew) scrollToLatest();
+  } catch (error) { console.warn("客服消息同步失败", error); }
+}
+function refresh() {
+  if (!apiBaseUrl) {
     messages.value = chatMessages(name);
     markChatRead(name);
     scrollToLatest();
+    return Promise.resolve();
   }
+  // 上一次同步未返回时不重复请求，避免慢网络下旧结果覆盖新结果
+  if (!loading) loading = load().finally(() => { loading = undefined; });
+  return loading;
 }
 function stopPolling() { clearInterval(poller); poller = undefined; }
-function startPolling() { stopPolling(); refresh(); if (apiBaseUrl) poller = setInterval(refresh, 8000); }
+function startPolling() { stopPolling(); refresh(); if (apiBaseUrl) poller = setInterval(refresh, 3000); }
 onMounted(startPolling);
 onUnmounted(stopPolling);
 onShow(startPolling);
@@ -82,7 +97,12 @@ async function send() {
   if (!value || sending.value) return;
   sending.value = true;
   try {
-    if (apiBaseUrl) { await sendMessage(value); await refresh(); }
+    if (apiBaseUrl) {
+      await sendMessage(value);
+      // 发送前已在进行的同步拿不到刚发的消息，等它结束后再同步一次
+      if (loading) await loading;
+      await refresh();
+    }
     else messages.value = sendDemoMessage(name, value);
     draft.value = "";
     scrollToLatest();

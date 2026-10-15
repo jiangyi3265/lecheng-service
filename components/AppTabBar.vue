@@ -5,22 +5,26 @@
 			:key="tab.key"
 			class="tab-item"
 			:class="{ 'is-active': active === tab.key, 'is-support': tab.key === 'support' }"
-			:aria-label="tab.title"
+			:aria-label="tab.key === 'support' && supportBadge ? tab.title + '，' + supportBadge + '条未读回复' : tab.title"
 			@tap="open(tab)"
 		>
 			<view class="tab-icon-wrap" :class="{ 'mascot-wrap': tab.key === 'support' }"
 				><image v-if="tab.key === 'support'" class="support-mascot" src="/static/images/customer-service-mascot.png" mode="aspectFit" aria-label="客服形象" /><AppIcon v-else
 					:name="active === tab.key ? tab.activeIcon : tab.icon"
 					:color="active === tab.key ? 'blue' : 'ink'"
-					:size="43" /></view
+					:size="43" /><text v-if="tab.key === 'support' && supportBadge" class="unread-badge">{{ supportBadge }}</text></view
 			><text>{{ tab.title }}</text>
 		</button></view
 	>
 </template>
 <script setup>
+import { computed } from "vue";
 import AppIcon from "./AppIcon.vue";
 import { openTab } from "../utils/navigation";
-defineProps({ active: { type: String, default: "home" } });
+import { unreadCount, badgeText } from "../utils/chat-unread";
+const props = defineProps({ active: { type: String, default: "home" } });
+// 客服有未读回复时在客服形象右上角显示红色数字角标；正在客服页时不显示
+const supportBadge = computed(() => (props.active === "support" ? "" : badgeText(unreadCount.value)));
 const tabs = [
 	{
 		key: "home",
@@ -98,6 +102,25 @@ function open(tab) {
 .mascot-wrap { height: 94rpx; margin-top: -29rpx; }
 .support-mascot { width: 88rpx; height: 94rpx; }
 .tab-item.is-support { overflow: visible; }
+.unread-badge {
+	position: absolute;
+	top: 0;
+	right: -16rpx;
+	z-index: 1;
+	box-sizing: border-box;
+	min-width: 32rpx;
+	height: 32rpx;
+	padding: 0 9rpx;
+	border-radius: 16rpx;
+	background: #fa5151;
+	box-shadow: 0 0 0 2rpx #fff;
+	color: #fff;
+	font-size: 20rpx;
+	font-weight: 700;
+	line-height: 32rpx;
+	text-align: center;
+	white-space: nowrap;
+}
 /* #ifdef H5 */
 @media (min-width: 600px) {
 	.app-tabbar {
